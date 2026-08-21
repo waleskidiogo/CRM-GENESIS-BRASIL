@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CRM - Grupo Gênesis Brasil</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Inter',sans-serif;background:#0f1923;color:#e2e8f0;min-height:100vh;}
@@ -26,14 +27,18 @@ body{font-family:'Inter',sans-serif;background:#0f1923;color:#e2e8f0;min-height:
 .user-profile .user-name{font-size:13px;font-weight:600;color:#fff;}
 .btn-logout{background:transparent;color:#f87171;border:1.5px solid rgba(248,113,113,.5);padding:8px 16px;font-size:12px;}
 .btn-logout:hover{background:rgba(248,113,113,.15);border-color:#f87171;}
-.login-overlay{display:none;position:fixed;inset:0;background:radial-gradient(ellipse at center,#10263e,#0d1b2a);z-index:1000;justify-content:center;align-items:center;flex-direction:column;}
+.login-overlay{display:none;position:fixed;inset:0;background:radial-gradient(ellipse at center,#10263e,#0d1b2a);z-index:1000;justify-content:center;align-items:center;flex-direction:column;overflow-y:auto;padding:20px;}
 .login-overlay.active{display:flex;}
-.login-box{background:linear-gradient(145deg,#10263e,#0d1f3c);padding:48px;border-radius:24px;border:1px solid rgba(240,123,38,.2);text-align:center;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:fadeInUp .6s;}
+.login-box{background:linear-gradient(145deg,#10263e,#0d1f3c);padding:48px;border-radius:24px;border:1px solid rgba(240,123,38,.2);text-align:center;max-width:440px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:fadeInUp .6s;margin:auto;}
 .login-box h2{font-family:Georgia,serif;font-style:italic;color:#f07b26;font-size:28px;margin-bottom:8px;}
 .login-box p{color:#94a3b8;font-size:14px;margin-bottom:28px;}
 .login-box input{width:100%;padding:14px;background:#0a1628;border:1.5px solid #1a3a5c;border-radius:10px;color:#e2e8f0;font-size:15px;font-family:'Inter',sans-serif;margin-bottom:16px;outline:none;}
 .login-box input:focus{border-color:#f07b26;box-shadow:0 0 0 3px rgba(240,123,38,.1);}
 #loginError{color:#f87171;font-size:13px;margin-top:16px;display:none;background:rgba(248,113,113,.1);padding:10px;border-radius:8px;border:1px solid rgba(248,113,113,.3);}
+.divider{display:flex;align-items:center;margin:20px 0;color:#64748b;font-size:12px;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:#1a3a5c;}
+.divider span{padding:0 12px;}
+#btnGoogle{margin:0 auto;display:flex;justify-content:center;}
 .main{padding:40px;max-width:1400px;margin:0 auto;}
 .section{display:none;}
 .section.active{display:block;animation:fadeInUp .4s;}
@@ -154,22 +159,13 @@ tr:hover td{background:rgba(240,123,38,.03);}
 .support-box strong{color:#e2e8f0;}
 .loading{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#f07b26;border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
-@media(max-width:768px){
-  .navbar{flex-wrap:wrap;height:auto;padding:16px;gap:12px;}
-  .navbar-buttons{flex-wrap:wrap;}
-  .user-profile{margin-left:0;padding-left:0;border-left:none;}
-  .main{padding:20px;}
-  .header h1{font-size:28px;}
-  .form-grid{grid-template-columns:1fr;}
-  .detail-grid{grid-template-columns:1fr;}
-}
+@media(max-width:768px){.navbar{flex-wrap:wrap;height:auto;padding:16px;gap:12px;}.navbar-buttons{flex-wrap:wrap;}.user-profile{margin-left:0;padding-left:0;border-left:none;}.main{padding:20px;}.header h1{font-size:28px;}.form-grid{grid-template-columns:1fr;}.detail-grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- LOGIN -->
 <div class="login-overlay active" id="loginOverlay">
   <div class="login-box">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 52" fill="none" style="height:44px;margin-bottom:20px;">
@@ -185,7 +181,11 @@ tr:hover td{background:rgba(240,123,38,.03);}
       <text x="54" y="46" font-family="Inter,Arial,sans-serif" font-size="7.5" font-weight="600" fill="#c0c8d0" letter-spacing="3">BRASIL</text>
     </svg>
     <h2>Área do Consultor</h2>
-    <p>Faça login com seu e-mail e senha</p>
+    <p>Entre com sua conta Google ou use e-mail e senha</p>
+
+    <div id="btnGoogle"></div>
+    <div class="divider"><span>ou</span></div>
+
     <input type="email" id="emailLogin" placeholder="E-mail" onkeydown="if(event.key==='Enter')document.getElementById('senhaLogin').focus()">
     <input type="password" id="senhaLogin" placeholder="Senha" onkeydown="if(event.key==='Enter')fazerLogin()">
     <button class="btn btn-primary btn-lg" id="btnLogin" onclick="fazerLogin()" style="width:100%;justify-content:center;">Entrar</button>
@@ -193,7 +193,6 @@ tr:hover td{background:rgba(240,123,38,.03);}
   </div>
 </div>
 
-<!-- NAVBAR -->
 <nav class="navbar">
   <a href="#" class="navbar-logo" onclick="showSection('home');return false;">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 52" fill="none">
@@ -226,9 +225,7 @@ tr:hover td{background:rgba(240,123,38,.03);}
   </div>
 </nav>
 
-<!-- CONTEÚDO -->
 <div class="main">
-
   <div id="home" class="section active">
     <div class="header"><h1>Olá, <em id="homeUserName">Consultor</em> 👋</h1></div>
     <div class="cards">
@@ -354,10 +351,8 @@ tr:hover td{background:rgba(240,123,38,.03);}
       🕐 Horário: <strong>Seg a Sex, 9h às 18h</strong></p>
     </div>
   </div>
-
 </div>
 
-<!-- MODAL DETALHES -->
 <div class="modal-overlay" id="modalDetalhes">
   <div class="modal">
     <h2>📋 Detalhes do Lead</h2>
@@ -369,7 +364,6 @@ tr:hover td{background:rgba(240,123,38,.03);}
   </div>
 </div>
 
-<!-- MODAL CARTÃO -->
 <div class="modal-overlay" id="modalCartao">
   <div class="modal" style="max-width:500px;">
     <h2>Novo Cartão</h2>
@@ -393,7 +387,6 @@ tr:hover td{background:rgba(240,123,38,.03);}
   </div>
 </div>
 
-<!-- MODAL LISTA -->
 <div class="modal-overlay" id="modalLista">
   <div class="modal" style="max-width:500px;">
     <h2>Nova Lista</h2>
@@ -407,6 +400,7 @@ tr:hover td{background:rgba(240,123,38,.03);}
 
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbwJVAUAICrDIa6u9dGiJxc4sSYtTCeQejP78-rktYLCPgYH2SHAEecz9qO8rwvJwTlA/exec';
+const GOOGLE_CLIENT_ID = 'SEU_CLIENT_ID_AQUI'; // 👈 TROQUE PELO SEU CLIENT ID
 
 let currentUser = null;
 let leads = [];
@@ -434,6 +428,7 @@ function showToast(message, type='success'){
   setTimeout(()=>{t.classList.add('hiding');setTimeout(()=>t.remove(),300);},3000);
 }
 
+// ===== LOGIN MANUAL =====
 async function fazerLogin(){
   const email = document.getElementById('emailLogin').value.trim();
   const senha = document.getElementById('senhaLogin').value;
@@ -446,7 +441,7 @@ async function fazerLogin(){
     btn.disabled = false; btn.innerHTML = 'Entrar';
     if(r.success){
       currentUser = r.user;
-      sessionStorage.setItem('crm_session', JSON.stringify(currentUser));
+      localStorage.setItem('crm_session', JSON.stringify(currentUser));
       entrar();
     } else {
       erro.textContent = ' ' + (r.message || 'E-mail ou senha incorretos.');
@@ -457,6 +452,60 @@ async function fazerLogin(){
     erro.textContent = '❌ Erro de conexão. Verifique a URL do Apps Script.';
     erro.style.display = 'block';
   }
+}
+
+// ===== LOGIN COM GOOGLE =====
+function initGoogleLogin(){
+  if (typeof google === 'undefined' || !google.accounts) return;
+  if (GOOGLE_CLIENT_ID === 'SEU_CLIENT_ID_AQUI' || !GOOGLE_CLIENT_ID) {
+    document.getElementById('btnGoogle').innerHTML = '<div style="color:#64748b;font-size:12px;padding:8px;">⚠️ Configure o Client ID para ativar o login Google</div>';
+    return;
+  }
+  google.accounts.id.initialize({
+    client_id: GOOGLE_CLIENT_ID,
+    callback: handleGoogleCredential,
+    cancel_on_tap_outside: false
+  });
+  google.accounts.id.renderButton(
+    document.getElementById('btnGoogle'),
+    { theme: 'outline', size: 'large', text: 'continue_with', width: 320 }
+  );
+}
+
+async function handleGoogleCredential(response){
+  try {
+    const r = await api('loginGoogle', { idToken: response.credential });
+    if(r.success){
+      currentUser = r.user;
+      if(r.chaveAcesso){
+        localStorage.setItem('crm_chave', r.chaveAcesso);
+        localStorage.setItem('crm_email', r.user.email);
+      }
+      localStorage.setItem('crm_session', JSON.stringify(currentUser));
+      entrar();
+      showToast(r.novoUsuario ? 'Conta Google vinculada! Bem-vindo, ' + r.user.nome + '! 🎉' : 'Bem-vindo de volta, ' + r.user.nome + '! 👋', 'success');
+    } else {
+      showToast(r.message || 'Erro ao entrar com Google', 'error');
+    }
+  } catch(e) {
+    showToast('Erro de conexão com o servidor', 'error');
+  }
+}
+
+// ===== LOGIN AUTOMÁTICO (chave) =====
+async function tentarLoginAutomatico(){
+  const chave = localStorage.getItem('crm_chave');
+  if(!chave) return false;
+  try {
+    const r = await api('loginChave', { chave: chave });
+    if(r.success){
+      currentUser = r.user;
+      localStorage.setItem('crm_session', JSON.stringify(currentUser));
+      entrar();
+      return true;
+    }
+  } catch(e) {}
+  return false;
 }
 
 function entrar(){
@@ -473,7 +522,9 @@ function entrar(){
 }
 
 function logout(){
-  sessionStorage.removeItem('crm_session');
+  localStorage.removeItem('crm_session');
+  localStorage.removeItem('crm_chave');
+  localStorage.removeItem('crm_email');
   currentUser = null; leads = []; quadro = { listas: [] };
   document.getElementById('userProfile').style.display = 'none';
   document.getElementById('loginOverlay').classList.add('active');
@@ -489,7 +540,6 @@ async function carregarDados(){
     if(r.success){ leads = r.leads; updateAll(); }
     else showToast(r.message||'Erro ao carregar leads','error');
   } catch(e) { showToast('Erro de conexão','error'); }
-
   try {
     const r = await api('getKanban', {email: currentUser.email});
     if(r.success){ quadro = r.dados; if(document.getElementById('quadro').classList.contains('active')) renderQuadro(); }
@@ -527,7 +577,6 @@ async function concluirRegistro(){
   if(!nome){ showToast('Preencha ao menos o Nome!','error'); document.getElementById('leadNome').focus(); return; }
   const btn = document.getElementById('btnSalvarLead');
   btn.disabled = true; btn.innerHTML = '<span class="loading"></span> Salvando...';
-
   const lead = {
     nome: nome,
     cpfCnpj: document.getElementById('leadCpfCnpj').value.trim(),
@@ -543,7 +592,6 @@ async function concluirRegistro(){
     dataRetorno: document.getElementById('leadDataRetorno').value,
     resumo: document.getElementById('leadResumo').value.trim()
   };
-
   try {
     const r = await api('addLead', {email: currentUser.email, lead: lead});
     btn.disabled = false; btn.innerHTML = '✅ Concluir Registro';
@@ -786,9 +834,13 @@ function updateDashboard(){
 
 function updateAll(){ renderLeads(); updateDashboard(); }
 
-window.onload = function(){
-  const session = JSON.parse(sessionStorage.getItem('crm_session')||'null');
-  if(session){ currentUser = session; entrar(); }
+window.onload = async function(){
+  const logado = await tentarLoginAutomatico();
+  if(!logado){
+    const session = JSON.parse(localStorage.getItem('crm_session')||'null');
+    if(session){ currentUser = session; entrar(); }
+  }
+  initGoogleLogin();
 };
 
 document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('active');}));
