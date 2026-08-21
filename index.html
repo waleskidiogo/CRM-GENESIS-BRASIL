@@ -399,8 +399,12 @@ tr:hover td{background:rgba(240,123,38,.03);}
 </div>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbwJVAUAICrDIa6u9dGiJxc4sSYtTCeQejP78-rktYLCPgYH2SHAEecz9qO8rwvJwTlA/exec';
-const GOOGLE_CLIENT_ID = '818074351738-b99p8m8fj8shn8bp0v1od3n3lvogjng5.apps.googleusercontent.com';
+// ✅ URL ATUALIZADA (20/08/2026)
+const API_URL = 'https://script.google.com/macros/s/AKfycbyygjwXK1lJY3yYos5S8T4wHncYqbkHCpqFy0yEzWM6q0-pxfOcRw0C9HTHvMMDp8dX/exec';
+
+// ⚠️ TROQUE PELO SEU CLIENT ID DO GOOGLE (opcional - login manual funciona sem isso)
+const GOOGLE_CLIENT_ID = 'SEU_CLIENT_ID_AQUI';
+
 let currentUser = null;
 let leads = [];
 let usuarios = [];
@@ -427,7 +431,6 @@ function showToast(message, type='success'){
   setTimeout(()=>{t.classList.add('hiding');setTimeout(()=>t.remove(),300);},3000);
 }
 
-// ===== LOGIN MANUAL =====
 async function fazerLogin(){
   const email = document.getElementById('emailLogin').value.trim();
   const senha = document.getElementById('senhaLogin').value;
@@ -453,10 +456,9 @@ async function fazerLogin(){
   }
 }
 
-// ===== LOGIN COM GOOGLE =====
 function initGoogleLogin(){
   if (typeof google === 'undefined' || !google.accounts) return;
-  if (GOOGLE_CLIENT_ID === 'SEU_CLIENT_ID_AQUI' || !GOOGLE_CLIENT_ID) {
+  if (GOOGLE_CLIENT_ID === 'https://script.google.com/macros/s/AKfycbyygjwXK1lJY3yYos5S8T4wHncYqbkHCpqFy0yEzWM6q0-pxfOcRw0C9HTHvMMDp8dX/exec' || !GOOGLE_CLIENT_ID) {
     document.getElementById('btnGoogle').innerHTML = '<div style="color:#64748b;font-size:12px;padding:8px;">⚠️ Configure o Client ID para ativar o login Google</div>';
     return;
   }
@@ -491,7 +493,6 @@ async function handleGoogleCredential(response){
   }
 }
 
-// ===== LOGIN AUTOMÁTICO (chave) =====
 async function tentarLoginAutomatico(){
   const chave = localStorage.getItem('crm_chave');
   if(!chave) return false;
