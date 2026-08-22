@@ -5,669 +5,586 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CRM Gênesis Brasil</title>
 <style>
-:root {
-  --bg: #0a1628;
-  --bg2: #0d1f3c;
-  --border: #1a3a5c;
-  --text: #e2e8f0;
-  --muted: #94a3b8;
-  --dim: #64748b;
-  --accent: #f07b26;
-}
-* { margin:0; padding:0; box-sizing:border-box; font-family:'Inter','Segoe UI',sans-serif; }
-body { background:var(--bg); color:var(--text); min-height:100vh; }
+  :root{
+    --verde:#1b7a4b;
+    --verde-escuro:#14532d;
+    --verde-claro:#e6f4ec;
+    --dourado:#f59e0b;
+    --cinza:#f1f5f9;
+    --borda:#e2e8f0;
+    --texto:#0f172a;
+    --texto-suave:#64748b;
+    --vermelho:#dc2626;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
+  body{background:var(--cinza);color:var(--texto);min-height:100vh}
 
-/* ===== Botões ===== */
-.btn { display:inline-flex; align-items:center; gap:8px; padding:10px 16px; border-radius:10px; border:1px solid transparent; cursor:pointer; font-size:14px; font-weight:600; font-family:'Inter',sans-serif; transition:all .2s; background:none; color:var(--text); }
-.btn:disabled { opacity:.6; cursor:not-allowed; }
-.btn-primary { background:var(--accent); color:#fff; }
-.btn-primary:hover { background:#d96a1c; }
-.btn-outline { background:rgba(255,255,255,.04); border-color:var(--border); color:var(--muted); }
-.btn-outline:hover { border-color:var(--accent); color:var(--accent); }
-.btn-outline.active-nav { background:rgba(240,123,38,.12); border-color:var(--accent); color:var(--accent); }
-.btn-lg { padding:14px 20px; font-size:16px; }
-.btn-danger { background:rgba(239,68,68,.15); color:#f87171; border:1px solid rgba(239,68,68,.3); }
-.btn-danger:hover { background:#ef4444; color:#fff; }
-.btn-info { background:rgba(96,165,250,.15); color:#60a5fa; border:1px solid rgba(96,165,250,.3); }
-.btn-info:hover { background:#60a5fa; color:#fff; }
-.btn-secondary { background:rgba(26,58,92,.5); color:var(--text); border:1px solid var(--border); }
-.btn-secondary:hover { background:var(--border); }
-.btn-logout { background:none; border:1px solid rgba(248,113,113,.4); color:#f87171; padding:6px 12px; font-size:12px; border-radius:8px; cursor:pointer; }
-.btn-logout:hover { background:#ef4444; color:#fff; }
+  /* ===== TELAS DE LOGIN / CADASTRO ===== */
+  .tela-central{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+  .cartao-login{background:#fff;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.12);width:100%;max-width:440px;overflow:hidden}
+  .cartao-login .topo{background:linear-gradient(135deg,var(--verde),var(--verde-escuro));color:#fff;padding:28px 24px;text-align:center}
+  .cartao-login .topo h1{font-size:22px;margin-bottom:4px}
+  .cartao-login .topo p{font-size:13px;opacity:.9}
+  .cartao-login .corpo{padding:24px}
+  .campo{margin-bottom:16px}
+  .campo label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--texto-suave)}
+  .campo input,.campo select,.campo textarea{width:100%;padding:12px 14px;border:1.5px solid var(--borda);border-radius:10px;font-size:14px;transition:.2s}
+  .campo input:focus,.campo select:focus,.campo textarea:focus{outline:none;border-color:var(--verde);box-shadow:0 0 0 3px rgba(27,122,75,.12)}
+  .campo textarea{resize:vertical;min-height:70px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:.2s}
+  .btn-primario{background:var(--verde);color:#fff;width:100%}
+  .btn-primario:hover{background:var(--verde-escuro)}
+  .btn-dourado{background:var(--dourado);color:#fff}
+  .btn-dourado:hover{filter:brightness(1.08)}
+  .btn-fantasma{background:transparent;color:var(--texto-suave);border:1.5px solid var(--borda)}
+  .btn-perigo{background:var(--vermelho);color:#fff}
+  .btn-pequeno{padding:6px 12px;font-size:12px;border-radius:8px}
+  .msg-aviso{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:10px 14px;border-radius:10px;font-size:13px;margin-bottom:16px}
 
-/* ===== Login ===== */
-.login-overlay { position:fixed; inset:0; z-index:1000; background:linear-gradient(135deg,#0f2027,#203a43,#2c5364); display:none; align-items:center; justify-content:center; padding:20px; }
-.login-overlay.active { display:flex; }
-.login-box { background:rgba(10,22,40,.96); padding:40px; border-radius:20px; width:380px; max-width:92vw; text-align:center; border:1px solid var(--border); box-shadow:0 20px 60px rgba(0,0,0,.5); }
-.login-box h2 { color:var(--accent); font-family:Georgia,serif; font-style:italic; margin:12px 0 6px; font-size:24px; }
-.login-box p { color:var(--muted); font-size:14px; margin-bottom:24px; }
-.login-box input { margin-bottom:10px; }
-.login-box input, .cadastro-box input { background:rgba(10,22,40,.7); border:1px solid var(--border); border-radius:10px; padding:13px 14px; color:var(--text); font-size:14px; width:100%; }
-.login-box input:focus { outline:none; border-color:var(--accent); }
-.cadastro-box { width:440px; max-height:92vh; overflow-y:auto; text-align:left; }
-.cadastro-box h2, .cadastro-box p { text-align:center; }
-#loginError, #cadastroError { display:none; color:#f87171; font-size:13px; margin-top:12px; }
+  /* ===== APP ===== */
+  #app{display:none}
+  .topbar{background:linear-gradient(135deg,var(--verde),var(--verde-escuro));color:#fff;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+  .topbar .logo{font-weight:700;font-size:18px}
+  .topbar .usuario-area{display:flex;align-items:center;gap:14px}
+  .badge-admin{background:var(--dourado);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;display:none}
+  .btn-sair{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);padding:7px 14px;border-radius:8px;font-size:13px;cursor:pointer}
+  .btn-sair:hover{background:rgba(255,255,255,.25)}
 
-/* ===== Navbar ===== */
-.navbar { display:flex; align-items:center; justify-content:space-between; padding:14px 28px; background:rgba(10,22,40,.9); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:100; backdrop-filter:blur(10px); }
-.navbar-logo { text-decoration:none; display:inline-flex; }
-.navbar-buttons { display:flex; align-items:center; gap:8px; }
-.user-profile { display:flex; align-items:center; gap:10px; margin-left:12px; padding-left:16px; border-left:1px solid var(--border); }
-.avatar { width:38px; height:38px; border-radius:50%; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px; }
-.user-name { color:var(--text); font-weight:600; font-size:14px; }
+  nav.nav-tabs{background:#fff;border-bottom:1px solid var(--borda);padding:0 24px;display:flex;gap:4px;position:sticky;top:64px;z-index:40}
+  nav.nav-tabs button{background:none;border:none;padding:16px 18px;font-size:14px;font-weight:600;color:var(--texto-suave);cursor:pointer;border-bottom:3px solid transparent}
+  nav.nav-tabs button.ativo{color:var(--verde);border-bottom-color:var(--verde)}
 
-/* ===== Layout principal ===== */
-.main { padding:32px; max-width:1200px; margin:0 auto; }
-.section { display:none; animation:fadeIn .3s; }
-.section.active { display:block; }
-.header { margin-bottom:24px; }
-.header h1 { font-size:34px; font-weight:700; }
-.header h1 em { font-family:Georgia,serif; color:var(--accent); font-style:italic; }
+  .conteudo{max-width:1200px;margin:0 auto;padding:24px}
 
-/* ===== Cards (Dashboard) ===== */
-.cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; margin-bottom:28px; }
-.card { background:linear-gradient(145deg,var(--bg2),var(--bg)); border:1px solid var(--border); border-radius:16px; padding:22px; }
-.card-icon { font-size:26px; margin-bottom:10px; }
-.card h3 { font-size:14px; color:var(--muted); font-weight:600; margin-bottom:8px; }
-.card .value { font-size:32px; font-weight:700; color:var(--text); }
-.card-progress { height:6px; background:rgba(255,255,255,.06); border-radius:50px; margin-top:12px; overflow:hidden; }
-.card-progress-bar { height:100%; background:var(--accent); border-radius:50px; transition:width .4s; }
+  /* Stats */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:24px}
+  .stat{background:#fff;border-radius:12px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,.06);border:1px solid var(--borda)}
+  .stat .valor{font-size:28px;font-weight:700;color:var(--verde)}
+  .stat .rotulo{font-size:12px;color:var(--texto-suave);margin-top:4px}
 
-/* ===== Tabelas ===== */
-.table-container { background:rgba(13,31,60,.6); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
-.table-header { padding:18px 22px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
-.table-header h3 { font-size:16px; color:var(--text); }
-table { width:100%; border-collapse:collapse; }
-thead th { text-align:left; padding:14px 22px; font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--dim); border-bottom:1px solid var(--border); font-weight:600; }
-tbody td { padding:14px 22px; font-size:14px; border-bottom:1px solid rgba(26,58,92,.4); color:var(--text); }
-tbody tr:hover { background:rgba(255,255,255,.02); }
-tbody tr:last-child td { border-bottom:none; }
+  /* Barra de ações / filtros */
+  .barra-acoes{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;align-items:center}
+  .barra-acoes input[type=text]{flex:1;min-width:220px;padding:11px 14px;border:1.5px solid var(--borda);border-radius:10px;font-size:14px}
+  .barra-acoes select{padding:11px 12px;border:1.5px solid var(--borda);border-radius:10px;font-size:14px;background:#fff}
 
-/* ===== Formulário ===== */
-.lead-form { background:rgba(13,31,60,.6); border:1px solid var(--border); border-radius:16px; padding:28px; }
-.form-main-title { font-size:20px; color:var(--text); margin-bottom:20px; }
-.form-section-title { font-size:12px; text-transform:uppercase; letter-spacing:1px; color:var(--accent); font-weight:700; margin:24px 0 14px; padding-bottom:8px; border-bottom:1px solid var(--border); }
-.form-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; }
-.form-group { display:flex; flex-direction:column; gap:6px; }
-.form-group label { font-size:12px; color:var(--muted); font-weight:600; }
-input, select, textarea { background:rgba(10,22,40,.7); border:1px solid var(--border); border-radius:10px; padding:12px 14px; color:var(--text); font-size:14px; font-family:'Inter',sans-serif; width:100%; transition:border .2s; }
-input:focus, select:focus, textarea:focus { outline:none; border-color:var(--accent); }
-textarea { resize:vertical; min-height:100px; }
-.form-footer { margin-top:24px; display:flex; justify-content:flex-end; }
+  /* Tabela */
+  .tabela-wrap{background:#fff;border-radius:12px;border:1px solid var(--borda);overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+  table{width:100%;border-collapse:collapse}
+  thead{background:#f8fafc}
+  th{text-align:left;padding:14px 16px;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--texto-suave);border-bottom:1px solid var(--borda)}
+  td{padding:14px 16px;font-size:14px;border-bottom:1px solid var(--cinza)}
+  tr.linha-lead{cursor:pointer;transition:.15s}
+  tr.linha-lead:hover{background:var(--verde-claro)}
+  .pill{display:inline-block;padding:4px 11px;border-radius:20px;font-size:12px;font-weight:600}
+  .pill-etapa{background:#eef2ff;color:#4338ca}
+  .pill-quente{background:#fee2e2;color:#b91c1c}
+  .pill-morno{background:#fef3c7;color:#b45309}
+  .pill-frio{background:#e0f2fe;color:#0369a1}
+  .vazio{text-align:center;padding:50px 20px;color:var(--texto-suave)}
 
-/* ===== Consulta ===== */
-.consulta-box { margin-bottom:20px; }
-.search-big { position:relative; }
-.search-big svg { position:absolute; left:16px; top:50%; transform:translateY(-50%); width:20px; height:20px; color:var(--dim); }
-.search-big input { padding-left:48px; padding-top:16px; padding-bottom:16px; font-size:16px; }
-.search-hint { margin-top:10px; font-size:12px; color:var(--dim); }
-.search-hint strong { color:var(--muted); }
-.search-results-count { font-size:12px; color:var(--dim); }
+  /* Kanban */
+  .kanban{display:flex;gap:16px;overflow-x:auto;align-items:flex-start;padding-bottom:20px}
+  .kanban-col{background:#f8fafc;border:1px solid var(--borda);border-radius:12px;min-width:280px;flex:1}
+  .kanban-col-header{display:flex;align-items:center;justify-content:space-between;padding:14px;font-weight:700;font-size:14px;border-bottom:1px solid var(--borda);background:#fff;border-radius:12px 12px 0 0}
+  .kanban-cards{min-height:60px;padding:10px}
+  .kanban-card{background:#fff;border:1px solid var(--borda);border-radius:10px;padding:12px;margin-bottom:10px;cursor:grab;box-shadow:0 1px 3px rgba(0,0,0,.06);font-size:14px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .kanban-card:hover{border-color:var(--verde)}
+  .kanban-card .excluir-card{color:var(--texto-suave);cursor:pointer;font-size:14px;border:none;background:none}
+  .kanban-add-card{width:100%;padding:10px;border:none;background:none;color:var(--texto-suave);cursor:pointer;font-size:13px}
+  .kanban-add-card:hover{color:var(--verde)}
 
-/* ===== Suporte ===== */
-.support-box { text-align:center; padding:60px 20px; }
-.support-icon { width:72px; height:72px; background:rgba(240,123,38,.1); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; color:var(--accent); font-size:32px; }
-.support-box h3 { color:var(--accent); font-size:24px; margin-bottom:16px; font-family:Georgia,serif; font-style:italic; }
-.support-box p { color:var(--muted); line-height:1.8; font-size:15px; }
-.support-box strong { color:var(--text); }
+  /* Modais */
+  .modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:100;align-items:center;justify-content:center;padding:20px}
+  .modal.aberto{display:flex}
+  .modal-box{background:#fff;border-radius:16px;width:100%;max-width:640px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+  .modal-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--borda)}
+  .modal-header h2{font-size:18px}
+  .modal-fechar{background:none;border:none;font-size:24px;cursor:pointer;color:var(--texto-suave);line-height:1}
+  .modal-body{padding:24px}
+  .modal-footer{padding:16px 24px;border-top:1px solid var(--borda);display:flex;justify-content:flex-end;gap:10px}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+  .detail-item{background:var(--cinza);border-radius:10px;padding:12px}
+  .detail-item .rotulo{font-size:11px;text-transform:uppercase;color:var(--texto-suave);letter-spacing:.04em}
+  .detail-item .valor{font-size:14px;font-weight:600;margin-top:4px}
+  .form-section-title{font-size:13px;font-weight:700;color:var(--verde);text-transform:uppercase;letter-spacing:.04em;margin:20px 0 12px}
 
-/* ===== Badges ===== */
-.badge { display:inline-block; padding:4px 12px; border-radius:50px; font-size:12px; font-weight:600; }
-.etapa-novo_lead{background:rgba(96,165,250,.15);color:#60a5fa;border:1px solid rgba(96,165,250,.3);}
-.etapa-em_conversa{background:rgba(251,191,36,.15);color:#fbbf24;border:1px solid rgba(251,191,36,.3);}
-.etapa-proposta_enviada{background:rgba(240,123,38,.2);color:#f07b26;border:1px solid rgba(240,123,38,.4);}
-.etapa-convertido{background:rgba(52,211,153,.15);color:#34d399;border:1px solid rgba(52,211,153,.3);}
-.etapa-sem_avanco{background:rgba(100,116,139,.2);color:#94a3b8;border:1px solid rgba(100,116,139,.4);}
-.temp-quente{background:rgba(248,113,113,.15);color:#f87171;border:1px solid rgba(248,113,113,.3);}
-.temp-morno{background:rgba(251,191,36,.15);color:#fbbf24;border:1px solid rgba(251,191,36,.3);}
-.temp-frio{background:rgba(96,165,250,.15);color:#60a5fa;border:1px solid rgba(96,165,250,.3);}
-.temp-sem_perfil{background:rgba(100,116,139,.2);color:#94a3b8;border:1px solid rgba(100,116,139,.4);}
+  /* Toast */
+  #toast{position:fixed;bottom:24px;right:24px;background:#0f172a;color:#fff;padding:14px 20px;border-radius:10px;font-size:14px;z-index:200;opacity:0;transform:translateY(10px);transition:.3s;pointer-events:none}
+  #toast.mostrar{opacity:1;transform:translateY(0)}
+  #toast.erro{background:var(--vermelho)}
+  #toast.ok{background:var(--verde)}
 
-/* ===== Modal ===== */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,22,40,.85);z-index:500;justify-content:center;align-items:center;backdrop-filter:blur(8px);}
-.modal-overlay.active{display:flex;}
-.modal{background:linear-gradient(145deg,#0d1f3c,#0a1628);padding:36px;border-radius:24px;width:90%;max-width:700px;border:1px solid rgba(240,123,38,.2);box-shadow:0 25px 60px rgba(0,0,0,.5);animation:fadeInUp .3s;max-height:90vh;overflow-y:auto;}
-.modal h2{font-family:Georgia,serif;margin-bottom:24px;color:#f07b26;font-size:24px;font-style:italic;}
-.modal-actions{display:flex;gap:12px;justify-content:flex-end;margin-top:24px;}
-.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
-.detail-item{background:rgba(10,22,40,.5);padding:14px 18px;border-radius:10px;border:1px solid #1a3a5c;}
-.detail-item.full{grid-column:1/-1;}
-.detail-label{font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-weight:600;}
-.detail-value{color:#e2e8f0;font-size:14px;line-height:1.5;word-wrap:break-word;}
-.detail-value.empty{color:#475569;font-style:italic;}
-
-/* ===== Kanban ===== */
-.board-container{display:flex;gap:20px;align-items:flex-start;overflow-x:auto;padding-bottom:20px;min-height:400px;}
-.board-list{background:rgba(13,31,60,.7);border-radius:16px;min-width:290px;max-width:290px;max-height:70vh;display:flex;flex-direction:column;border:1px solid #1a3a5c;transition:all .2s;}
-.board-list.drag-over{border-color:#f07b26;box-shadow:0 0 0 3px rgba(240,123,38,.2);}
-.board-list-header{padding:16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a3a5c;}
-.board-list-title{font-size:15px;font-weight:700;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:8px;}
-.board-list-count{background:rgba(255,255,255,.1);color:#94a3b8;font-size:12px;padding:2px 10px;border-radius:50px;}
-.board-list-delete{background:none;border:none;cursor:pointer;font-size:16px;opacity:.4;color:#f87171;}
-.board-list-delete:hover{opacity:1;}
-.board-cards{padding:12px;display:flex;flex-direction:column;gap:10px;overflow-y:auto;flex:1;min-height:60px;}
-.board-card{background:linear-gradient(145deg,#0d1f3c,#0a1628);border:1px solid #1a3a5c;border-radius:12px;padding:14px;cursor:grab;transition:all .2s;position:relative;}
-.board-card:active{cursor:grabbing;}
-.board-card:hover{border-color:#f07b26;box-shadow:0 6px 16px rgba(0,0,0,.3);transform:translateY(-2px);}
-.board-card.dragging{opacity:.4;}
-.board-card-label{display:inline-block;width:44px;height:8px;border-radius:4px;margin-bottom:8px;}
-.board-card-title{font-size:14px;font-weight:600;color:#e2e8f0;margin-bottom:4px;padding-right:20px;}
-.board-card-desc{font-size:12px;color:#64748b;line-height:1.5;}
-.board-card-delete{position:absolute;top:10px;right:10px;background:rgba(239,68,68,.1);color:#f87171;border:none;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:11px;opacity:0;transition:opacity .2s;}
-.board-card:hover .board-card-delete{opacity:1;}
-.board-card-delete:hover{background:#ef4444;color:#fff;}
-.board-empty{text-align:center;color:#475569;font-size:12px;padding:20px 0;}
-.btn-add-card{margin:0 12px 12px;padding:10px;background:rgba(255,255,255,.03);border:1px dashed #1a3a5c;border-radius:10px;color:#94a3b8;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif;}
-.btn-add-card:hover{border-color:#f07b26;color:#f07b26;background:rgba(240,123,38,.05);}
-.btn-add-list{min-width:290px;max-width:290px;padding:16px;background:rgba(255,255,255,.02);border:1px dashed #1a3a5c;border-radius:16px;color:#94a3b8;cursor:pointer;font-size:14px;font-family:'Inter',sans-serif;height:fit-content;}
-.btn-add-list:hover{border-color:#f07b26;color:#f07b26;background:rgba(240,123,38,.05);}
-.label-colors{display:flex;gap:10px;flex-wrap:wrap;}
-.label-color{width:28px;height:28px;border-radius:50%;cursor:pointer;transition:all .2s;border:2px solid transparent;}
-.label-color:hover{transform:scale(1.15);}
-.label-color.selected{border:2px solid #fff;box-shadow:0 0 0 3px rgba(240,123,38,.4);}
-.label-none{background:#1a3a5c!important;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:13px;}
-
-/* ===== Toast ===== */
-.toast-container{position:fixed;top:90px;right:20px;z-index:2000;display:flex;flex-direction:column;gap:10px;}
-.toast{background:linear-gradient(145deg,#0d1f3c,#0a1628);border:1px solid rgba(240,123,38,.3);border-radius:12px;padding:14px 20px;display:flex;align-items:center;gap:12px;min-width:280px;box-shadow:0 10px 30px rgba(0,0,0,.4);animation:slideInRight .4s;color:#e2e8f0;font-size:14px;}
-.toast.toast-success{border-color:rgba(52,211,153,.5);}
-.toast.toast-error{border-color:rgba(248,113,113,.5);}
-.toast.toast-info{border-color:rgba(96,165,250,.5);}
-.toast-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;}
-.toast-success .toast-icon{background:rgba(52,211,153,.2);color:#34d399;}
-.toast-error .toast-icon{background:rgba(248,113,113,.2);color:#f87171;}
-.toast-info .toast-icon{background:rgba(96,165,250,.2);color:#60a5fa;}
-.toast.hiding{animation:slideOutRight .3s forwards;}
-
-/* ===== Estado vazio ===== */
-.empty-state{text-align:center;padding:40px 20px;}
-.empty-state-icon{font-size:40px;margin-bottom:12px;}
-.empty-state p{color:#94a3b8;font-weight:600;}
-.empty-state small{color:#64748b;font-size:12px;}
-
-/* ===== Animações ===== */
-.loading{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#f07b26;border-radius:50%;animation:spin .8s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
-@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
-@keyframes fadeInUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
-@keyframes slideInRight{from{opacity:0;transform:translateX(100px);}to{opacity:1;transform:translateX(0);}}
-@keyframes slideOutRight{to{opacity:0;transform:translateX(100px);}}
-
-@media(max-width:768px){.navbar{flex-wrap:wrap;height:auto;padding:16px;gap:12px;}.navbar-buttons{flex-wrap:wrap;}.user-profile{margin-left:0;padding-left:0;border-left:none;}.main{padding:20px;}.header h1{font-size:28px;}.form-grid{grid-template-columns:1fr;}.detail-grid{grid-template-columns:1fr;}.cadastro-box{width:92vw;}}
+  @media(max-width:640px){
+    .grid-2,.detail-grid{grid-template-columns:1fr}
+    nav.nav-tabs{padding:0 10px}
+    .conteudo{padding:14px}
+  }
 </style>
 </head>
 <body>
 
-<div class="toast-container" id="toastContainer"></div>
-
-<!-- ===== TELA DE LOGIN (CPF) ===== -->
-<div class="login-overlay active" id="loginOverlay">
-  <div class="login-box">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 52" fill="none" style="height:44px;margin-bottom:20px;">
-      <g transform="translate(2,2)">
-        <circle cx="22" cy="22" r="20" stroke="#f07b26" stroke-width="2.5" fill="none"/>
-        <circle cx="22" cy="22" r="14" stroke="#f07b26" stroke-width="2" fill="none"/>
-        <circle cx="22" cy="22" r="8" stroke="#f07b26" stroke-width="1.5" fill="none"/>
-        <path d="M 42 22 L 30 22" stroke="#10263e" stroke-width="4" stroke-linecap="round"/>
-        <path d="M 22 22 L 32 22" stroke="#f07b26" stroke-width="2.5" stroke-linecap="round"/>
-      </g>
-      <text x="54" y="14" font-family="Inter,Arial,sans-serif" font-size="7.5" font-weight="600" fill="#c0c8d0" letter-spacing="2.5">GRUPO</text>
-      <text x="54" y="32" font-family="Georgia,serif" font-size="22" font-weight="700" fill="#f07b26" font-style="italic">Gênesis</text>
-      <text x="54" y="46" font-family="Inter,Arial,sans-serif" font-size="7.5" font-weight="600" fill="#c0c8d0" letter-spacing="3">BRASIL</text>
-    </svg>
-    <h2>Área do Consultor</h2>
-    <p>Informe seu CPF para acessar</p>
-
-    <input type="text" id="cpfLogin" placeholder="CPF" maxlength="14" oninput="this.value=mascaraCpf(this.value)" onkeydown="if(event.key==='Enter')fazerLogin()">
-    <button class="btn btn-primary btn-lg" id="btnLogin" onclick="fazerLogin()" style="width:100%;justify-content:center;">Entrar</button>
-    <div id="loginError"></div>
-    <p style="margin-top:16px;font-size:12px;color:#64748b;">Primeiro acesso? Informe apenas o CPF.</p>
+<!-- ===================== LOGIN ===================== -->
+<div id="telaLogin" class="tela-central">
+  <div class="cartao-login">
+    <div class="topo">
+      <h1>🌱 CRM Gênesis Brasil</h1>
+      <p>Acesse com seu CPF</p>
+    </div>
+    <div class="corpo">
+      <div class="campo">
+        <label>CPF</label>
+        <input type="text" id="loginCpf" placeholder="000.000.000-00" inputmode="numeric" maxlength="14">
+      </div>
+      <button class="btn btn-primario" onclick="loginCpf()">Entrar</button>
+    </div>
   </div>
 </div>
 
-<!-- ===== TELA DE CADASTRO ===== -->
-<div class="login-overlay" id="cadastroOverlay">
-  <div class="login-box cadastro-box">
-    <h2>Complete seu Cadastro</h2>
-    <p>Preencha todos os campos obrigatórios (*) para acessar o CRM</p>
-
-    <input type="text" id="cadNome" placeholder="Nome Completo *">
-    <input type="text" id="cadCpf" placeholder="CPF" readonly>
-    <input type="email" id="cadEmailGrupo" placeholder="E-mail Grupo Gênesis Brasil *">
-    <input type="email" id="cadEmailGmail" placeholder="E-mail do Gmail *">
-    <input type="text" id="cadCidade" placeholder="Cidade / Estado *">
-    <input type="text" id="cadEndereco" placeholder="Endereço *">
-    <input type="password" id="cadSenha" placeholder="Nova Senha (mín. 4 caracteres) *">
-    <input type="password" id="cadConfirmarSenha" placeholder="Confirmar Senha *">
-
-    <button class="btn btn-primary btn-lg" id="btnFinalizarCadastro" onclick="finalizarCadastro()" style="width:100%;justify-content:center;margin-top:10px;">Finalizar Cadastro</button>
-    <div id="cadastroError"></div>
-  </div>
-</div>
-
-<nav class="navbar">
-  <a href="#" class="navbar-logo" onclick="showSection('home');return false;">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 52" fill="none">
-      <g transform="translate(2,2)">
-        <circle cx="22" cy="22" r="20" stroke="#f07b26" stroke-width="2.5" fill="none"/>
-        <circle cx="22" cy="22" r="14" stroke="#f07b26" stroke-width="2" fill="none"/>
-        <circle cx="22" cy="22" r="8" stroke="#f07b26" stroke-width="1.5" fill="none"/>
-        <path d="M 42 22 L 30 22" stroke="#0d1b2a" stroke-width="4" stroke-linecap="round"/>
-        <path d="M 22 22 L 32 22" stroke="#f07b26" stroke-width="2.5" stroke-linecap="round"/>
-      </g>
-      <text x="54" y="14" font-family="Inter,Arial,sans-serif" font-size="7.5" font-weight="600" fill="#c0c8d0" letter-spacing="2.5">GRUPO</text>
-      <text x="54" y="32" font-family="Georgia,serif" font-size="22" font-weight="700" fill="#f07b26" font-style="italic">Gênesis</text>
-      <text x="54" y="46" font-family="Inter,Arial,sans-serif" font-size="7.5" font-weight="600" fill="#c0c8d0" letter-spacing="3">BRASIL</text>
-    </svg>
-  </a>
-  <div class="navbar-buttons">
-    <button class="btn btn-outline active-nav" onclick="showSection('home')"> Home</button>
-    <button class="btn btn-outline" onclick="showSection('novolead')">📝 Novo Lead</button>
-    <button class="btn btn-outline" onclick="showSection('consulta')">🔍 Consulta</button>
-    <button class="btn btn-outline" onclick="showSection('quadro')">📋 Quadro</button>
-    <button class="btn btn-primary" onclick="showSection('suporte')">🎧 Suporte</button>
-    <div class="user-profile" id="userProfile" style="display:none;">
-      <div class="avatar" id="avatarLetra">D</div>
-      <div>
-        <div class="user-name" id="userName">—</div>
-        <div style="font-size:11px;color:#94a3b8;" id="userPapel">—</div>
-      </div>
-      <button class="btn btn-logout" onclick="logout()">Sair</button>
+<!-- ===================== CADASTRO ===================== -->
+<div id="telaCadastro" class="tela-central" style="display:none">
+  <div class="cartao-login">
+    <div class="topo">
+      <h1>Complete seu cadastro</h1>
+      <p>Primeiro acesso — precisamos de alguns dados</p>
     </div>
-  </div>
-</nav>
-
-<div class="main">
-  <div id="home" class="section active">
-    <div class="header"><h1>Olá, <em id="homeUserName">Consultor</em> 👋</h1></div>
-    <div class="cards">
-      <div class="card"><div class="card-icon">📊</div><h3>Total de Leads</h3><div class="value" id="totalLeads">0</div><div class="card-progress"><div class="card-progress-bar" id="progressLeads" style="width:0%"></div></div></div>
-      <div class="card"><div class="card-icon">🎉</div><h3>Leads Convertidos</h3><div class="value" id="totalConvertidos">0</div><div class="card-progress"><div class="card-progress-bar" id="progressConvertidos" style="width:0%"></div></div></div>
-      <div class="card"><div class="card-icon">🔥</div><h3>Leads Quentes</h3><div class="value" id="totalQuentes">0</div><div class="card-progress"><div class="card-progress-bar" id="progressQuentes" style="width:0%"></div></div></div>
-      <div class="card"><div class="card-icon">📅</div><h3>Retornos Hoje</h3><div class="value" id="totalRetornos">0</div><div class="card-progress"><div class="card-progress-bar" id="progressRetornos" style="width:0%"></div></div></div>
-    </div>
-    <div class="table-container">
-      <div class="table-header"><h3>📝 Últimos Leads Registrados</h3></div>
-      <table><thead><tr><th>Nome</th><th>Instituição</th><th>Etapa</th><th>Temperatura</th></tr></thead><tbody id="homeLeads"></tbody></table>
-    </div>
-  </div>
-
-  <div id="novolead" class="section">
-    <div class="header"><h1>Área dos <em>Vendedores</em></h1></div>
-    <div class="lead-form">
-      <h2 class="form-main-title">📝 Registrar Cliente</h2>
-      <div class="form-section-title">📇 Inscrição de Contato</div>
-      <div class="form-grid">
-        <div class="form-group"><label>Nome *</label><input type="text" id="leadNome" placeholder="Nome do contato"></div>
-        <div class="form-group"><label>CPF / CNPJ</label><input type="text" id="leadCpfCnpj" placeholder="Opcional"></div>
-        <div class="form-group"><label>Instituição / Empresa</label>
-          <select id="leadInstituicao">
-            <option value="">Selecione...</option>
-            <option value="faculdade">Faculdade</option>
-            <option value="instituicao_ensino">Instituição de Ensino</option>
-            <option value="empresa">Empresa</option>
-            <option value="prefeitura">Prefeitura</option>
-            <option value="orgao_publico">Órgão Público</option>
-            <option value="outro">Outro</option>
-          </select>
-        </div>
-        <div class="form-group"><label>Cidade / UF</label><input type="text" id="leadCidade" placeholder="Ex: Curitiba/PR"></div>
+    <div class="corpo">
+      <div class="campo">
+        <label>Nome completo *</label>
+        <input type="text" id="cadNome">
       </div>
-      <div class="form-section-title">👤 Pessoa com quem falou</div>
-      <div class="form-grid">
-        <div class="form-group"><label>Nome</label><input type="text" id="leadPessoa" placeholder="Nome da pessoa"></div>
-        <div class="form-group"><label>Cargo</label>
-          <select id="leadCargo">
-            <option value="">Selecione...</option>
-            <option value="diretora">Diretora</option>
-            <option value="rh">RH</option>
-            <option value="professor">Professor</option>
-            <option value="mestre">Mestre</option>
-            <option value="coordenador">Coordenador</option>
-            <option value="proprietario">Proprietário</option>
-            <option value="outro">Outro</option>
-          </select>
-        </div>
-        <div class="form-group"><label>Responsável (Consultor)</label><select id="leadResponsavel"></select></div>
+      <div class="campo">
+        <label>E-mail Grupo Gênesis Brasil *</label>
+        <input type="email" id="cadEmailGrupo">
       </div>
-      <div class="form-section-title">📊 Resultado do Contato</div>
-      <div class="form-grid">
-        <div class="form-group"><label>Etapa do Lead</label>
-          <select id="leadEtapa">
-            <option value="novo_lead">Novo Lead</option>
-            <option value="em_conversa">Em Conversa</option>
-            <option value="proposta_enviada">Proposta Enviada</option>
-            <option value="convertido">Convertido</option>
-            <option value="sem_avanco">Sem Avanço</option>
-          </select>
+      <div class="campo">
+        <label>E-mail do Gmail *</label>
+        <input type="email" id="cadEmailGmail">
+      </div>
+      <div class="campo">
+        <label>Cidade / Estado *</label>
+        <input type="text" id="cadCidadeEstado" placeholder="Ex: Curitiba / PR">
+      </div>
+      <div class="campo">
+        <label>Endereço *</label>
+        <input type="text" id="cadEndereco">
+      </div>
+      <div class="grid-2">
+        <div class="campo">
+          <label>Senha *</label>
+          <input type="password" id="cadSenha" placeholder="Mínimo 4 caracteres">
         </div>
-        <div class="form-group"><label>Temperatura</label>
-          <select id="leadTemperatura">
-            <option value="quente">Quente</option>
-            <option value="morno">Morno</option>
-            <option value="frio">Frio</option>
-            <option value="sem_perfil">Sem Perfil</option>
-          </select>
-        </div>
-        <div class="form-group"><label>Canal</label>
-          <select id="leadCanal">
-            <option value="ligacao">Ligação</option>
-            <option value="whatsapp">WhatsApp</option>
-            <option value="email">Email</option>
-            <option value="reuniao_presencial">Reunião Presencial</option>
-            <option value="reuniao_online">Reunião Online</option>
-            <option value="evento">Evento</option>
-            <option value="outro">Outro</option>
-          </select>
+        <div class="campo">
+          <label>Confirmar senha *</label>
+          <input type="password" id="cadConfirmarSenha">
         </div>
       </div>
-      <div class="form-section-title">🔁 Continuidade</div>
-      <div class="form-grid">
-        <div class="form-group"><label>Próximo passo combinado</label><input type="text" id="leadProximoPasso" placeholder="O que ficou combinado?"></div>
-        <div class="form-group"><label>Data de retorno</label><input type="date" id="leadDataRetorno"></div>
+      <button class="btn btn-primario" onclick="concluirRegistro()">Concluir cadastro</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== APP ===================== -->
+<div id="app">
+  <div class="topbar">
+    <div class="logo">🌱 CRM Gênesis Brasil</div>
+    <div class="usuario-area">
+      <span class="badge-admin" id="badgeAdmin">ADMIN</span>
+      <span id="nomeUsuario" style="font-weight:600"></span>
+      <button class="btn-sair" onclick="sair()">Sair</button>
+    </div>
+  </div>
+
+  <nav class="nav-tabs">
+    <button id="tabLeads" class="ativo" onclick="trocarTela('leads')">📋 Leads</button>
+    <button id="tabKanban" onclick="trocarTela('kanban')">🗂️ Kanban</button>
+    <button id="tabUsuarios" onclick="trocarTela('usuarios')" style="display:none">👥 Usuários</button>
+  </nav>
+
+  <div class="conteudo">
+
+    <!-- ===== SEÇÃO LEADS ===== -->
+    <section id="secaoLeads">
+      <div class="stats">
+        <div class="stat"><div class="valor" id="statTotal">0</div><div class="rotulo">Total de leads</div></div>
+        <div class="stat"><div class="valor" id="statNovos">0</div><div class="rotulo">Novos</div></div>
+        <div class="stat"><div class="valor" id="statQuentes">0</div><div class="rotulo">Quentes 🔥</div></div>
+        <div class="stat"><div class="valor" id="statFechados">0</div><div class="rotulo">Fechados</div></div>
       </div>
-      <div class="form-section-title">📝 Resumo da Conversa</div>
-      <div class="form-group"><textarea id="leadResumo" placeholder="Descreva aqui o resumo da conversa..."></textarea></div>
-      <div class="form-footer"><button class="btn btn-primary btn-lg" id="btnSalvarLead" onclick="concluirRegistro()">✅ Concluir Registro</button></div>
-    </div>
-  </div>
 
-  <div id="consulta" class="section">
-    <div class="header"><h1>Consulta de <em>Leads</em></h1></div>
-    <div class="consulta-box">
-      <div class="search-big">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-        <input type="text" id="consultaInput" placeholder="Digite o nome, CPF, CNPJ ou nome da empresa..." oninput="buscarLeads()">
+      <div class="barra-acoes">
+        <input type="text" id="buscaLeads" placeholder="🔍 Buscar por nome, CPF, instituição, responsável..." oninput="aplicarFiltros()">
+        <select id="filtroEtapa" onchange="aplicarFiltros()">
+          <option value="todos">Todas as etapas</option>
+        </select>
+        <select id="filtroTemperatura" onchange="aplicarFiltros()">
+          <option value="todos">Todas as temperaturas</option>
+        </select>
+        <button class="btn btn-dourado" onclick="abrirNovoLead()">+ Novo Lead</button>
       </div>
-      <div class="search-hint">💡 <span>Dica: você pode buscar por <strong>nome</strong>, <strong>CPF/CNPJ</strong>, <strong>cidade</strong>, <strong>instituição</strong>, <strong>pessoa</strong> ou <strong>responsável</strong>.</span></div>
-    </div>
-    <div class="table-container">
-      <div class="table-header"><h3>📋 Resultados</h3><div class="search-results-count" id="resultadosCount"></div></div>
-      <table><thead><tr><th>Nome</th><th>CPF/CNPJ</th><th>Cidade/UF</th><th>Etapa</th><th>Temperatura</th><th>Ações</th></tr></thead><tbody id="tableConsulta"></tbody></table>
-    </div>
-  </div>
 
-  <div id="quadro" class="section">
-    <div class="header"><h1>Quadro <em>Kanban</em> 📋</h1></div>
-    <div class="board-container" id="boardContainer"></div>
-  </div>
-
-  <div id="suporte" class="section">
-    <div class="header"><h1>Suporte</h1></div>
-    <div class="support-box">
-      <div class="support-icon">🎧</div>
-      <h3>Como podemos ajudar?</h3>
-      <p>Entre em contato com nossa equipe de suporte.<br><br>
-      📧 Email: <strong>suporte@genesibrasil.com.br</strong><br>
-      📱 WhatsApp: <strong>(41) 99999-9999</strong><br>
-      🕐 Horário: <strong>Seg a Sex, 9h às 18h</strong></p>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="modalDetalhes">
-  <div class="modal">
-    <h2>📋 Detalhes do Lead</h2>
-    <div id="detalhesConteudo"></div>
-    <div class="modal-actions">
-      <button class="btn btn-danger" id="btnExcluirDetalhes">🗑 Excluir Lead</button>
-      <button class="btn btn-secondary" onclick="closeModal('detalhes')">Fechar</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="modalCartao">
-  <div class="modal" style="max-width:500px;">
-    <h2>Novo Cartão</h2>
-    <div class="form-group"><label>Título</label><input type="text" id="cardTitulo"></div>
-    <div class="form-group"><label>Descrição</label><textarea id="cardDescricao" placeholder="Detalhes do cartão..." style="min-height:80px;"></textarea></div>
-    <div class="form-group"><label>Etiqueta</label>
-      <div class="label-colors">
-        <span class="label-color" style="background:#f87171" onclick="selectLabel('#f87171',this)"></span>
-        <span class="label-color" style="background:#fbbf24" onclick="selectLabel('#fbbf24',this)"></span>
-        <span class="label-color" style="background:#34d399" onclick="selectLabel('#34d399',this)"></span>
-        <span class="label-color" style="background:#60a5fa" onclick="selectLabel('#60a5fa',this)"></span>
-        <span class="label-color" style="background:#a78bfa" onclick="selectLabel('#a78bfa',this)"></span>
-        <span class="label-color" style="background:#f07b26" onclick="selectLabel('#f07b26',this)"></span>
-        <span class="label-color label-none" onclick="selectLabel('',this)">✕</span>
+      <div class="tabela-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Lead</th>
+              <th>Instituição</th>
+              <th>Responsável</th>
+              <th>Criado por</th>
+              <th>Etapa</th>
+              <th>Temp.</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="tabelaLeads"></tbody>
+        </table>
       </div>
+    </section>
+
+    <!-- ===== SEÇÃO KANBAN ===== -->
+    <section id="secaoKanban" style="display:none">
+      <div class="barra-acoes">
+        <button class="btn btn-primario" onclick="adicionarLista()" style="width:auto">+ Nova Lista</button>
+      </div>
+      <div class="kanban" id="kanbanContainer"></div>
+    </section>
+
+    <!-- ===== SEÇÃO USUÁRIOS ===== -->
+    <section id="secaoUsuarios" style="display:none">
+      <div class="tabela-wrap">
+        <table>
+          <thead>
+            <tr><th>Nome</th><th>CPF</th><th>Perfil</th></tr>
+          </thead>
+          <tbody id="tabelaUsuarios"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- ===================== MODAL NOVO LEAD ===================== -->
+<div class="modal" id="modalLead">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2>➕ Novo Lead</h2>
+      <button class="modal-fechar" onclick="fecharModal('modalLead')">×</button>
     </div>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal('cartao')">Cancelar</button>
-      <button class="btn btn-primary" onclick="salvarCartao()">Salvar</button>
+    <div class="modal-body">
+      <form id="formLead" onsubmit="event.preventDefault(); concluirLead()">
+        <div class="form-section-title">🏢 Dados da Instituição</div>
+        <div class="campo">
+          <label>Nome do Lead / Cliente *</label>
+          <input type="text" id="leadNome">
+        </div>
+        <div class="grid-2">
+          <div class="campo">
+            <label>CPF / CNPJ</label>
+            <input type="text" id="leadCpfCnpj">
+          </div>
+          <div class="campo">
+            <label>Instituição / Empresa</label>
+            <input type="text" id="leadInstituicao">
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="campo">
+            <label>Cidade</label>
+            <input type="text" id="leadCidade">
+          </div>
+          <div class="campo">
+            <label>Pessoa de contato</label>
+            <input type="text" id="leadPessoa">
+          </div>
+        </div>
+        <div class="campo">
+          <label>Cargo da pessoa de contato</label>
+          <input type="text" id="leadCargo">
+        </div>
+
+        <div class="form-section-title">🎯 Classificação</div>
+        <div class="grid-2">
+          <div class="campo">
+            <label>Etapa</label>
+            <select id="leadEtapa"></select>
+          </div>
+          <div class="campo">
+            <label>Temperatura</label>
+            <select id="leadTemperatura"></select>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="campo">
+            <label>Canal</label>
+            <select id="leadCanal"></select>
+          </div>
+          <div class="campo">
+            <label>Responsável</label>
+            <select id="leadResponsavel"></select>
+          </div>
+        </div>
+
+        <div class="form-section-title">📝 Acompanhamento</div>
+        <div class="campo">
+          <label>Próximo passo</label>
+          <input type="text" id="leadProximoPasso">
+        </div>
+        <div class="campo">
+          <label>Data de retorno</label>
+          <input type="date" id="leadDataRetorno">
+        </div>
+        <div class="campo">
+          <label>Resumo</label>
+          <textarea id="leadResumo"></textarea>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-fantasma" onclick="fecharModal('modalLead')">Cancelar</button>
+      <button class="btn btn-primario" onclick="concluirLead()" style="width:auto">Salvar Lead</button>
     </div>
   </div>
 </div>
 
-<div class="modal-overlay" id="modalLista">
-  <div class="modal" style="max-width:500px;">
-    <h2>Nova Lista</h2>
-    <div class="form-group"><label>Nome da lista</label><input type="text" id="listTitulo" placeholder="Ex: Em negociação"></div>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal('lista')">Cancelar</button>
-      <button class="btn btn-primary" onclick="salvarLista()">Criar Lista</button>
+<!-- ===================== MODAL DETALHES ===================== -->
+<div class="modal" id="modalDetalhes">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2>Detalhes do Lead</h2>
+      <button class="modal-fechar" onclick="fecharModal('modalDetalhes')">×</button>
+    </div>
+    <div class="modal-body" id="detalheConteudo"></div>
+    <div class="modal-footer">
+      <button class="btn btn-perigo" id="btnExcluirLead" style="width:auto">🗑️ Excluir</button>
+      <button class="btn btn-fantasma" onclick="fecharModal('modalDetalhes')">Fechar</button>
     </div>
   </div>
 </div>
+
+<div id="toast"></div>
 
 <script>
-// ✅ URL do Apps Script (mantenha a que já funciona)
+/* ================= CONFIG ================= */
 const API_URL = 'https://script.google.com/macros/s/AKfycbwkpaPwPwNjS0vydd1E-dg9sdETPe1KyvWRRDXR4mnCf5u1XAGF4DwxxB7IWFe_CIp1/exec';
+
+const ETAPAS = { novo_lead:'Novo Lead', em_contato:'Em Contato', agendado:'Agendado', em_negociacao:'Em Negociação', fechado:'Fechado', perdido:'Perdido' };
+const TEMPERATURAS = { quente:'Quente 🔥', morno:'Morno 🌤️', frio:'Frio ❄️' };
+const CANAIS = { ligacao:'Ligação', whatsapp:'WhatsApp', email:'E-mail', indicacao:'Indicação', outro:'Outro' };
+
 let currentUser = null;
-let leads = [];
 let usuarios = [];
-let quadro = { listas: [] };
-let draggedCard = null, draggedFromList = null;
-let currentListId = null, selectedLabel = '';
+let leads = [];
+let kanbanDados = null;
+let telaAtual = 'leads';
 
-async function api(action, data) {
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify(Object.assign({ action: action }, data || {}))
-  });
-  return await res.json();
-}
-
-function showToast(message, type='success'){
-  const c = document.getElementById('toastContainer');
-  const t = document.createElement('div');
-  t.className = 'toast toast-' + type;
-  const icons = {success:'✓', error:'✕', info:'ℹ'};
-  t.innerHTML = '<div class="toast-icon">'+icons[type]+'</div><div>'+message+'</div>';
-  c.appendChild(t);
-  setTimeout(()=>{t.classList.add('hiding');setTimeout(()=>t.remove(),300);},3000);
-}
-
-function mascaraCpf(v){
-  v = v.replace(/\D/g,'');
-  if (v.length > 11) v = v.slice(0,11);
-  v = v.replace(/(\d{3})(\d)/,'$1.$2');
-  v = v.replace(/(\d{3})(\d)/,'$1.$2');
-  v = v.replace(/(\d{3})(\d{1,2})$/,'$1-$2');
-  return v;
-}
-
+/* ================= UTILITÁRIOS ================= */
 function somenteDigitos(v){ return String(v||'').replace(/\D/g,''); }
+function labelEtapa(e){ return ETAPAS[e] || e || '—'; }
+function labelTemperatura(t){ return TEMPERATURAS[t] || t || '—'; }
+function labelCanal(c){ return CANAIS[c] || c || '—'; }
+function labelInstituicao(i){ return i || '—'; }
+function nomeDe(cpf){ const alvo = somenteDigitos(cpf); const u = usuarios.find(x=>somenteDigitos(x.cpf)===alvo); return u ? u.nome : (cpf||'—'); }
 
-// ============ LOGIN POR CPF ============
-async function fazerLogin(){
-  const cpf = somenteDigitos(document.getElementById('cpfLogin').value);
-  const erro = document.getElementById('loginError');
-  const btn = document.getElementById('btnLogin');
-  if(!cpf){ erro.textContent='Digite seu CPF'; erro.style.display='block'; return; }
-  btn.disabled = true; btn.innerHTML = '<span class="loading"></span> Verificando...'; erro.style.display='none';
-  try {
-    const r = await api('loginCpf', {cpf});
-    btn.disabled = false; btn.innerHTML = 'Entrar';
-    if(r.success && r.precisaCadastro){
-      abrirCadastro(r.cpf);
-    } else if(r.success){
-      currentUser = r.user;
-      if(r.chaveAcesso){
-        localStorage.setItem('crm_chave', r.chaveAcesso);
-        localStorage.setItem('crm_cpf', r.user.cpf);
-      }
-      localStorage.setItem('crm_session', JSON.stringify(currentUser));
-      entrar();
-    } else {
-      erro.textContent = '❌ ' + (r.message || 'CPF não encontrado');
-      erro.style.display = 'block';
-    }
-  } catch(e) {
-    btn.disabled = false; btn.innerHTML = 'Entrar';
-    erro.textContent = '❌ Erro de conexão. Verifique a URL do Apps Script.';
-    erro.style.display = 'block';
+function toast(msg, tipo){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = tipo==='erro' ? 'erro mostrar' : 'ok mostrar';
+  clearTimeout(t._timeout);
+  t._timeout = setTimeout(()=>{ t.className = ''; }, 3000);
+}
+
+async function api(action, payload = {}){
+  try{
+    const res = await fetch(API_URL, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({action, ...payload})
+    });
+    return await res.json();
+  }catch(e){
+    return { success:false, message:'Falha de conexão: '+e.message };
   }
 }
 
-function abrirCadastro(cpf){
-  document.getElementById('loginOverlay').classList.remove('active');
-  document.getElementById('cadastroOverlay').classList.add('active');
-  document.getElementById('cadCpf').value = mascaraCpf(cpf);
-  document.getElementById('cadastroError').style.display = 'none';
+function montarSelects(){
+  const selEtapa = document.getElementById('leadEtapa');
+  const selTemp = document.getElementById('leadTemperatura');
+  const selCanal = document.getElementById('leadCanal');
+  const filEtapa = document.getElementById('filtroEtapa');
+  const filTemp = document.getElementById('filtroTemperatura');
+
+  selEtapa.innerHTML = Object.entries(ETAPAS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
+  selTemp.innerHTML = Object.entries(TEMPERATURAS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
+  selCanal.innerHTML = Object.entries(CANAIS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
+
+  filEtapa.innerHTML = '<option value="todos">Todas as etapas</option>' + Object.entries(ETAPAS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
+  filTemp.innerHTML = '<option value="todos">Todas as temperaturas</option>' + Object.entries(TEMPERATURAS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
 }
 
-async function finalizarCadastro(){
-  const erro = document.getElementById('cadastroError');
-  const btn = document.getElementById('btnFinalizarCadastro');
+/* ================= SESSÃO ================= */
+function salvarSessao(u, chave){
+  currentUser = u;
+  if(chave) localStorage.setItem('ggb_chave', chave);
+  localStorage.setItem('ggb_user', JSON.stringify(u));
+}
+
+function sair(){
+  localStorage.removeItem('ggb_chave');
+  localStorage.removeItem('ggb_user');
+  currentUser = null;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('telaCadastro').style.display = 'none';
+  document.getElementById('telaLogin').style.display = 'flex';
+}
+
+function entrarApp(){
+  document.getElementById('telaLogin').style.display = 'none';
+  document.getElementById('telaCadastro').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('nomeUsuario').textContent = currentUser.nome || currentUser.cpf;
+  document.getElementById('badgeAdmin').style.display = currentUser.admin ? 'inline-block' : 'none';
+  document.getElementById('tabUsuarios').style.display = currentUser.admin ? 'inline-block' : 'none';
+  carregarDados();
+}
+
+/* ================= LOGIN ================= */
+async function loginCpf(){
+  const cpf = somenteDigitos(document.getElementById('loginCpf').value);
+  if(!cpf){ toast('Digite seu CPF', 'erro'); return; }
+  const r = await api('loginCpf', {cpf});
+  if(!r.success){ toast(r.message || 'Erro ao entrar', 'erro'); return; }
+  if(r.precisaCadastro){
+    localStorage.setItem('ggb_cpf_pendente', cpf);
+    document.getElementById('telaLogin').style.display = 'none';
+    document.getElementById('telaCadastro').style.display = 'flex';
+    return;
+  }
+  salvarSessao(r.user, r.chaveAcesso);
+  entrarApp();
+}
+
+/* ================= CADASTRO ================= */
+async function concluirRegistro(){
+  const cpf = somenteDigitos(localStorage.getItem('ggb_cpf_pendente'));
   const dados = {
     nome: document.getElementById('cadNome').value.trim(),
     emailGrupo: document.getElementById('cadEmailGrupo').value.trim(),
     emailGmail: document.getElementById('cadEmailGmail').value.trim(),
-    cidadeEstado: document.getElementById('cadCidade').value.trim(),
+    cidadeEstado: document.getElementById('cadCidadeEstado').value.trim(),
     endereco: document.getElementById('cadEndereco').value.trim(),
     senha: document.getElementById('cadSenha').value,
     confirmarSenha: document.getElementById('cadConfirmarSenha').value
   };
-  const cpf = somenteDigitos(document.getElementById('cadCpf').value);
+  if(!dados.nome){ toast('Informe o nome completo', 'erro'); return; }
+  if(!dados.emailGrupo){ toast('Informe o e-mail do grupo', 'erro'); return; }
+  if(!dados.emailGmail){ toast('Informe o e-mail do Gmail', 'erro'); return; }
+  if(!dados.cidadeEstado){ toast('Informe cidade/estado', 'erro'); return; }
+  if(!dados.endereco){ toast('Informe o endereço', 'erro'); return; }
+  if(dados.senha.length < 4){ toast('Senha deve ter no mínimo 4 caracteres', 'erro'); return; }
+  if(dados.senha !== dados.confirmarSenha){ toast('As senhas não coincidem', 'erro'); return; }
 
-  if(!dados.nome){ erro.textContent='❌ Preencha o Nome Completo'; erro.style.display='block'; return; }
-  if(!dados.emailGrupo){ erro.textContent='❌ Preencha o E-mail Grupo Gênesis Brasil'; erro.style.display='block'; return; }
-  if(!dados.emailGmail){ erro.textContent='❌ Preencha o E-mail do Gmail'; erro.style.display='block'; return; }
-  if(!dados.cidadeEstado){ erro.textContent='❌ Preencha Cidade/Estado'; erro.style.display='block'; return; }
-  if(!dados.endereco){ erro.textContent='❌ Preencha o Endereço'; erro.style.display='block'; return; }
-  if(!dados.senha || dados.senha.length < 4){ erro.textContent='❌ A senha deve ter no mínimo 4 caracteres'; erro.style.display='block'; return; }
-  if(dados.senha !== dados.confirmarSenha){ erro.textContent='❌ As senhas não coincidem'; erro.style.display='block'; return; }
-
-  btn.disabled = true; btn.innerHTML = '<span class="loading"></span> Finalizando...'; erro.style.display='none';
-  try {
-    const r = await api('completarCadastro', {cpf, dados});
-    btn.disabled = false; btn.innerHTML = '✅ Finalizar Cadastro';
-    if(r.success){
-      currentUser = r.user;
-      localStorage.setItem('crm_chave', r.chaveAcesso);
-      localStorage.setItem('crm_cpf', r.user.cpf);
-      localStorage.setItem('crm_session', JSON.stringify(currentUser));
-      document.getElementById('cadastroOverlay').classList.remove('active');
-      entrar();
-      showToast('Cadastro concluído! Bem-vindo, ' + r.user.nome + '! 🎉','success');
-    } else {
-      erro.textContent = '❌ ' + (r.message || 'Erro ao finalizar cadastro');
-      erro.style.display = 'block';
-    }
-  } catch(e) {
-    btn.disabled = false; btn.innerHTML = '✅ Finalizar Cadastro';
-    erro.textContent = '❌ Erro de conexão com o servidor';
-    erro.style.display = 'block';
+  const r = await api('completarCadastro', {cpf, dados});
+  if(r.success){
+    toast('Cadastro concluído! Bem-vindo ✅', 'ok');
+    localStorage.removeItem('ggb_cpf_pendente');
+    salvarSessao(r.user, r.chaveAcesso);
+    entrarApp();
+  } else {
+    toast(r.message || 'Erro ao concluir cadastro', 'erro');
   }
 }
 
-// ============ LOGIN AUTOMÁTICO ============
-async function tentarLoginAutomatico(){
-  const chave = localStorage.getItem('crm_chave');
-  if(!chave) return false;
-  try {
-    const r = await api('loginChave', { chave: chave });
-    if(r.success){
-      currentUser = r.user;
-      localStorage.setItem('crm_session', JSON.stringify(currentUser));
-      entrar();
-      return true;
-    }
-  } catch(e) {}
-  return false;
-}
-
-function entrar(){
-  document.getElementById('loginOverlay').classList.remove('active');
-  document.getElementById('cadastroOverlay').classList.remove('active');
-  document.getElementById('userProfile').style.display = 'flex';
-  document.getElementById('userName').textContent = currentUser.nome;
-  document.getElementById('userPapel').textContent = currentUser.admin ? 'Administrador' : 'Vendedor';
-  document.getElementById('avatarLetra').textContent = (currentUser.nome || '?')[0].toUpperCase();
-  document.getElementById('homeUserName').textContent = currentUser.nome;
-  carregarDados();
-  carregarUsuarios();
-  showSection('home');
-  showToast('Bem-vindo, ' + currentUser.nome + '! 👋', 'success');
-}
-
-function logout(){
-  localStorage.removeItem('crm_session');
-  localStorage.removeItem('crm_chave');
-  localStorage.removeItem('crm_cpf');
-  currentUser = null; leads = []; quadro = { listas: [] };
-  document.getElementById('userProfile').style.display = 'none';
-  document.getElementById('loginOverlay').classList.add('active');
-  document.getElementById('cpfLogin').value = '';
-  document.getElementById('loginError').style.display = 'none';
-  showToast('Você saiu da sua conta', 'info');
-}
-
-// ============ DADOS ============
+/* ================= CARREGAR DADOS ================= */
 async function carregarDados(){
-  try {
-    const r = await api('getLeads', {cpf: currentUser.cpf});
-    if(r.success){ leads = r.leads; updateAll(); }
-    else showToast(r.message||'Erro ao carregar leads','error');
-  } catch(e) { showToast('Erro de conexão','error'); }
-  try {
-    const r = await api('getKanban', {cpf: currentUser.cpf});
-    if(r.success){ quadro = r.dados; if(document.getElementById('quadro').classList.contains('active')) renderQuadro(); }
-  } catch(e) {}
+  await carregarUsuarios();
+  await carregarLeads();
+  await carregarKanban();
 }
 
 async function carregarUsuarios(){
-  try {
-    const r = await api('getAllUsers', {cpf: currentUser.cpf});
-    if(r.success){
-      usuarios = r.users;
-      const sel = document.getElementById('leadResponsavel');
-      if(sel){
-        sel.innerHTML = usuarios.map(u => '<option value="'+escapeHtml(u.cpf)+'">'+escapeHtml(u.nome)+'</option>').join('');
-        sel.value = currentUser.cpf;
-        if(!currentUser.admin) sel.disabled = true;
-      }
+  const r = await api('getAllUsers', {cpf: currentUser.cpf});
+  if(r.success){ usuarios = r.users || []; renderUsuarios(); }
+}
+
+async function carregarLeads(){
+  const r = await api('getLeads', {cpf: currentUser.cpf});
+  if(r.success){
+    leads = r.leads || [];
+    atualizarStats();
+    renderLeads();
+  } else {
+    toast(r.message || 'Erro ao carregar leads', 'erro');
+  }
+}
+
+function atualizarStats(){
+  document.getElementById('statTotal').textContent = leads.length;
+  document.getElementById('statNovos').textContent = leads.filter(l=>l.etapa==='novo_lead').length;
+  document.getElementById('statQuentes').textContent = leads.filter(l=>l.temperatura==='quente').length;
+  document.getElementById('statFechados').textContent = leads.filter(l=>l.etapa==='fechado').length;
+}
+
+/* ================= LEADS ================= */
+function aplicarFiltros(){
+  const q = document.getElementById('buscaLeads').value;
+  const etapa = document.getElementById('filtroEtapa').value;
+  const temp = document.getElementById('filtroTemperatura').value;
+  renderLeads(q, etapa, temp);
+}
+
+function leadsFiltrados(q, etapa, temp){
+  q = (q||'').toLowerCase();
+  return leads.filter(l=>{
+    if(etapa && etapa!=='todos' && l.etapa!==etapa) return false;
+    if(temp && temp!=='todos' && l.temperatura!==temp) return false;
+    if(q){
+      const campos = [l.nome,l.cpfCnpj,l.cidade,l.pessoa,labelInstituicao(l.instituicao),labelEtapa(l.etapa),labelTemperatura(l.temperatura),labelCanal(l.canal),labelCargo(l.cargo),nomeDe(l.responsavel),nomeDe(l.criadoPor)].map(c=>(c||'').toLowerCase());
+      if(!campos.some(c=>c.includes(q))) return false;
     }
-  } catch(e) {}
+    return true;
+  });
 }
 
-function showSection(id){
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  document.querySelectorAll('.navbar-buttons .btn').forEach(b=>b.classList.remove('active-nav'));
-  const map = {home:0, novolead:1, consulta:2, quadro:3, suporte:4};
-  const btns = document.querySelectorAll('.navbar-buttons .btn');
-  if(map[id]!==undefined) btns[map[id]].classList.add('active-nav');
-  if(id==='quadro') renderQuadro();
-  if(id==='consulta') buscarLeads();
+function renderLeads(q, etapa, temp){
+  const tbody = document.getElementById('tabelaLeads');
+  const lista = leadsFiltrados(q, etapa, temp);
+  if(lista.length === 0){
+    tbody.innerHTML = '<tr><td colspan="7" class="vazio">Nenhum lead encontrado. Cadastre um novo lead para começar! 🚀</td></tr>';
+    return;
+  }
+  tbody.innerHTML = lista.map(l=>{
+    const tempClass = l.temperatura==='quente' ? 'pill-quente' : l.temperatura==='morno' ? 'pill-morno' : 'pill-frio';
+    return `<tr class="linha-lead" onclick="verDetalhes('${l.id}')">
+      <td><strong>${l.nome||''}</strong><br><small style="color:var(--texto-suave)">${labelInstituicao(l.instituicao) ? (l.instituicao||'') : ''}</small></td>
+      <td>${labelInstituicao(l.instituicao)}</td>
+      <td>${nomeDe(l.responsavel)}</td>
+      <td>${nomeDe(l.criadoPor)}</td>
+      <td><span class="pill pill-etapa">${labelEtapa(l.etapa)}</span></td>
+      <td><span class="pill ${tempClass}">${labelTemperatura(l.temperatura)}</span></td>
+      <td onclick="event.stopPropagation()"><button class="btn btn-perigo btn-pequeno" onclick="excluirLead('${l.id}')">🗑️</button></td>
+    </tr>`;
+  }).join('');
 }
 
-// ============ LEADS ============
-async function concluirRegistro(){
-  const nome = document.getElementById('leadNome').value.trim();
-  if(!nome){ showToast('Preencha ao menos o Nome!','error'); document.getElementById('leadNome').focus(); return; }
-  const btn = document.getElementById('btnSalvarLead');
-  btn.disabled = true; btn.innerHTML = '<span class="loading"></span> Salvando...';
+function abrirNovoLead(){
+  const sel = document.getElementById('leadResponsavel');
+  sel.innerHTML = usuarios.map(u=>`<option value="${u.cpf}">${u.nome}${u.admin ? ' (Admin)' : ''}</option>`).join('');
+  if(currentUser) sel.value = currentUser.cpf;
+  document.getElementById('formLead').reset();
+  document.getElementById('modalLead').classList.add('aberto');
+}
+
+async function concluirLead(){
   const lead = {
-    nome: nome,
+    nome: document.getElementById('leadNome').value.trim(),
     cpfCnpj: document.getElementById('leadCpfCnpj').value.trim(),
-    instituicao: document.getElementById('leadInstituicao').value,
+    instituicao: document.getElementById('leadInstituicao').value.trim(),
     cidade: document.getElementById('leadCidade').value.trim(),
     pessoa: document.getElementById('leadPessoa').value.trim(),
-    cargo: document.getElementById('leadCargo').value,
+    cargo: document.getElementById('leadCargo').value.trim(),
     responsavel: document.getElementById('leadResponsavel').value || currentUser.cpf,
+    criadoPor: currentUser.cpf,
     etapa: document.getElementById('leadEtapa').value,
     temperatura: document.getElementById('leadTemperatura').value,
     canal: document.getElementById('leadCanal').value,
@@ -675,259 +592,206 @@ async function concluirRegistro(){
     dataRetorno: document.getElementById('leadDataRetorno').value,
     resumo: document.getElementById('leadResumo').value.trim()
   };
-  try {
-    const r = await api('addLead', {cpf: currentUser.cpf, lead: lead});
-    btn.disabled = false; btn.innerHTML = '✅ Concluir Registro';
-    if(r.success){
-      limparFormulario();
-      carregarDados();
-      showToast('Lead registrado com sucesso! 🎉','success');
-    } else {
-      showToast(r.message||'Erro ao salvar','error');
-    }
-  } catch(e) {
-    btn.disabled = false; btn.innerHTML = '✅ Concluir Registro';
-    showToast('Erro de conexão','error');
+  if(!lead.nome){ toast('Nome do lead é obrigatório', 'erro'); return; }
+
+  const r = await api('addLead', {cpf: currentUser.cpf, lead});
+  if(r.success){
+    toast('Lead cadastrado com sucesso! ✅', 'ok');
+    fecharModal('modalLead');
+    carregarLeads();
+  } else {
+    toast(r.message || 'Erro ao cadastrar lead', 'erro');
   }
-}
-
-function limparFormulario(){
-  ['leadNome','leadCpfCnpj','leadCidade','leadPessoa','leadProximoPasso','leadDataRetorno','leadResumo'].forEach(i=>document.getElementById(i).value='');
-  ['leadInstituicao','leadCargo'].forEach(i=>document.getElementById(i).value='');
-  document.getElementById('leadEtapa').value='novo_lead';
-  document.getElementById('leadTemperatura').value='quente';
-  document.getElementById('leadCanal').value='ligacao';
-  if(currentUser) document.getElementById('leadResponsavel').value = currentUser.cpf;
-}
-
-async function removerLead(id){
-  if(!confirm('Deseja realmente excluir este lead?')) return;
-  try {
-    const r = await api('deleteLead', {id: id, cpf: currentUser.cpf});
-    if(r.success){ carregarDados(); buscarLeads(); showToast('Lead removido','info'); }
-    else showToast(r.message,'error');
-  } catch(e) { showToast('Erro de conexão','error'); }
-}
-
-function buscarLeads(){
-  const termo = (document.getElementById('consultaInput')?.value||'').toLowerCase().trim();
-  const tbody = document.getElementById('tableConsulta');
-  const countEl = document.getElementById('resultadosCount');
-  if(!tbody) return;
-  let filtrados = leads;
-  if(termo){
-    filtrados = leads.filter(l=>{
-      const campos = [l.nome,l.cpfCnpj,l.cidade,l.pessoa,labelInstituicao(l.instituicao),labelEtapa(l.etapa),labelTemperatura(l.temperatura),labelCanal(l.canal),labelCargo(l.cargo),nomeDe(l.responsavel)].map(c=>(c||'').toLowerCase());
-      return campos.some(c=>c.includes(termo));
-    });
-  }
-  countEl.innerHTML = termo ? 'Encontrados: <strong>'+filtrados.length+'</strong> lead(s)' : 'Total: <strong>'+leads.length+'</strong> lead(s)';
-  if(filtrados.length===0){
-    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">'+(termo?'🔍':'📭')+'</div><p>'+(termo?'Nenhum lead encontrado':'Nenhum lead cadastrado ainda')+'</p><small>'+(termo?'Tente outro termo':'Registre um novo lead na aba "Novo Lead"')+'</small></div></td></tr>';
-    return;
-  }
-  tbody.innerHTML = filtrados.map(l=>`
-    <tr>
-      <td><strong>${escapeHtml(l.nome)}</strong></td>
-      <td>${escapeHtml(l.cpfCnpj)||'<span style="color:#475569">-</span>'}</td>
-      <td>${escapeHtml(l.cidade)||'<span style="color:#475569">-</span>'}</td>
-      <td><span class="badge etapa-${l.etapa}">${labelEtapa(l.etapa)}</span></td>
-      <td><span class="badge temp-${l.temperatura}">${labelTemperatura(l.temperatura)}</span></td>
-      <td><button class="btn btn-info" onclick="verDetalhes('${l.id}')">👁 Ver</button><button class="btn btn-danger" onclick="removerLead('${l.id}')">🗑</button></td>
-    </tr>`).join('');
-}
-
-function escapeHtml(str){
-  if(!str) return '';
-  return String(str).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
 
 function verDetalhes(id){
-  const lead = leads.find(l=>String(l.id)===String(id));
+  const lead = leads.find(l=>l.id===id);
   if(!lead) return;
-  const d = (label,value)=>`<div class="detail-item"><div class="detail-label">${label}</div><div class="detail-value ${!value?'empty':''}">${value?escapeHtml(value):'Não informado'}</div></div>`;
-  const df = (label,value)=>`<div class="detail-item full"><div class="detail-label">${label}</div><div class="detail-value ${!value?'empty':''}" style="white-space:pre-wrap;">${value?escapeHtml(value):'Não informado'}</div></div>`;
-  document.getElementById('detalhesConteudo').innerHTML = `
-    <div class="form-section-title">📇 Contato</div>
+  const d = (rotulo, valor) => `<div class="detail-item"><div class="rotulo">${rotulo}</div><div class="valor">${valor}</div></div>`;
+
+  document.getElementById('detalheConteudo').innerHTML = `
+    <div class="form-section-title">🏢 Instituição</div>
     <div class="detail-grid">
-      ${d('Nome',lead.nome)}
-      ${d('CPF / CNPJ',lead.cpfCnpj)}
-      ${d('Instituição / Empresa',labelInstituicao(lead.instituicao))}
-      ${d('Cidade / UF',lead.cidade)}
+      ${d('Lead', lead.nome)}
+      ${d('CPF/CNPJ', lead.cpfCnpj || '—')}
+      ${d('Instituição', labelInstituicao(lead.instituicao))}
+      ${d('Cidade', lead.cidade || '—')}
     </div>
+
     <div class="form-section-title">👤 Pessoa com quem falou</div>
     <div class="detail-grid">
-      ${d('Nome',lead.pessoa)}
-      ${d('Cargo',labelCargo(lead.cargo))}
-      ${d('Responsável',nomeDe(lead.responsavel))}
+      ${d('Nome', lead.pessoa || '—')}
+      ${d('Cargo', labelCargo(lead.cargo))}
+      ${d('Responsável', nomeDe(lead.responsavel))}
+      ${d('Criado por', nomeDe(lead.criadoPor))}
     </div>
-    <div class="form-section-title">📊 Resultado do Contato</div>
+
+    <div class="form-section-title">🎯 Classificação</div>
     <div class="detail-grid">
-      <div class="detail-item"><div class="detail-label">Etapa</div><div class="detail-value"><span class="badge etapa-${lead.etapa}">${labelEtapa(lead.etapa)}</span></div></div>
-      <div class="detail-item"><div class="detail-label">Temperatura</div><div class="detail-value"><span class="badge temp-${lead.temperatura}">${labelTemperatura(lead.temperatura)}</span></div></div>
-      ${d('Canal',labelCanal(lead.canal))}
+      ${d('Etapa', labelEtapa(lead.etapa))}
+      ${d('Temperatura', labelTemperatura(lead.temperatura))}
+      ${d('Canal', labelCanal(lead.canal))}
+      ${d('Criado em', (lead.criadoEm||'').toString().slice(0,10) || '—')}
     </div>
-    <div class="form-section-title">🔁 Continuidade</div>
+
+    <div class="form-section-title">📝 Acompanhamento</div>
     <div class="detail-grid">
-      ${d('Próximo passo',lead.proximoPasso)}
-      ${d('Data de retorno',lead.dataRetorno?fmtDate(lead.dataRetorno):'')}
+      ${d('Próximo passo', lead.proximoPasso || '—')}
+      ${d('Data de retorno', lead.dataRetorno || '—')}
     </div>
-    <div class="form-section-title">📝 Resumo da Conversa</div>
-    ${df('Resumo',lead.resumo)}
-    <div style="margin-top:16px;font-size:12px;color:#64748b;">📅 Registrado em: ${fmtDateTime(lead.criadoEm)}</div>
+    <div class="detail-item"><div class="rotulo">Resumo</div><div class="valor">${lead.resumo || '—'}</div></div>
   `;
-  document.getElementById('btnExcluirDetalhes').onclick = ()=>{
-    if(!confirm('Deseja realmente excluir este lead?')) return;
-    removerLead(lead.id);
-    closeModal('detalhes');
-  };
-  openModal('detalhes');
+
+  document.getElementById('btnExcluirLead').onclick = ()=>excluirLead(lead.id);
+  document.getElementById('modalDetalhes').classList.add('aberto');
 }
 
-// ============ KANBAN ============
-function genId(){ return 'id_'+Date.now()+'_'+Math.random().toString(36).substr(2,5); }
-function defaultKanban(){ return { listas:[{id:genId(),titulo:'A Fazer',cartoes:[]},{id:genId(),titulo:'Em Andamento',cartoes:[]},{id:genId(),titulo:'Concluído',cartoes:[]}]}; }
-function openCardModal(listId){ currentListId=listId; selectedLabel=''; document.getElementById('cardTitulo').value=''; document.getElementById('cardDescricao').value=''; document.querySelectorAll('.label-color').forEach(c=>c.classList.remove('selected')); openModal('cartao'); }
-function openListModal(){ document.getElementById('listTitulo').value=''; openModal('lista'); }
-function openModal(t){ document.getElementById('modal'+t.charAt(0).toUpperCase()+t.slice(1)).classList.add('active'); }
-function closeModal(t){ document.getElementById('modal'+t.charAt(0).toUpperCase()+t.slice(1)).classList.remove('active'); }
-function selectLabel(color,el){ selectedLabel=color; document.querySelectorAll('.label-color').forEach(c=>c.classList.remove('selected')); el.classList.add('selected'); }
-
-function salvarCartao(){
-  const titulo = document.getElementById('cardTitulo').value.trim();
-  if(!titulo){ showToast('Preencha o título!','error'); return; }
-  const lista = quadro.listas.find(l=>l.id===currentListId);
-  if(!lista) return;
-  lista.cartoes.push({id:genId(),titulo,descricao:document.getElementById('cardDescricao').value,etiqueta:selectedLabel});
-  closeModal('cartao');
-  salvarQuadro();
-  showToast('Cartão adicionado! 📋','success');
-}
-function salvarLista(){
-  const titulo = document.getElementById('listTitulo').value.trim();
-  if(!titulo){ showToast('Digite o nome da lista!','error'); return; }
-  quadro.listas.push({id:genId(),titulo,cartoes:[]});
-  closeModal('lista');
-  salvarQuadro();
-  showToast('Lista criada! 📋','success');
-}
-function renomearLista(listId){
-  const lista = quadro.listas.find(l=>l.id===listId);
-  if(!lista) return;
-  const novo = prompt('Renomear lista:',lista.titulo);
-  if(novo&&novo.trim()){ lista.titulo=novo.trim(); salvarQuadro(); renderQuadro(); showToast('Lista renomeada!','success'); }
-}
-function removerLista(listId){
-  const lista = quadro.listas.find(l=>l.id===listId);
-  if(!lista) return;
-  if(!confirm('Excluir a lista "'+lista.titulo+'" e todos os cartões?')) return;
-  quadro.listas = quadro.listas.filter(l=>l.id!==listId);
-  salvarQuadro(); renderQuadro(); showToast('Lista removida','info');
-}
-function removerCartao(listId,cardId){
-  const lista = quadro.listas.find(l=>l.id===listId);
-  if(!lista) return;
-  lista.cartoes = lista.cartoes.filter(c=>c.id!==cardId);
-  salvarQuadro(); renderQuadro(); showToast('Cartão removido','info');
-}
-async function salvarQuadro(){
-  try {
-    const r = await api('saveKanban', {cpf: currentUser.cpf, dados: quadro});
-    if(!r.success) showToast(r.message||'Erro','error');
-  } catch(e) { showToast('Erro de conexão','error'); }
-}
-
-function onDragStart(e,cardId,listId){ draggedCard=cardId; draggedFromList=listId; e.dataTransfer.effectAllowed='move'; setTimeout(()=>{document.querySelectorAll('.board-card').forEach(c=>{if(c.dataset.cardId===cardId)c.classList.add('dragging');});},0); }
-function onDragEnd(){ document.querySelectorAll('.board-card').forEach(c=>c.classList.remove('dragging')); document.querySelectorAll('.board-list').forEach(l=>l.classList.remove('drag-over')); }
-function onDragOver(e,listId){ e.preventDefault(); e.dataTransfer.dropEffect='move'; document.querySelectorAll('.board-list').forEach(l=>l.classList.remove('drag-over')); const list=document.querySelector('.board-list[data-list-id="'+listId+'"]'); if(list) list.classList.add('drag-over'); }
-function onDragLeave(e,listId){ const list=document.querySelector('.board-list[data-list-id="'+listId+'"]'); if(list&&!list.contains(e.relatedTarget)) list.classList.remove('drag-over'); }
-function onDrop(e,listId){
-  e.preventDefault();
-  document.querySelectorAll('.board-list').forEach(l=>l.classList.remove('drag-over'));
-  if(!draggedCard||!draggedFromList) return;
-  const source = quadro.listas.find(l=>l.id===draggedFromList);
-  const target = quadro.listas.find(l=>l.id===listId);
-  if(!source||!target) return;
-  const idx = source.cartoes.findIndex(c=>c.id===draggedCard);
-  if(idx===-1) return;
-  const [card] = source.cartoes.splice(idx,1);
-  target.cartoes.push(card);
-  draggedCard=null; draggedFromList=null;
-  salvarQuadro(); renderQuadro();
-  showToast('Cartão movido! 📋','success');
-}
-
-function renderQuadro(){
-  const board = document.getElementById('boardContainer');
-  if(!board) return;
-  if(!quadro||!quadro.listas||quadro.listas.length===0) quadro = defaultKanban();
-  board.innerHTML = quadro.listas.map(lista=>{
-    const cards = lista.cartoes.map(cartao=>`
-      <div class="board-card" draggable="true" data-card-id="${cartao.id}" ondragstart="onDragStart(event,'${cartao.id}','${lista.id}')" ondragend="onDragEnd()">
-        ${cartao.etiqueta?'<span class="board-card-label" style="background:'+cartao.etiqueta+'"></span>':''}
-        <div class="board-card-title">${escapeHtml(cartao.titulo)}</div>
-        ${cartao.descricao?'<div class="board-card-desc">'+escapeHtml(cartao.descricao)+'</div>':''}
-        <button class="board-card-delete" onclick="removerCartao(\''+lista.id+'\',\''+cartao.id+'\')">✕</button>
-      </div>`).join('');
-    return `
-      <div class="board-list" data-list-id="${lista.id}" ondragover="onDragOver(event,'${lista.id}')" ondragleave="onDragLeave(event,'${lista.id}')" ondrop="onDrop(event,'${lista.id}')">
-        <div class="board-list-header">
-          <span class="board-list-title" ondblclick="renomearLista('${lista.id}')" title="Clique duplo para renomear">${escapeHtml(lista.titulo)} <span class="board-list-count">${lista.cartoes.length}</span></span>
-          <button class="board-list-delete" onclick="removerLista('${lista.id}')">🗑</button>
-        </div>
-        <div class="board-cards">${cards||'<div class="board-empty">Arraste cartões aqui</div>'}</div>
-        <button class="btn-add-card" onclick="openCardModal('${lista.id}')">+ Adicionar cartão</button>
-      </div>`;
-  }).join('') + '<button class="btn-add-list" onclick="openListModal()">+ Adicionar lista</button>';
-}
-
-// ============ LABELS ============
-function labelInstituicao(v){ const m={faculdade:'Faculdade',instituicao_ensino:'Inst. de Ensino',empresa:'Empresa',prefeitura:'Prefeitura',orgao_publico:'Órgão Público',outro:'Outro'}; return m[v]||v||'-'; }
-function labelCargo(v){ const m={diretora:'Diretora',rh:'RH',professor:'Professor',mestre:'Mestre',coordenador:'Coordenador',proprietario:'Proprietário',outro:'Outro'}; return m[v]||v||'-'; }
-function labelCanal(v){ const m={ligacao:'Ligação',whatsapp:'WhatsApp',email:'Email',reuniao_presencial:'Reun. Presencial',reuniao_online:'Reun. Online',evento:'Evento',outro:'Outro'}; return m[v]||v||'-'; }
-function labelEtapa(v){ const m={novo_lead:'Novo Lead',em_conversa:'Em Conversa',proposta_enviada:'Proposta Enviada',convertido:'Convertido',sem_avanco:'Sem Avanço'}; return m[v]||v; }
-function labelTemperatura(v){ const m={quente:'Quente',morno:'Morno',frio:'Frio',sem_perfil:'Sem Perfil'}; return m[v]||v; }
-function nomeDe(cpf){ const u = usuarios.find(u=>String(u.cpf)===String(cpf||'')); return u ? u.nome : (cpf||'-'); }
-function fmtDate(d){ if(!d) return ''; try{const p=d.split('T')[0].split('-');return p[2]+'/'+p[1]+'/'+p[0];}catch(e){return d;} }
-function fmtDateTime(t){ if(!t) return ''; try{return new Date(t).toLocaleString('pt-BR');}catch(e){return t;} }
-
-function renderLeads(){
-  document.getElementById('homeLeads').innerHTML = leads.length ? leads.slice(0,5).map(l=>`
-    <tr>
-      <td><strong>${escapeHtml(l.nome)}</strong></td>
-      <td>${labelInstituicao(l.instituicao)}</td>
-      <td><span class="badge etapa-${l.etapa}">${labelEtapa(l.etapa)}</span></td>
-      <td><span class="badge temp-${l.temperatura}">${labelTemperatura(l.temperatura)}</span></td>
-    </tr>`).join('') : '<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">📭</div><p>Nenhum lead ainda</p></div></td></tr>';
-}
-
-function updateDashboard(){
-  const total = leads.length;
-  const convertidos = leads.filter(l=>l.etapa==='convertido').length;
-  const quentes = leads.filter(l=>l.temperatura==='quente').length;
-  const hoje = new Date().toISOString().split('T')[0];
-  const retornos = leads.filter(l=>String(l.dataRetorno||'').startsWith(hoje)).length;
-  document.getElementById('totalLeads').textContent = total;
-  document.getElementById('totalConvertidos').textContent = convertidos;
-  document.getElementById('totalQuentes').textContent = quentes;
-  document.getElementById('totalRetornos').textContent = retornos;
-  document.getElementById('progressLeads').style.width = Math.min(100,(total/50)*100)+'%';
-  document.getElementById('progressConvertidos').style.width = Math.min(100,(convertidos/Math.max(1,total))*100)+'%';
-  document.getElementById('progressQuentes').style.width = Math.min(100,(quentes/Math.max(1,total))*100)+'%';
-  document.getElementById('progressRetornos').style.width = Math.min(100,(retornos/Math.max(1,total))*100)+'%';
-}
-
-function updateAll(){ renderLeads(); updateDashboard(); }
-
-window.onload = async function(){
-  const logado = await tentarLoginAutomatico();
-  if(!logado){
-    const session = JSON.parse(localStorage.getItem('crm_session')||'null');
-    if(session){ currentUser = session; entrar(); }
+async function excluirLead(id){
+  if(!confirm('Tem certeza que deseja excluir este lead?')) return;
+  const r = await api('deleteLead', {id, cpf: currentUser.cpf});
+  if(r.success){
+    toast('Lead excluído', 'ok');
+    fecharModal('modalDetalhes');
+    carregarLeads();
+  } else {
+    toast(r.message || 'Erro ao excluir', 'erro');
   }
-};
+}
 
-document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('active');}));
+function labelCargo(c){ return c || '—'; }
+
+/* ================= USUÁRIOS ================= */
+function renderUsuarios(){
+  if(!currentUser || !currentUser.admin) return;
+  const tbody = document.getElementById('tabelaUsuarios');
+  if(usuarios.length === 0){
+    tbody.innerHTML = '<tr><td colspan="3" class="vazio">Nenhum usuário cadastrado.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = usuarios.map(u=>`<tr><td>${u.nome}</td><td>${u.cpf}</td><td>${u.admin ? '👑 Admin' : 'Vendedor'}</td></tr>`).join('');
+}
+
+/* ================= KANBAN ================= */
+async function carregarKanban(){
+  const r = await api('getKanban', {cpf: currentUser.cpf});
+  if(r.success){ kanbanDados = r.dados; renderKanban(); }
+}
+
+function renderKanban(){
+  const cont = document.getElementById('kanbanContainer');
+  cont.innerHTML = '';
+  if(!kanbanDados || !kanbanDados.listas || kanbanDados.listas.length === 0){
+    cont.innerHTML = '<div class="vazio">Nenhuma lista. Clique em "Nova Lista".</div>';
+    return;
+  }
+  kanbanDados.listas.forEach((lista, li)=>{
+    const col = document.createElement('div');
+    col.className = 'kanban-col';
+    col.innerHTML = `
+      <div class="kanban-col-header">
+        <span>${lista.titulo} <small style="color:var(--texto-suave)">(${lista.cartoes.length})</small></span>
+        <button class="excluir-card" onclick="excluirLista(${li})" title="Excluir lista">🗑️</button>
+      </div>`;
+    const cards = document.createElement('div');
+    cards.className = 'kanban-cards';
+    cards.dataset.li = li;
+    cards.addEventListener('dragover', e=>e.preventDefault());
+    cards.addEventListener('drop', soltarCard);
+    lista.cartoes.forEach((c, ci)=>{
+      const card = document.createElement('div');
+      card.className = 'kanban-card';
+      card.draggable = true;
+      card.innerHTML = `<span>${c.titulo}</span><button class="excluir-card" onclick="excluirCard(${li},${ci})">×</button>`;
+      card.addEventListener('dragstart', e=>e.dataTransfer.setData('text/plain', JSON.stringify({li,ci})));
+      cards.appendChild(card);
+    });
+    const btnAdd = document.createElement('button');
+    btnAdd.className = 'kanban-add-card';
+    btnAdd.textContent = '+ Adicionar cartão';
+    btnAdd.onclick = ()=>adicionarCard(li);
+    cards.appendChild(btnAdd);
+    col.appendChild(cards);
+    cont.appendChild(col);
+  });
+}
+
+function soltarCard(e){
+  e.preventDefault();
+  const origem = JSON.parse(e.dataTransfer.getData('text/plain'));
+  const destinoLi = parseInt(e.currentTarget.dataset.li);
+  if(origem.li === destinoLi) return;
+  const card = kanbanDados.listas[origem.li].cartoes.splice(origem.ci,1)[0];
+  kanbanDados.listas[destinoLi].cartoes.push(card);
+  renderKanban();
+  salvarKanban();
+}
+
+function adicionarCard(li){
+  const titulo = prompt('Título do cartão:');
+  if(!titulo || !titulo.trim()) return;
+  kanbanDados.listas[li].cartoes.push({id:'c_'+Date.now(), titulo: titulo.trim()});
+  renderKanban();
+  salvarKanban();
+}
+
+function excluirCard(li, ci){
+  kanbanDados.listas[li].cartoes.splice(ci,1);
+  renderKanban();
+  salvarKanban();
+}
+
+function adicionarLista(){
+  const titulo = prompt('Nome da nova lista:');
+  if(!titulo || !titulo.trim()) return;
+  kanbanDados.listas.push({id:'l_'+Date.now(), titulo: titulo.trim(), cartoes:[]});
+  renderKanban();
+  salvarKanban();
+}
+
+function excluirLista(li){
+  if(!confirm('Excluir esta lista e todos os seus cartões?')) return;
+  kanbanDados.listas.splice(li,1);
+  renderKanban();
+  salvarKanban();
+}
+
+async function salvarKanban(){
+  await api('saveKanban', {cpf: currentUser.cpf, dados: kanbanDados});
+}
+
+/* ================= NAVEGAÇÃO ================= */
+function trocarTela(tela){
+  telaAtual = tela;
+  document.getElementById('secaoLeads').style.display = tela==='leads' ? 'block' : 'none';
+  document.getElementById('secaoKanban').style.display = tela==='kanban' ? 'block' : 'none';
+  document.getElementById('secaoUsuarios').style.display = tela==='usuarios' ? 'block' : 'none';
+  document.getElementById('tabLeads').classList.toggle('ativo', tela==='leads');
+  document.getElementById('tabKanban').classList.toggle('ativo', tela==='kanban');
+  document.getElementById('tabUsuarios').classList.toggle('ativo', tela==='usuarios');
+  if(tela==='usuarios') renderUsuarios();
+}
+
+function fecharModal(id){
+  document.getElementById(id).classList.remove('aberto');
+}
+
+/* ================= INICIALIZAÇÃO ================= */
+window.addEventListener('load', async ()=>{
+  montarSelects();
+  const chave = localStorage.getItem('ggb_chave');
+  if(chave){
+    const r = await api('loginChave', {chave});
+    if(r.success){
+      currentUser = r.user;
+      localStorage.setItem('ggb_user', JSON.stringify(r.user));
+      entrarApp();
+      return;
+    } else {
+      localStorage.clear();
+    }
+  }
+  document.getElementById('telaLogin').style.display = 'flex';
+});
 </script>
 </body>
 </html>
