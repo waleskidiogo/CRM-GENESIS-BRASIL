@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CRM Gênesis Brasil</title>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 :root {
   --bg: #0a1628;
@@ -37,17 +36,17 @@ body { background:var(--bg); color:var(--text); min-height:100vh; }
 .btn-logout:hover { background:#ef4444; color:#fff; }
 
 /* ===== Login ===== */
-.login-overlay { position:fixed; inset:0; z-index:1000; background:linear-gradient(135deg,#0f2027,#203a43,#2c5364); display:none; align-items:center; justify-content:center; }
+.login-overlay { position:fixed; inset:0; z-index:1000; background:linear-gradient(135deg,#0f2027,#203a43,#2c5364); display:none; align-items:center; justify-content:center; padding:20px; }
 .login-overlay.active { display:flex; }
 .login-box { background:rgba(10,22,40,.96); padding:40px; border-radius:20px; width:380px; max-width:92vw; text-align:center; border:1px solid var(--border); box-shadow:0 20px 60px rgba(0,0,0,.5); }
 .login-box h2 { color:var(--accent); font-family:Georgia,serif; font-style:italic; margin:12px 0 6px; font-size:24px; }
 .login-box p { color:var(--muted); font-size:14px; margin-bottom:24px; }
 .login-box input { margin-bottom:10px; }
-#btnGoogle { display:flex; justify-content:center; margin-bottom:4px; }
-.divider { display:flex; align-items:center; margin:20px 0; color:var(--dim); font-size:13px; }
-.divider::before, .divider::after { content:''; flex:1; height:1px; background:var(--border); }
-.divider span { padding:0 12px; }
-#loginError { display:none; color:#f87171; font-size:13px; margin-top:12px; }
+.login-box input, .cadastro-box input { background:rgba(10,22,40,.7); border:1px solid var(--border); border-radius:10px; padding:13px 14px; color:var(--text); font-size:14px; width:100%; }
+.login-box input:focus { outline:none; border-color:var(--accent); }
+.cadastro-box { width:440px; max-height:92vh; overflow-y:auto; text-align:left; }
+.cadastro-box h2, .cadastro-box p { text-align:center; }
+#loginError, #cadastroError { display:none; color:#f87171; font-size:13px; margin-top:12px; }
 
 /* ===== Navbar ===== */
 .navbar { display:flex; align-items:center; justify-content:space-between; padding:14px 28px; background:rgba(10,22,40,.9); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:100; backdrop-filter:blur(10px); }
@@ -194,13 +193,14 @@ textarea { resize:vertical; min-height:100px; }
 @keyframes slideInRight{from{opacity:0;transform:translateX(100px);}to{opacity:1;transform:translateX(0);}}
 @keyframes slideOutRight{to{opacity:0;transform:translateX(100px);}}
 
-@media(max-width:768px){.navbar{flex-wrap:wrap;height:auto;padding:16px;gap:12px;}.navbar-buttons{flex-wrap:wrap;}.user-profile{margin-left:0;padding-left:0;border-left:none;}.main{padding:20px;}.header h1{font-size:28px;}.form-grid{grid-template-columns:1fr;}.detail-grid{grid-template-columns:1fr;}}
+@media(max-width:768px){.navbar{flex-wrap:wrap;height:auto;padding:16px;gap:12px;}.navbar-buttons{flex-wrap:wrap;}.user-profile{margin-left:0;padding-left:0;border-left:none;}.main{padding:20px;}.header h1{font-size:28px;}.form-grid{grid-template-columns:1fr;}.detail-grid{grid-template-columns:1fr;}.cadastro-box{width:92vw;}}
 </style>
 </head>
 <body>
 
 <div class="toast-container" id="toastContainer"></div>
 
+<!-- ===== TELA DE LOGIN (CPF) ===== -->
 <div class="login-overlay active" id="loginOverlay">
   <div class="login-box">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 52" fill="none" style="height:44px;margin-bottom:20px;">
@@ -216,15 +216,32 @@ textarea { resize:vertical; min-height:100px; }
       <text x="54" y="46" font-family="Inter,Arial,sans-serif" font-size="7.5" font-weight="600" fill="#c0c8d0" letter-spacing="3">BRASIL</text>
     </svg>
     <h2>Área do Consultor</h2>
-    <p>Entre com sua conta Google ou use e-mail e senha</p>
+    <p>Informe seu CPF para acessar</p>
 
-    <div id="btnGoogle"></div>
-    <div class="divider"><span>ou</span></div>
-
-    <input type="email" id="emailLogin" placeholder="E-mail" onkeydown="if(event.key==='Enter')document.getElementById('senhaLogin').focus()">
-    <input type="password" id="senhaLogin" placeholder="Senha" onkeydown="if(event.key==='Enter')fazerLogin()">
+    <input type="text" id="cpfLogin" placeholder="CPF" maxlength="14" oninput="this.value=mascaraCpf(this.value)" onkeydown="if(event.key==='Enter')fazerLogin()">
     <button class="btn btn-primary btn-lg" id="btnLogin" onclick="fazerLogin()" style="width:100%;justify-content:center;">Entrar</button>
-    <div id="loginError">❌ E-mail ou senha incorretos.</div>
+    <div id="loginError"></div>
+    <p style="margin-top:16px;font-size:12px;color:#64748b;">Primeiro acesso? Informe apenas o CPF.</p>
+  </div>
+</div>
+
+<!-- ===== TELA DE CADASTRO ===== -->
+<div class="login-overlay" id="cadastroOverlay">
+  <div class="login-box cadastro-box">
+    <h2>Complete seu Cadastro</h2>
+    <p>Preencha todos os campos obrigatórios (*) para acessar o CRM</p>
+
+    <input type="text" id="cadNome" placeholder="Nome Completo *">
+    <input type="text" id="cadCpf" placeholder="CPF" readonly>
+    <input type="email" id="cadEmailGrupo" placeholder="E-mail Grupo Gênesis Brasil *">
+    <input type="email" id="cadEmailGmail" placeholder="E-mail do Gmail *">
+    <input type="text" id="cadCidade" placeholder="Cidade / Estado *">
+    <input type="text" id="cadEndereco" placeholder="Endereço *">
+    <input type="password" id="cadSenha" placeholder="Nova Senha (mín. 4 caracteres) *">
+    <input type="password" id="cadConfirmarSenha" placeholder="Confirmar Senha *">
+
+    <button class="btn btn-primary btn-lg" id="btnFinalizarCadastro" onclick="finalizarCadastro()" style="width:100%;justify-content:center;margin-top:10px;">Finalizar Cadastro</button>
+    <div id="cadastroError"></div>
   </div>
 </div>
 
@@ -437,9 +454,6 @@ textarea { resize:vertical; min-height:100px; }
 // ✅ URL do Apps Script (mantenha a que já funciona)
 const API_URL = 'https://script.google.com/macros/s/AKfycbyygjwXK1lJY3yYos5S8T4wHncYqbkHCpqFy0yEzWM6q0-pxfOcRw0C9HTHvMMDp8dX/exec';
 
-// ✅ SEU Client ID do Google
-const GOOGLE_CLIENT_ID = '900723936751-0u7g08iap78gn7j9em1emnc74kqlfe48.apps.googleusercontent.com';
-
 let currentUser = null;
 let leads = [];
 let usuarios = [];
@@ -466,22 +480,39 @@ function showToast(message, type='success'){
   setTimeout(()=>{t.classList.add('hiding');setTimeout(()=>t.remove(),300);},3000);
 }
 
+function mascaraCpf(v){
+  v = v.replace(/\D/g,'');
+  if (v.length > 11) v = v.slice(0,11);
+  v = v.replace(/(\d{3})(\d)/,'$1.$2');
+  v = v.replace(/(\d{3})(\d)/,'$1.$2');
+  v = v.replace(/(\d{3})(\d{1,2})$/,'$1-$2');
+  return v;
+}
+
+function somenteDigitos(v){ return String(v||'').replace(/\D/g,''); }
+
+// ============ LOGIN POR CPF ============
 async function fazerLogin(){
-  const email = document.getElementById('emailLogin').value.trim();
-  const senha = document.getElementById('senhaLogin').value;
+  const cpf = somenteDigitos(document.getElementById('cpfLogin').value);
   const erro = document.getElementById('loginError');
   const btn = document.getElementById('btnLogin');
-  if(!email || !senha){ erro.textContent='Digite e-mail e senha'; erro.style.display='block'; return; }
-  btn.disabled = true; btn.innerHTML = '<span class="loading"></span> Entrando...'; erro.style.display='none';
+  if(!cpf){ erro.textContent='Digite seu CPF'; erro.style.display='block'; return; }
+  btn.disabled = true; btn.innerHTML = '<span class="loading"></span> Verificando...'; erro.style.display='none';
   try {
-    const r = await api('login', {email, senha});
+    const r = await api('loginCpf', {cpf});
     btn.disabled = false; btn.innerHTML = 'Entrar';
-    if(r.success){
+    if(r.success && r.precisaCadastro){
+      abrirCadastro(r.cpf);
+    } else if(r.success){
       currentUser = r.user;
+      if(r.chaveAcesso){
+        localStorage.setItem('crm_chave', r.chaveAcesso);
+        localStorage.setItem('crm_cpf', r.user.cpf);
+      }
       localStorage.setItem('crm_session', JSON.stringify(currentUser));
       entrar();
     } else {
-      erro.textContent = ' ' + (r.message || 'E-mail ou senha incorretos.');
+      erro.textContent = '❌ ' + (r.message || 'CPF não encontrado');
       erro.style.display = 'block';
     }
   } catch(e) {
@@ -491,43 +522,59 @@ async function fazerLogin(){
   }
 }
 
-function initGoogleLogin(){
-  if (typeof google === 'undefined' || !google.accounts) return;
-  if (!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID === 'SEU_CLIENT_ID_AQUI') {
-    document.getElementById('btnGoogle').innerHTML = '<div style="color:#64748b;font-size:12px;padding:8px;">⚠️ Configure o Client ID para ativar o login Google</div>';
-    return;
-  }
-  google.accounts.id.initialize({
-    client_id: GOOGLE_CLIENT_ID,
-    callback: handleGoogleCredential,
-    cancel_on_tap_outside: false
-  });
-  google.accounts.id.renderButton(
-    document.getElementById('btnGoogle'),
-    { theme: 'outline', size: 'large', text: 'continue_with', width: 320 }
-  );
+function abrirCadastro(cpf){
+  document.getElementById('loginOverlay').classList.remove('active');
+  document.getElementById('cadastroOverlay').classList.add('active');
+  document.getElementById('cadCpf').value = mascaraCpf(cpf);
+  document.getElementById('cadastroError').style.display = 'none';
 }
 
-async function handleGoogleCredential(response){
+async function finalizarCadastro(){
+  const erro = document.getElementById('cadastroError');
+  const btn = document.getElementById('btnFinalizarCadastro');
+  const dados = {
+    nome: document.getElementById('cadNome').value.trim(),
+    emailGrupo: document.getElementById('cadEmailGrupo').value.trim(),
+    emailGmail: document.getElementById('cadEmailGmail').value.trim(),
+    cidadeEstado: document.getElementById('cadCidade').value.trim(),
+    endereco: document.getElementById('cadEndereco').value.trim(),
+    senha: document.getElementById('cadSenha').value,
+    confirmarSenha: document.getElementById('cadConfirmarSenha').value
+  };
+  const cpf = somenteDigitos(document.getElementById('cadCpf').value);
+
+  if(!dados.nome){ erro.textContent='❌ Preencha o Nome Completo'; erro.style.display='block'; return; }
+  if(!dados.emailGrupo){ erro.textContent='❌ Preencha o E-mail Grupo Gênesis Brasil'; erro.style.display='block'; return; }
+  if(!dados.emailGmail){ erro.textContent='❌ Preencha o E-mail do Gmail'; erro.style.display='block'; return; }
+  if(!dados.cidadeEstado){ erro.textContent='❌ Preencha Cidade/Estado'; erro.style.display='block'; return; }
+  if(!dados.endereco){ erro.textContent='❌ Preencha o Endereço'; erro.style.display='block'; return; }
+  if(!dados.senha || dados.senha.length < 4){ erro.textContent='❌ A senha deve ter no mínimo 4 caracteres'; erro.style.display='block'; return; }
+  if(dados.senha !== dados.confirmarSenha){ erro.textContent='❌ As senhas não coincidem'; erro.style.display='block'; return; }
+
+  btn.disabled = true; btn.innerHTML = '<span class="loading"></span> Finalizando...'; erro.style.display='none';
   try {
-    const r = await api('loginGoogle', { idToken: response.credential });
+    const r = await api('completarCadastro', {cpf, dados});
+    btn.disabled = false; btn.innerHTML = '✅ Finalizar Cadastro';
     if(r.success){
       currentUser = r.user;
-      if(r.chaveAcesso){
-        localStorage.setItem('crm_chave', r.chaveAcesso);
-        localStorage.setItem('crm_email', r.user.email);
-      }
+      localStorage.setItem('crm_chave', r.chaveAcesso);
+      localStorage.setItem('crm_cpf', r.user.cpf);
       localStorage.setItem('crm_session', JSON.stringify(currentUser));
+      document.getElementById('cadastroOverlay').classList.remove('active');
       entrar();
-      showToast(r.novoUsuario ? 'Conta Google vinculada! Bem-vindo, ' + r.user.nome + '! 🎉' : 'Bem-vindo de volta, ' + r.user.nome + '! 👋', 'success');
+      showToast('Cadastro concluído! Bem-vindo, ' + r.user.nome + '! 🎉','success');
     } else {
-      showToast(r.message || 'Erro ao entrar com Google', 'error');
+      erro.textContent = '❌ ' + (r.message || 'Erro ao finalizar cadastro');
+      erro.style.display = 'block';
     }
   } catch(e) {
-    showToast('Erro de conexão com o servidor', 'error');
+    btn.disabled = false; btn.innerHTML = '✅ Finalizar Cadastro';
+    erro.textContent = '❌ Erro de conexão com o servidor';
+    erro.style.display = 'block';
   }
 }
 
+// ============ LOGIN AUTOMÁTICO ============
 async function tentarLoginAutomatico(){
   const chave = localStorage.getItem('crm_chave');
   if(!chave) return false;
@@ -545,10 +592,11 @@ async function tentarLoginAutomatico(){
 
 function entrar(){
   document.getElementById('loginOverlay').classList.remove('active');
+  document.getElementById('cadastroOverlay').classList.remove('active');
   document.getElementById('userProfile').style.display = 'flex';
   document.getElementById('userName').textContent = currentUser.nome;
   document.getElementById('userPapel').textContent = currentUser.admin ? 'Administrador' : 'Vendedor';
-  document.getElementById('avatarLetra').textContent = currentUser.nome[0].toUpperCase();
+  document.getElementById('avatarLetra').textContent = (currentUser.nome || '?')[0].toUpperCase();
   document.getElementById('homeUserName').textContent = currentUser.nome;
   carregarDados();
   carregarUsuarios();
@@ -559,37 +607,37 @@ function entrar(){
 function logout(){
   localStorage.removeItem('crm_session');
   localStorage.removeItem('crm_chave');
-  localStorage.removeItem('crm_email');
+  localStorage.removeItem('crm_cpf');
   currentUser = null; leads = []; quadro = { listas: [] };
   document.getElementById('userProfile').style.display = 'none';
   document.getElementById('loginOverlay').classList.add('active');
-  document.getElementById('emailLogin').value = '';
-  document.getElementById('senhaLogin').value = '';
+  document.getElementById('cpfLogin').value = '';
   document.getElementById('loginError').style.display = 'none';
   showToast('Você saiu da sua conta', 'info');
 }
 
+// ============ DADOS ============
 async function carregarDados(){
   try {
-    const r = await api('getLeads', {email: currentUser.email});
+    const r = await api('getLeads', {cpf: currentUser.cpf});
     if(r.success){ leads = r.leads; updateAll(); }
     else showToast(r.message||'Erro ao carregar leads','error');
   } catch(e) { showToast('Erro de conexão','error'); }
   try {
-    const r = await api('getKanban', {email: currentUser.email});
+    const r = await api('getKanban', {cpf: currentUser.cpf});
     if(r.success){ quadro = r.dados; if(document.getElementById('quadro').classList.contains('active')) renderQuadro(); }
   } catch(e) {}
 }
 
 async function carregarUsuarios(){
   try {
-    const r = await api('getAllUsers', {email: currentUser.email});
+    const r = await api('getAllUsers', {cpf: currentUser.cpf});
     if(r.success){
       usuarios = r.users;
       const sel = document.getElementById('leadResponsavel');
       if(sel){
-        sel.innerHTML = usuarios.map(u => '<option value="'+escapeHtml(u.email)+'">'+escapeHtml(u.nome)+'</option>').join('');
-        sel.value = currentUser.email;
+        sel.innerHTML = usuarios.map(u => '<option value="'+escapeHtml(u.cpf)+'">'+escapeHtml(u.nome)+'</option>').join('');
+        sel.value = currentUser.cpf;
         if(!currentUser.admin) sel.disabled = true;
       }
     }
@@ -607,6 +655,7 @@ function showSection(id){
   if(id==='consulta') buscarLeads();
 }
 
+// ============ LEADS ============
 async function concluirRegistro(){
   const nome = document.getElementById('leadNome').value.trim();
   if(!nome){ showToast('Preencha ao menos o Nome!','error'); document.getElementById('leadNome').focus(); return; }
@@ -619,7 +668,7 @@ async function concluirRegistro(){
     cidade: document.getElementById('leadCidade').value.trim(),
     pessoa: document.getElementById('leadPessoa').value.trim(),
     cargo: document.getElementById('leadCargo').value,
-    responsavel: document.getElementById('leadResponsavel').value || currentUser.email,
+    responsavel: document.getElementById('leadResponsavel').value || currentUser.cpf,
     etapa: document.getElementById('leadEtapa').value,
     temperatura: document.getElementById('leadTemperatura').value,
     canal: document.getElementById('leadCanal').value,
@@ -628,7 +677,7 @@ async function concluirRegistro(){
     resumo: document.getElementById('leadResumo').value.trim()
   };
   try {
-    const r = await api('addLead', {email: currentUser.email, lead: lead});
+    const r = await api('addLead', {cpf: currentUser.cpf, lead: lead});
     btn.disabled = false; btn.innerHTML = '✅ Concluir Registro';
     if(r.success){
       limparFormulario();
@@ -649,13 +698,13 @@ function limparFormulario(){
   document.getElementById('leadEtapa').value='novo_lead';
   document.getElementById('leadTemperatura').value='quente';
   document.getElementById('leadCanal').value='ligacao';
-  if(currentUser) document.getElementById('leadResponsavel').value = currentUser.email;
+  if(currentUser) document.getElementById('leadResponsavel').value = currentUser.cpf;
 }
 
 async function removerLead(id){
   if(!confirm('Deseja realmente excluir este lead?')) return;
   try {
-    const r = await api('deleteLead', {id: id, email: currentUser.email});
+    const r = await api('deleteLead', {id: id, cpf: currentUser.cpf});
     if(r.success){ carregarDados(); buscarLeads(); showToast('Lead removido','info'); }
     else showToast(r.message,'error');
   } catch(e) { showToast('Erro de conexão','error'); }
@@ -736,6 +785,7 @@ function verDetalhes(id){
   openModal('detalhes');
 }
 
+// ============ KANBAN ============
 function genId(){ return 'id_'+Date.now()+'_'+Math.random().toString(36).substr(2,5); }
 function defaultKanban(){ return { listas:[{id:genId(),titulo:'A Fazer',cartoes:[]},{id:genId(),titulo:'Em Andamento',cartoes:[]},{id:genId(),titulo:'Concluído',cartoes:[]}]}; }
 function openCardModal(listId){ currentListId=listId; selectedLabel=''; document.getElementById('cardTitulo').value=''; document.getElementById('cardDescricao').value=''; document.querySelectorAll('.label-color').forEach(c=>c.classList.remove('selected')); openModal('cartao'); }
@@ -783,7 +833,7 @@ function removerCartao(listId,cardId){
 }
 async function salvarQuadro(){
   try {
-    const r = await api('saveKanban', {email: currentUser.email, dados: quadro});
+    const r = await api('saveKanban', {cpf: currentUser.cpf, dados: quadro});
     if(!r.success) showToast(r.message||'Erro','error');
   } catch(e) { showToast('Erro de conexão','error'); }
 }
@@ -832,12 +882,13 @@ function renderQuadro(){
   }).join('') + '<button class="btn-add-list" onclick="openListModal()">+ Adicionar lista</button>';
 }
 
+// ============ LABELS ============
 function labelInstituicao(v){ const m={faculdade:'Faculdade',instituicao_ensino:'Inst. de Ensino',empresa:'Empresa',prefeitura:'Prefeitura',orgao_publico:'Órgão Público',outro:'Outro'}; return m[v]||v||'-'; }
 function labelCargo(v){ const m={diretora:'Diretora',rh:'RH',professor:'Professor',mestre:'Mestre',coordenador:'Coordenador',proprietario:'Proprietário',outro:'Outro'}; return m[v]||v||'-'; }
 function labelCanal(v){ const m={ligacao:'Ligação',whatsapp:'WhatsApp',email:'Email',reuniao_presencial:'Reun. Presencial',reuniao_online:'Reun. Online',evento:'Evento',outro:'Outro'}; return m[v]||v||'-'; }
 function labelEtapa(v){ const m={novo_lead:'Novo Lead',em_conversa:'Em Conversa',proposta_enviada:'Proposta Enviada',convertido:'Convertido',sem_avanco:'Sem Avanço'}; return m[v]||v; }
 function labelTemperatura(v){ const m={quente:'Quente',morno:'Morno',frio:'Frio',sem_perfil:'Sem Perfil'}; return m[v]||v; }
-function nomeDe(email){ const u = usuarios.find(u=>String(u.email).toLowerCase()===String(email||'').toLowerCase()); return u ? u.nome : (email||'-'); }
+function nomeDe(cpf){ const u = usuarios.find(u=>String(u.cpf)===String(cpf||'')); return u ? u.nome : (cpf||'-'); }
 function fmtDate(d){ if(!d) return ''; try{const p=d.split('T')[0].split('-');return p[2]+'/'+p[1]+'/'+p[0];}catch(e){return d;} }
 function fmtDateTime(t){ if(!t) return ''; try{return new Date(t).toLocaleString('pt-BR');}catch(e){return t;} }
 
@@ -875,7 +926,6 @@ window.onload = async function(){
     const session = JSON.parse(localStorage.getItem('crm_session')||'null');
     if(session){ currentUser = session; entrar(); }
   }
-  initGoogleLogin();
 };
 
 document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('active');}));
