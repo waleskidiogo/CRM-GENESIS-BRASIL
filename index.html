@@ -4,367 +4,686 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CRM Genesis Brasil</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --orange:#E86A1F; --orange-light:#F2955A;
-  --graphite:#1B2431; --graphite-2:#24304A;
-  --white:#fff; --gray:#9CA3AF; --font:'Montserrat',sans-serif;
-}
-*{margin:0;padding:0;box-sizing:border-box;font-family:var(--font);}
-body{display:flex;min-height:100vh;background:#F5F6F8;color:var(--graphite);}
-a{text-decoration:none;color:inherit;}
-ul{list-style:none;}
-
-/* ===== SIDEBAR ===== */
-.sidebar{
-  width:280px; background:var(--graphite); height:100vh; position:fixed; top:0; left:0;
-  display:flex; flex-direction:column; transition:width .25s; overflow-y:auto; z-index:20;
-}
-.sidebar.collapsed{ width:76px; }
-.sidebar::-webkit-scrollbar{width:5px;}
-.sidebar::-webkit-scrollbar-thumb{background:var(--orange);border-radius:10px;}
-
-/* BRANDING — preparado para logo oficial */
-.sidebar-header{padding:20px 20px; border-bottom:1px solid rgba(255,255,255,.08); display:flex; align-items:center; gap:12px;}
-.brand-logo-slot{
-  width:38px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
-  overflow:hidden;
-}
-.brand-logo-slot img{max-width:100%;max-height:100%;object-fit:contain;}
-/* Placeholder neutro até a logo oficial ser inserida (sem redesenho de marca) */
-.brand-logo-slot .logo-placeholder{
-  width:100%;height:100%;border:1px dashed rgba(255,255,255,.35);border-radius:8px;
-}
-.brand-text{color:#fff;font-size:13.5px;line-height:1.25;white-space:nowrap;}
-.brand-text span{display:block;color:var(--orange);font-size:10px;font-weight:700;letter-spacing:1.4px;}
-.sidebar.collapsed .brand-text{display:none;}
-
-/* Botão + NOVO RELACIONAMENTO */
-.btn-novo-wrap{padding:16px;}
-.btn-novo{
-  width:100%; background:var(--orange); color:#fff; border:none; border-radius:10px;
-  padding:12px; font-weight:700; font-size:13.5px; display:flex; align-items:center;
-  justify-content:center; gap:8px; cursor:pointer; box-shadow:0 4px 14px rgba(232,106,31,.35);
-  white-space:nowrap;
-}
-.btn-novo:hover{background:var(--orange-light);}
-.sidebar.collapsed .btn-novo .label{display:none;}
-.sidebar.collapsed .btn-novo{padding:12px 0;}
-
-/* Seções */
-.nav-section-title{font-size:10.5px;font-weight:700;letter-spacing:1.4px;color:var(--gray);padding:14px 20px 6px;text-transform:uppercase;white-space:nowrap;}
-.sidebar.collapsed .nav-section-title{display:none;}
-
-.nav-item{
-  display:flex; align-items:center; gap:12px; padding:10px 20px; font-size:14px;
-  font-weight:500; color:#E5E7EB; cursor:pointer; margin:1px 8px; border-radius:9px;
-  transition:background .2s,color .2s; white-space:nowrap; overflow:hidden;
-}
-.nav-item:hover{background:rgba(232,106,31,.12); color:#fff;}
-.nav-item.active{background:var(--orange); color:#fff;}
-.ic{width:18px;text-align:center;flex-shrink:0;color:var(--orange-light);font-size:14px;}
-.nav-item.active .ic{color:#fff;}
-.sidebar.collapsed .nav-item span:not(.ic){display:none;}
-.sidebar.collapsed .nav-item{justify-content:center;padding:12px 0;margin:1px 12px;}
-
-.sidebar-divider{height:1px;background:rgba(255,255,255,.08);margin:8px 16px;}
-
-.sidebar-footer{margin-top:auto;padding:14px 16px;}
-.toggle-btn{
-  width:100%;background:var(--graphite-2);border:none;color:var(--gray);padding:10px;
-  border-radius:8px;cursor:pointer;font-size:12px;
-}
-
-/* ===== TOPBAR ===== */
-.topbar{
-  height:64px; background:#fff; border-bottom:1px solid #eee; display:flex; align-items:center;
-  gap:20px; padding:0 28px; position:sticky; top:0; z-index:10;
-}
-.page-title{font-size:17px;font-weight:700;color:var(--graphite);white-space:nowrap;}
-
-/* Campo de busca real (input) — sem mecanismo de pesquisa ainda */
-.search-box{
-  flex:1; max-width:520px; display:flex; align-items:center; gap:10px; background:#F3F4F6;
-  border-radius:999px; padding:0 16px;
-}
-.search-box .ic-search{color:#9CA3AF;font-size:14px;}
-.search-input{
-  flex:1; border:none; background:transparent; outline:none; font-size:13.5px;
-  color:var(--graphite); padding:10px 0; font-family:var(--font);
-}
-.search-input::placeholder{color:#9CA3AF;}
-
-.top-actions{display:flex;align-items:center;gap:14px;margin-left:auto;}
-.btn-top-novo{
-  background:var(--orange); color:#fff; border:none; padding:9px 18px; border-radius:999px;
-  font-weight:700; font-size:13px; cursor:pointer; white-space:nowrap;
-}
-.icon-btn{
-  width:38px;height:38px;border-radius:50%;background:#F3F4F6;display:flex;align-items:center;
-  justify-content:center;cursor:pointer;color:var(--graphite);font-size:15px;position:relative;
-}
-.badge{position:absolute;top:-2px;right:-2px;width:9px;height:9px;background:var(--orange);border-radius:50%;border:2px solid #fff;}
-.user-mini{display:flex;align-items:center;gap:10px;cursor:pointer;}
-.avatar{width:36px;height:36px;border-radius:50%;background:var(--orange);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;}
-.user-mini .name{font-size:13px;font-weight:700;}
-.user-mini .role{font-size:11px;color:var(--gray);}
-
-/* ===== CONTEÚDO / PLACEHOLDER ===== */
-.main{margin-left:280px;flex:1;transition:margin-left .25s;}
-.sidebar.collapsed ~ .main{margin-left:76px;}
-.content{padding:32px 5%;}
-.placeholder{
-  background:#fff; border:1px dashed #D1D5DB; border-radius:14px; padding:60px 30px;
-  text-align:center; color:var(--gray);
-}
-.placeholder h2{color:var(--graphite); font-size:18px; margin-bottom:8px;}
-.placeholder p{font-size:13.5px;}
-
-/* ===== MODAL "NOVO RELACIONAMENTO" ===== */
-/* Modal central: funciona independente do estado da sidebar (colapsada ou não) */
-.modal-overlay{
-  position:fixed; inset:0; background:rgba(15,20,30,.55); display:none;
-  align-items:center; justify-content:center; z-index:100; padding:20px;
-}
-.modal-overlay.open{display:flex;}
-.modal-box{
-  background:#fff; border-radius:16px; width:100%; max-width:440px; padding:26px;
-  box-shadow:0 20px 60px rgba(0,0,0,.3); max-height:90vh; overflow-y:auto;
-}
-.modal-title{font-size:16px;font-weight:700;color:var(--graphite);margin-bottom:4px;}
-.modal-subtitle{font-size:12.5px;color:var(--gray);margin-bottom:18px;}
-.modal-group-label{font-size:10.5px;font-weight:700;letter-spacing:1px;color:var(--gray);text-transform:uppercase;margin:14px 0 8px;}
-.modal-item{
-  display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:9px;
-  font-size:13.5px;font-weight:500;color:var(--graphite);cursor:pointer;border:1px solid transparent;
-}
-.modal-item:hover{background:#FBEAE0;color:var(--orange);border-color:#F6D3BC;}
-.modal-divider{height:1px;background:#eee;margin:14px 0;}
-.modal-close{
-  position:absolute; top:18px; right:20px; cursor:pointer; color:var(--gray); font-size:18px;
-}
-.modal-box{position:relative;}
-
-/* ===== RESPONSIVIDADE (não altera layout desktop) ===== */
-@media (max-width: 1024px){
-  .sidebar{ width:76px; }
-  .sidebar .brand-text, .sidebar .btn-novo .label,
-  .sidebar .nav-section-title, .sidebar .nav-item span:not(.ic){ display:none; }
-  .sidebar .nav-item{ justify-content:center; padding:12px 0; margin:1px 12px; }
-  .sidebar .btn-novo{ padding:12px 0; }
-  .main{ margin-left:76px; }
-  .sidebar.collapsed{ width:76px; } /* já colapsada por padrão neste breakpoint */
-  .sidebar:not(.collapsed) ~ .main{ margin-left:76px; }
-}
-
-@media (max-width: 768px){
-  .sidebar{
-    width:240px; left:-240px; transition:left .25s;
+  :root{
+    --laranja:#E86A1F;
+    --laranja-escuro:#C95518;
+    --laranja-claro:#FDECD9;
+    --grafite:#2C2C2C;
+    --cinza:#6A6A6A;
+    --cinza-claro:#E5E5E5;
+    --branco:#FFFFFF;
   }
-  .sidebar.mobile-open{ left:0; }
-  .sidebar .brand-text, .sidebar .btn-novo .label,
-  .sidebar .nav-section-title, .sidebar .nav-item span:not(.ic){ display:flex; }
-  .sidebar .nav-item{ justify-content:flex-start; padding:10px 20px; margin:1px 8px; }
-  .sidebar .btn-novo{ padding:12px; }
-  .main{ margin-left:0 !important; }
-  .topbar{ padding:0 14px; gap:10px; }
-  .page-title{ display:none; }
-  .search-box{ max-width:none; }
-  .btn-top-novo span.full-label{ display:none; }
-  .mobile-toggle{ display:flex !important; }
-}
-.mobile-toggle{
-  display:none; width:38px;height:38px;border-radius:8px;background:#F3F4F6;
-  align-items:center;justify-content:center;cursor:pointer;font-size:16px;
-}
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Montserrat',sans-serif;
+    background:#F7F7F7;
+    color:var(--grafite);
+  }
+  h1,h2,h3,.brand-font{
+    font-family: Georgia, 'Cooper Black', serif;
+    font-weight:700;
+  }
+
+  /* ---------- TOPBAR ---------- */
+  .topbar{
+    background:var(--grafite);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 24px;
+    position:sticky;
+    top:0;
+    z-index:100;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:20px;
+  }
+  .brand .logo-g{
+    width:36px;height:36px;
+    border:4px solid var(--laranja);
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--laranja);font-weight:700;
+  }
+  .brand span.small{
+    font-size:11px;
+    display:block;
+    color:var(--cinza-claro);
+    letter-spacing:1px;
+    font-weight:400;
+  }
+  nav.menu{
+    display:flex;
+    gap:24px;
+  }
+  nav.menu a{
+    color:#ddd;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:600;
+    padding:6px 4px;
+    border-bottom:2px solid transparent;
+    cursor:pointer;
+    transition:.2s;
+  }
+  nav.menu a:hover, nav.menu a.active{
+    color:var(--laranja);
+    border-bottom:2px solid var(--laranja);
+  }
+  .topbar-actions{
+    display:flex;
+    gap:10px;
+  }
+  .btn{
+    padding:8px 16px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+    border:none;
+    transition:.2s;
+  }
+  .btn-outline{
+    background:transparent;
+    color:#fff;
+    border:1px solid #fff;
+  }
+  .btn-outline:hover{ background:#fff; color:var(--grafite); }
+  .btn-primary{
+    background:var(--laranja);
+    color:#fff;
+  }
+  .btn-primary:hover{ background:var(--laranja-escuro); }
+
+  /* ---------- LAYOUT ---------- */
+  .container{
+    max-width:1300px;
+    margin:0 auto;
+    padding:32px 24px;
+  }
+  .page-title{
+    font-size:26px;
+    margin-bottom:4px;
+  }
+  .page-sub{
+    color:var(--cinza);
+    margin-bottom:24px;
+    font-size:14px;
+  }
+
+  /* ---------- CARDS ---------- */
+  .cards-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+    gap:20px;
+    margin-bottom:32px;
+  }
+  .card{
+    background:var(--branco);
+    border:1px solid var(--cinza-claro);
+    border-radius:12px;
+    padding:20px;
+    transition:.2s;
+  }
+  .card:hover{
+    box-shadow:0 6px 18px rgba(0,0,0,0.08);
+    transform:translateY(-2px);
+  }
+  .card-icon{
+    width:44px;height:44px;
+    background:var(--laranja-claro);
+    color:var(--laranja);
+    border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:20px;
+    margin-bottom:12px;
+  }
+  .card h3{ font-size:16px; margin:0 0 6px; font-family:'Montserrat'; font-weight:700;}
+  .card p{ font-size:13px; color:var(--cinza); margin:0 0 12px; }
+  .card .card-number{ font-size:28px; font-weight:700; color:var(--grafite); }
+  .card a.link{
+    color:var(--laranja);
+    font-weight:700;
+    font-size:13px;
+    text-decoration:none;
+  }
+
+  /* ---------- SECTION / TABLE ---------- */
+  .section{
+    background:var(--branco);
+    border:1px solid var(--cinza-claro);
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:24px;
+  }
+  .section-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:16px;
+  }
+  .section-header h2{ font-size:18px; margin:0;}
+  table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13px;
+  }
+  th{
+    text-align:left;
+    color:var(--cinza);
+    font-weight:700;
+    padding:10px;
+    border-bottom:2px solid var(--cinza-claro);
+    text-transform:uppercase;
+    font-size:11px;
+  }
+  td{
+    padding:10px;
+    border-bottom:1px solid var(--cinza-claro);
+  }
+  tr:hover td{ background:var(--laranja-claro); }
+  .tag{
+    padding:3px 10px;
+    border-radius:12px;
+    font-size:11px;
+    font-weight:700;
+    background:var(--laranja-claro);
+    color:var(--laranja-escuro);
+  }
+  .empty-state{
+    text-align:center;
+    padding:40px 0;
+    color:var(--cinza);
+    font-size:14px;
+  }
+
+  /* ---------- FORM / MODAL ---------- */
+  .modal-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.4);
+    align-items:center;
+    justify-content:center;
+    z-index:200;
+  }
+  .modal-overlay.active{ display:flex; }
+  .modal{
+    background:#fff;
+    border-radius:12px;
+    padding:28px;
+    width:420px;
+    max-width:90%;
+  }
+  .modal h2{ margin-top:0; font-size:20px;}
+  .form-group{ margin-bottom:14px; }
+  label{
+    display:block;
+    font-size:12px;
+    font-weight:700;
+    margin-bottom:6px;
+    color:var(--grafite);
+  }
+  input, select, textarea{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--cinza-claro);
+    border-radius:8px;
+    font-family:'Montserrat';
+    font-size:13px;
+    outline:none;
+  }
+  input:focus, select:focus, textarea:focus{ border-color:var(--laranja); }
+  .modal-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:18px;
+  }
+
+  .view{ display:none; }
+  .view.active{ display:block; }
+
+  @media(max-width:900px){
+    nav.menu{ display:none; }
+  }
 </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <!-- Slot de branding: substituir por <img src="logo-oficial.svg" alt="Grupo Gênesis Brasil"> quando disponível -->
-    <div class="brand-logo-slot">
-      <div class="logo-placeholder"></div>
+<!-- ===================== TOPBAR ===================== -->
+<div class="topbar">
+  <div class="brand">
+    <div class="logo-g">G</div>
+    <div>
+      Gênesis Brasil
+      <span class="small">CRM · GRUPO GÊNESIS</span>
     </div>
-    <div class="brand-text">GRUPO GÊNESIS BRASIL<span>CRM ECOSSISTEMA</span></div>
   </div>
-
-  <div class="btn-novo-wrap">
-    <button class="btn-novo" onclick="openNovoModal()">
-      <span>＋</span><span class="label">NOVO RELACIONAMENTO</span>
-    </button>
+  <nav class="menu">
+    <a data-view="dashboard" class="active">Dashboard</a>
+    <a data-view="pessoas">Pessoas</a>
+    <a data-view="organizacoes">Organizações</a>
+    <a data-view="oportunidades">Oportunidades</a>
+    <a data-view="atividades">Atividades</a>
+  </nav>
+  <div class="topbar-actions">
+    <button class="btn btn-outline" onclick="exportData()">Exportar</button>
+    <button class="btn btn-primary" onclick="openModal('lead')">+ Novo Lead</button>
   </div>
-
-  <!-- VISÃO GERAL -->
-  <div class="nav-item active" data-route="visao-geral"><span class="ic">⌂</span><span>Visão Geral</span></div>
-
-  <!-- MEU TRABALHO -->
-  <div class="nav-section-title">Meu Trabalho</div>
-  <div class="nav-item" data-route="minha-carteira"><span class="ic">▣</span><span>Minha Carteira</span></div>
-  <div class="nav-item" data-route="agenda-tarefas"><span class="ic">✓</span><span>Agenda &amp; Tarefas</span></div>
-  <div class="nav-item" data-route="atendimentos"><span class="ic">↻</span><span>Atendimentos</span></div>
-
-  <!-- RELACIONAMENTOS -->
-  <div class="nav-section-title">Relacionamentos</div>
-  <div class="nav-item" data-route="profissionais"><span class="ic">♙</span><span>Profissionais / Filiados</span></div>
-  <div class="nav-item" data-route="organizacoes"><span class="ic">▦</span><span>Organizações</span></div>
-  <div class="nav-item" data-route="oportunidades"><span class="ic">◎</span><span>Oportunidades</span></div>
-  <div class="nav-item" data-route="funis"><span class="ic">▽</span><span>Funis</span></div>
-
-  <!-- ECOSSISTEMA -->
-  <div class="nav-section-title">Ecossistema</div>
-  <div class="nav-item" data-route="necessidades-solucoes"><span class="ic">⌘</span><span>Necessidades &amp; Soluções</span></div>
-  <div class="nav-item" data-route="parceiros-beneficios"><span class="ic">◇</span><span>Parceiros &amp; Benefícios</span></div>
-  <div class="nav-item" data-route="mapa-ecossistema"><span class="ic">◉</span><span>Mapa do Ecossistema</span></div>
-
-  <!-- GESTÃO -->
-  <div class="nav-section-title" data-permission="lider,admin">Gestão</div>
-  <div class="nav-item" data-route="minha-equipe" data-permission="lider,admin"><span class="ic">▥</span><span>Minha Equipe</span></div>
-  <div class="nav-item" data-route="inteligencia-indicadores" data-permission="admin"><span class="ic">▤</span><span>Inteligência &amp; Indicadores</span></div>
-  <div class="nav-item" data-route="relatorios" data-permission="admin"><span class="ic">▧</span><span>Relatórios</span></div>
-
-  <div class="sidebar-divider"></div>
-
-  <!-- SISTEMA -->
-  <div class="nav-section-title">Sistema</div>
-  <div class="nav-item" data-route="administracao" data-permission="admin"><span class="ic">⚙</span><span>Administração</span></div>
-  <div class="nav-item" data-route="ajuda-treinamento"><span class="ic">?</span><span>Ajuda / Treinamento</span></div>
-
-  <div class="sidebar-footer">
-    <button class="toggle-btn" onclick="document.getElementById('sidebar').classList.toggle('collapsed')">⇆ Recolher</button>
-  </div>
-</aside>
-
-<!-- MAIN -->
-<div class="main">
-  <header class="topbar">
-    <div class="mobile-toggle" onclick="document.getElementById('sidebar').classList.toggle('mobile-open')">☰</div>
-    <div class="page-title" id="pageTitle">Visão Geral</div>
-
-    <div class="search-box">
-      <span class="ic-search">🔎</span>
-      <input type="text" class="search-input" placeholder="Buscar profissional, empresa, organização, telefone, CPF, CNPJ..." disabled>
-    </div>
-
-    <div class="top-actions">
-      <button class="btn-top-novo" onclick="openNovoModal()"><span class="full-label">＋ Novo Relacionamento</span></button>
-      <div class="icon-btn">🔔<span class="badge"></span></div>
-      <div class="icon-btn">?</div>
-      <div class="user-mini">
-        <div class="avatar">DW</div>
-        <div>
-          <div class="name">Diogo Waleski</div>
-          <div class="role">Administrador</div>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <main class="content" id="content">
-    <div class="placeholder">
-      <h2>Visão Geral</h2>
-      <p>Módulo em desenvolvimento. O conteúdo desta tela será implementado em etapa posterior.</p>
-    </div>
-  </main>
 </div>
 
-<!-- MODAL: + NOVO RELACIONAMENTO -->
-<div class="modal-overlay" id="novoModal">
-  <div class="modal-box">
-    <span class="modal-close" onclick="closeNovoModal()">✕</span>
-    <div class="modal-title">Quem você está adicionando ao ecossistema?</div>
-    <div class="modal-subtitle">Selecione o tipo de relacionamento</div>
+<!-- ===================== CONTAINER ===================== -->
+<div class="container">
 
-    <div class="modal-item" data-route="novo-profissional">👤 Profissional / Filiado</div>
-    <div class="modal-item" data-route="nova-empresa">🏢 Empresa</div>
-    <div class="modal-item" data-route="nova-associacao">🤝 Associação / ONG / Entidade</div>
-    <div class="modal-item" data-route="nova-instituicao">🎓 Faculdade / Instituição de Ensino</div>
-    <div class="modal-item" data-route="novo-parceiro">🔗 Parceiro Estratégico</div>
+  <!-- DASHBOARD -->
+  <div class="view active" id="view-dashboard">
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-sub">Visão geral do Grupo Gênesis Brasil</p>
 
-    <div class="modal-divider"></div>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-icon">👤</div>
+        <div class="card-number" id="count-pessoas">0</div>
+        <h3>Pessoas</h3>
+        <p>Contatos cadastrados</p>
+        <a class="link" onclick="switchView('pessoas')">Ver todos →</a>
+      </div>
+      <div class="card">
+        <div class="card-icon">🏢</div>
+        <div class="card-number" id="count-organizacoes">0</div>
+        <h3>Organizações</h3>
+        <p>Empresas parceiras</p>
+        <a class="link" onclick="switchView('organizacoes')">Ver todos →</a>
+      </div>
+      <div class="card">
+        <div class="card-icon">💰</div>
+        <div class="card-number" id="count-oportunidades">0</div>
+        <h3>Oportunidades</h3>
+        <p>Negócios em andamento</p>
+        <a class="link" onclick="switchView('oportunidades')">Ver todos →</a>
+      </div>
+      <div class="card">
+        <div class="card-icon">📅</div>
+        <div class="card-number" id="count-atividades">0</div>
+        <h3>Atividades</h3>
+        <p>Tarefas pendentes</p>
+        <a class="link" onclick="switchView('atividades')">Ver todos →</a>
+      </div>
+    </div>
 
-    <div class="modal-item" data-route="nova-oportunidade">◎ Nova Oportunidade</div>
-    <div class="modal-item" data-route="nova-atividade">✓ Nova Atividade</div>
+    <div class="section">
+      <div class="section-header"><h2>Últimas Oportunidades</h2></div>
+      <div id="dash-oport-table"></div>
+    </div>
+  </div>
+
+  <!-- PESSOAS -->
+  <div class="view" id="view-pessoas">
+    <div class="section-header" style="margin-bottom:20px;">
+      <div>
+        <h1 class="page-title">Pessoas</h1>
+        <p class="page-sub">Gerencie seus contatos</p>
+      </div>
+      <button class="btn btn-primary" onclick="openModal('pessoa')">+ Nova Pessoa</button>
+    </div>
+    <div class="section">
+      <table>
+        <thead><tr><th>Nome</th><th>Email</th><th>Telefone</th><th>Organização</th><th>Ações</th></tr></thead>
+        <tbody id="table-pessoas"></tbody>
+      </table>
+      <div id="empty-pessoas" class="empty-state" style="display:none;">Nenhuma pessoa cadastrada ainda.</div>
+    </div>
+  </div>
+
+  <!-- ORGANIZAÇÕES -->
+  <div class="view" id="view-organizacoes">
+    <div class="section-header" style="margin-bottom:20px;">
+      <div>
+        <h1 class="page-title">Organizações</h1>
+        <p class="page-sub">Empresas e parceiros</p>
+      </div>
+      <button class="btn btn-primary" onclick="openModal('organizacao')">+ Nova Organização</button>
+    </div>
+    <div class="section">
+      <table>
+        <thead><tr><th>Nome</th><th>Segmento</th><th>Cidade</th><th>Ações</th></tr></thead>
+        <tbody id="table-organizacoes"></tbody>
+      </table>
+      <div id="empty-organizacoes" class="empty-state" style="display:none;">Nenhuma organização cadastrada ainda.</div>
+    </div>
+  </div>
+
+  <!-- OPORTUNIDADES -->
+  <div class="view" id="view-oportunidades">
+    <div class="section-header" style="margin-bottom:20px;">
+      <div>
+        <h1 class="page-title">Oportunidades</h1>
+        <p class="page-sub">Funil de vendas</p>
+      </div>
+      <button class="btn btn-primary" onclick="openModal('oportunidade')">+ Nova Oportunidade</button>
+    </div>
+    <div class="section">
+      <table>
+        <thead><tr><th>Título</th><th>Valor</th><th>Status</th><th>Contato</th><th>Ações</th></tr></thead>
+        <tbody id="table-oportunidades"></tbody>
+      </table>
+      <div id="empty-oportunidades" class="empty-state" style="display:none;">Nenhuma oportunidade cadastrada ainda.</div>
+    </div>
+  </div>
+
+  <!-- ATIVIDADES -->
+  <div class="view" id="view-atividades">
+    <div class="section-header" style="margin-bottom:20px;">
+      <div>
+        <h1 class="page-title">Atividades</h1>
+        <p class="page-sub">Tarefas e follow-ups</p>
+      </div>
+      <button class="btn btn-primary" onclick="openModal('atividade')">+ Nova Atividade</button>
+    </div>
+    <div class="section">
+      <table>
+        <thead><tr><th>Tarefa</th><th>Data</th><th>Tipo</th><th>Status</th><th>Ações</th></tr></thead>
+        <tbody id="table-atividades"></tbody>
+      </table>
+      <div id="empty-atividades" class="empty-state" style="display:none;">Nenhuma atividade cadastrada ainda.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===================== MODAIS ===================== -->
+
+<div class="modal-overlay" id="modal-pessoa">
+  <div class="modal">
+    <h2>Nova Pessoa</h2>
+    <div class="form-group"><label>Nome</label><input id="p-nome" placeholder="Nome completo"></div>
+    <div class="form-group"><label>Email</label><input id="p-email" placeholder="email@exemplo.com"></div>
+    <div class="form-group"><label>Telefone</label><input id="p-telefone" placeholder="(41) 90000-0000"></div>
+    <div class="form-group"><label>Organização</label><input id="p-org" placeholder="Empresa (opcional)"></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" style="color:var(--grafite);border-color:var(--cinza-claro);" onclick="closeModal('pessoa')">Cancelar</button>
+      <button class="btn btn-primary" onclick="savePessoa()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-organizacao">
+  <div class="modal">
+    <h2>Nova Organização</h2>
+    <div class="form-group"><label>Nome</label><input id="o-nome" placeholder="Nome da empresa"></div>
+    <div class="form-group"><label>Segmento</label><input id="o-segmento" placeholder="Ex: Varejo, Saúde..."></div>
+    <div class="form-group"><label>Cidade</label><input id="o-cidade" placeholder="Cidade / UF"></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" style="color:var(--grafite);border-color:var(--cinza-claro);" onclick="closeModal('organizacao')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveOrganizacao()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-oportunidade">
+  <div class="modal">
+    <h2>Nova Oportunidade</h2>
+    <div class="form-group"><label>Título</label><input id="op-titulo" placeholder="Ex: Contrato Anual"></div>
+    <div class="form-group"><label>Valor (R$)</label><input id="op-valor" type="number" placeholder="0,00"></div>
+    <div class="form-group"><label>Status</label>
+      <select id="op-status">
+        <option>Prospecção</option>
+        <option>Proposta Enviada</option>
+        <option>Negociação</option>
+        <option>Ganho</option>
+        <option>Perdido</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Contato</label><input id="op-contato" placeholder="Nome do contato"></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" style="color:var(--grafite);border-color:var(--cinza-claro);" onclick="closeModal('oportunidade')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveOportunidade()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-atividade">
+  <div class="modal">
+    <h2>Nova Atividade</h2>
+    <div class="form-group"><label>Tarefa</label><input id="a-tarefa" placeholder="Ex: Ligar para cliente"></div>
+    <div class="form-group"><label>Data</label><input id="a-data" type="date"></div>
+    <div class="form-group"><label>Tipo</label>
+      <select id="a-tipo">
+        <option>Ligação</option>
+        <option>Reunião</option>
+        <option>Email</option>
+        <option>Follow-up</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Status</label>
+      <select id="a-status">
+        <option>Pendente</option>
+        <option>Concluída</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" style="color:var(--grafite);border-color:var(--cinza-claro);" onclick="closeModal('atividade')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveAtividade()">Salvar</button>
+    </div>
   </div>
 </div>
 
 <script>
-const routeTitles = {
-  "visao-geral":"Visão Geral",
-  "minha-carteira":"Minha Carteira",
-  "agenda-tarefas":"Agenda & Tarefas",
-  "atendimentos":"Atendimentos",
-  "profissionais":"Profissionais / Filiados",
-  "organizacoes":"Organizações",
-  "oportunidades":"Oportunidades",
-  "funis":"Funis",
-  "necessidades-solucoes":"Necessidades & Soluções",
-  "parceiros-beneficios":"Parceiros & Benefícios",
-  "mapa-ecossistema":"Mapa do Ecossistema",
-  "minha-equipe":"Minha Equipe",
-  "inteligencia-indicadores":"Inteligência & Indicadores",
-  "relatorios":"Relatórios",
-  "administracao":"Administração",
-  "ajuda-treinamento":"Ajuda / Treinamento",
-  "novo-profissional":"Novo Profissional",
-  "nova-empresa":"Nova Empresa",
-  "nova-associacao":"Nova Associação/ONG/Entidade",
-  "nova-instituicao":"Nova Instituição de Ensino",
-  "novo-parceiro":"Novo Parceiro Estratégico",
-  "nova-oportunidade":"Nova Oportunidade",
-  "nova-atividade":"Nova Atividade"
+/* ================= STORAGE ================= */
+const DB = {
+  get(key){ return JSON.parse(localStorage.getItem(key) || '[]'); },
+  set(key, data){ localStorage.setItem(key, JSON.stringify(data)); }
 };
-
-document.querySelectorAll('.nav-item[data-route]').forEach(el=>{
-  el.addEventListener('click', ()=>{
-    navigateTo(el.getAttribute('data-route'));
-    document.getElementById('sidebar').classList.remove('mobile-open');
-  });
+['pessoas','organizacoes','oportunidades','atividades'].forEach(k=>{
+  if(!localStorage.getItem(k)) DB.set(k, []);
 });
 
-document.querySelectorAll('.modal-item[data-route]').forEach(el=>{
-  el.addEventListener('click', ()=>{
-    navigateTo(el.getAttribute('data-route'));
-    closeNovoModal();
-  });
+/* ================= NAVIGATION ================= */
+document.querySelectorAll('nav.menu a').forEach(a=>{
+  a.addEventListener('click', ()=> switchView(a.dataset.view));
 });
-
-function navigateTo(route){
-  document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
-  const clicked = document.querySelector(`.nav-item[data-route="${route}"]`);
-  if(clicked) clicked.classList.add('active');
-
-  const title = routeTitles[route] || route;
-  document.getElementById('pageTitle').textContent = title;
-  document.getElementById('content').innerHTML = `
-    <div class="placeholder">
-      <h2>${title}</h2>
-      <p>Módulo em desenvolvimento. O conteúdo desta tela será implementado em etapa posterior.</p>
-    </div>`;
-}
-
-function openNovoModal(){ document.getElementById('novoModal').classList.add('open'); }
-function closeNovoModal(){ document.getElementById('novoModal').classList.remove('open'); }
-document.getElementById('novoModal').addEventListener('click', (e)=>{
-  if(e.target.id === 'novoModal') closeNovoModal();
-});
-
-/* ===== CONTROLE DE PERMISSÕES (protótipo) =====
-   currentUserRole deve ser substituído pela sessão real de autenticação.
-   Ex.: const currentUserRole = auth.getUser().role;
-*/
-const currentUserRole = 'admin'; // MOCK — origem futura: módulo de autenticação
-
-function applyPermissions(role){
-  document.querySelectorAll('[data-permission]').forEach(el=>{
-    const allowed = el.getAttribute('data-permission').split(',');
-    el.style.display = allowed.includes(role) ? '' : 'none';
+function switchView(view){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+view).classList.add('active');
+  document.querySelectorAll('nav.menu a').forEach(a=>{
+    a.classList.toggle('active', a.dataset.view===view);
   });
 }
-applyPermissions(currentUserRole);
+
+/* ================= MODAL HELPERS ================= */
+function openModal(type){ document.getElementById('modal-'+type).classList.add('active'); }
+function closeModal(type){ document.getElementById('modal-'+type).classList.remove('active'); }
+
+/* ================= PESSOAS ================= */
+function savePessoa(){
+  const nome = document.getElementById('p-nome').value.trim();
+  if(!nome) return alert('Informe o nome.');
+  const data = DB.get('pessoas');
+  data.push({
+    id: Date.now(),
+    nome,
+    email: document.getElementById('p-email').value,
+    telefone: document.getElementById('p-telefone').value,
+    organizacao: document.getElementById('p-org').value
+  });
+  DB.set('pessoas', data);
+  ['p-nome','p-email','p-telefone','p-org'].forEach(id=>document.getElementById(id).value='');
+  closeModal('pessoa');
+  renderAll();
+}
+function deletePessoa(id){
+  DB.set('pessoas', DB.get('pessoas').filter(p=>p.id!==id));
+  renderAll();
+}
+
+/* ================= ORGANIZAÇÕES ================= */
+function saveOrganizacao(){
+  const nome = document.getElementById('o-nome').value.trim();
+  if(!nome) return alert('Informe o nome.');
+  const data = DB.get('organizacoes');
+  data.push({
+    id: Date.now(),
+    nome,
+    segmento: document.getElementById('o-segmento').value,
+    cidade: document.getElementById('o-cidade').value
+  });
+  DB.set('organizacoes', data);
+  ['o-nome','o-segmento','o-cidade'].forEach(id=>document.getElementById(id).value='');
+  closeModal('organizacao');
+  renderAll();
+}
+function deleteOrganizacao(id){
+  DB.set('organizacoes', DB.get('organizacoes').filter(o=>o.id!==id));
+  renderAll();
+}
+
+/* ================= OPORTUNIDADES ================= */
+function saveOportunidade(){
+  const titulo = document.getElementById('op-titulo').value.trim();
+  if(!titulo) return alert('Informe o título.');
+  const data = DB.get('oportunidades');
+  data.push({
+    id: Date.now(),
+    titulo,
+    valor: parseFloat(document.getElementById('op-valor').value) || 0,
+    status: document.getElementById('op-status').value,
+    contato: document.getElementById('op-contato').value
+  });
+  DB.set('oportunidades', data);
+  ['op-titulo','op-valor','op-contato'].forEach(id=>document.getElementById(id).value='');
+  closeModal('oportunidade');
+  renderAll();
+}
+function deleteOportunidade(id){
+  DB.set('oportunidades', DB.get('oportunidades').filter(o=>o.id!==id));
+  renderAll();
+}
+
+/* ================= ATIVIDADES ================= */
+function saveAtividade(){
+  const tarefa = document.getElementById('a-tarefa').value.trim();
+  if(!tarefa) return alert('Informe a tarefa.');
+  const data = DB.get('atividades');
+  data.push({
+    id: Date.now(),
+    tarefa,
+    data: document.getElementById('a-data').value,
+    tipo: document.getElementById('a-tipo').value,
+    status: document.getElementById('a-status').value
+  });
+  DB.set('atividades', data);
+  ['a-tarefa','a-data'].forEach(id=>document.getElementById(id).value='');
+  closeModal('atividade');
+  renderAll();
+}
+function deleteAtividade(id){
+  DB.set('atividades', DB.get('atividades').filter(a=>a.id!==id));
+  renderAll();
+}
+
+/* ================= RENDER ================= */
+function statusColor(status){
+  const map = {
+    'Ganho':'#2e7d32', 'Perdido':'#c62828', 'Concluída':'#2e7d32', 'Pendente':'#C95518'
+  };
+  return map[status] || '#E86A1F';
+}
+
+function renderAll(){
+  const pessoas = DB.get('pessoas');
+  const orgs = DB.get('organizacoes');
+  const oport = DB.get('oportunidades');
+  const ativ = DB.get('atividades');
+
+  document.getElementById('count-pessoas').textContent = pessoas.length;
+  document.getElementById('count-organizacoes').textContent = orgs.length;
+  document.getElementById('count-oportunidades').textContent = oport.length;
+  document.getElementById('count-atividades').textContent = ativ.length;
+
+  // Pessoas
+  const tbP = document.getElementById('table-pessoas');
+  tbP.innerHTML = pessoas.map(p=>`
+    <tr>
+      <td>${p.nome}</td><td>${p.email||'-'}</td><td>${p.telefone||'-'}</td><td>${p.organizacao||'-'}</td>
+      <td><a class="link" style="color:#c62828;cursor:pointer;font-weight:700;font-size:12px;" onclick="deletePessoa(${p.id})">Excluir</a></td>
+    </tr>`).join('');
+  document.getElementById('empty-pessoas').style.display = pessoas.length ? 'none':'block';
+
+  // Organizações
+  const tbO = document.getElementById('table-organizacoes');
+  tbO.innerHTML = orgs.map(o=>`
+    <tr>
+      <td>${o.nome}</td><td>${o.segmento||'-'}</td><td>${o.cidade||'-'}</td>
+      <td><a style="color:#c62828;cursor:pointer;font-weight:700;font-size:12px;" onclick="deleteOrganizacao(${o.id})">Excluir</a></td>
+    </tr>`).join('');
+  document.getElementById('empty-organizacoes').style.display = orgs.length ? 'none':'block';
+
+  // Oportunidades
+  const tbOp = document.getElementById('table-oportunidades');
+  tbOp.innerHTML = oport.map(o=>`
+    <tr>
+      <td>${o.titulo}</td>
+      <td>R$ ${o.valor.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+      <td><span class="tag" style="background:${statusColor(o.status)}22;color:${statusColor(o.status)};">${o.status}</span></td>
+      <td>${o.contato||'-'}</td>
+      <td><a style="color:#c62828;cursor:pointer;font-weight:700;font-size:12px;" onclick="deleteOportunidade(${o.id})">Excluir</a></td>
+    </tr>`).join('');
+  document.getElementById('empty-oportunidades').style.display = oport.length ? 'none':'block';
+
+  // Dashboard mini table (últimas 5)
+  const dashTable = document.getElementById('dash-oport-table');
+  if(oport.length===0){
+    dashTable.innerHTML = '<div class="empty-state">Nenhuma oportunidade cadastrada ainda.</div>';
+  } else {
+    const last = oport.slice(-5).reverse();
+    dashTable.innerHTML = `<table>
+      <thead><tr><th>Título</th><th>Valor</th><th>Status</th></tr></thead>
+      <tbody>${last.map(o=>`
+        <tr>
+          <td>${o.titulo}</td>
+          <td>R$ ${o.valor.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+          <td><span class="tag" style="background:${statusColor(o.status)}22;color:${statusColor(o.status)};">${o.status}</span></td>
+        </tr>`).join('')}</tbody>
+    </table>`;
+  }
+
+  // Atividades
+  const tbA = document.getElementById('table-atividades');
+  tbA.innerHTML = ativ.map(a=>`
+    <tr>
+      <td>${a.tarefa}</td><td>${a.data||'-'}</td><td>${a.tipo}</td>
+      <td><span class="tag" style="background:${statusColor(a.status)}22;color:${statusColor(a.status)};">${a.status}</span></td>
+      <td><a style="color:#c62828;cursor:pointer;font-weight:700;font-size:12px;" onclick="deleteAtividade(${a.id})">Excluir</a></td>
+    </tr>`).join('');
+  document.getElementById('empty-atividades').style.display = ativ.length ? 'none':'block';
+}
+
+/* ================= EXPORT ================= */
+function exportData(){
+  const all = {
+    pessoas: DB.get('pessoas'),
+    organizacoes: DB.get('organizacoes'),
+    oportunidades: DB.get('oportunidades'),
+    atividades: DB.get('atividades')
+  };
+  const blob = new Blob([JSON.stringify(all, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'crm-genesis-brasil.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ================= INIT ================= */
+renderAll();
 </script>
 </body>
 </html>
