@@ -25,31 +25,32 @@ ul{list-style:none;}
 .sidebar::-webkit-scrollbar{width:5px;}
 .sidebar::-webkit-scrollbar-thumb{background:var(--orange);border-radius:10px;}
 
-.sidebar-header{padding:22px 20px; border-bottom:1px solid rgba(255,255,255,.08); display:flex; align-items:center; gap:12px;}
-.logo-circle{width:38px;height:38px;border-radius:50%;border:2px solid var(--orange);display:flex;align-items:center;justify-content:center;color:var(--orange);font-weight:800;flex-shrink:0;}
+/* BRANDING — preparado para logo oficial */
+.sidebar-header{padding:20px 20px; border-bottom:1px solid rgba(255,255,255,.08); display:flex; align-items:center; gap:12px;}
+.brand-logo-slot{
+  width:38px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.brand-logo-slot img{max-width:100%;max-height:100%;object-fit:contain;}
+/* Placeholder neutro até a logo oficial ser inserida (sem redesenho de marca) */
+.brand-logo-slot .logo-placeholder{
+  width:100%;height:100%;border:1px dashed rgba(255,255,255,.35);border-radius:8px;
+}
 .brand-text{color:#fff;font-size:13.5px;line-height:1.25;white-space:nowrap;}
 .brand-text span{display:block;color:var(--orange);font-size:10px;font-weight:700;letter-spacing:1.4px;}
 .sidebar.collapsed .brand-text{display:none;}
 
-/* Botão + NOVO */
-.btn-novo-wrap{padding:16px;position:relative;}
+/* Botão + NOVO RELACIONAMENTO */
+.btn-novo-wrap{padding:16px;}
 .btn-novo{
   width:100%; background:var(--orange); color:#fff; border:none; border-radius:10px;
-  padding:12px; font-weight:700; font-size:14px; display:flex; align-items:center;
+  padding:12px; font-weight:700; font-size:13.5px; display:flex; align-items:center;
   justify-content:center; gap:8px; cursor:pointer; box-shadow:0 4px 14px rgba(232,106,31,.35);
   white-space:nowrap;
 }
 .btn-novo:hover{background:var(--orange-light);}
 .sidebar.collapsed .btn-novo .label{display:none;}
-
-.novo-menu{
-  position:absolute; top:60px; left:16px; right:16px; background:#fff; border-radius:12px;
-  box-shadow:0 12px 32px rgba(0,0,0,.2); padding:8px; display:none; z-index:30;
-}
-.novo-menu.open{display:block;}
-.novo-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;font-size:13.5px;font-weight:500;color:var(--graphite);cursor:pointer;}
-.novo-item:hover{background:#FBEAE0;color:var(--orange);}
-.novo-divider{height:1px;background:#eee;margin:6px 0;}
+.sidebar.collapsed .btn-novo{padding:12px 0;}
 
 /* Seções */
 .nav-section-title{font-size:10.5px;font-weight:700;letter-spacing:1.4px;color:var(--gray);padding:14px 20px 6px;text-transform:uppercase;white-space:nowrap;}
@@ -81,14 +82,23 @@ ul{list-style:none;}
   gap:20px; padding:0 28px; position:sticky; top:0; z-index:10;
 }
 .page-title{font-size:17px;font-weight:700;color:var(--graphite);white-space:nowrap;}
+
+/* Campo de busca real (input) — sem mecanismo de pesquisa ainda */
 .search-box{
   flex:1; max-width:520px; display:flex; align-items:center; gap:10px; background:#F3F4F6;
-  border-radius:999px; padding:9px 16px; color:#6b7280; font-size:13.5px;
+  border-radius:999px; padding:0 16px;
 }
+.search-box .ic-search{color:#9CA3AF;font-size:14px;}
+.search-input{
+  flex:1; border:none; background:transparent; outline:none; font-size:13.5px;
+  color:var(--graphite); padding:10px 0; font-family:var(--font);
+}
+.search-input::placeholder{color:#9CA3AF;}
+
 .top-actions{display:flex;align-items:center;gap:14px;margin-left:auto;}
 .btn-top-novo{
   background:var(--orange); color:#fff; border:none; padding:9px 18px; border-radius:999px;
-  font-weight:700; font-size:13px; cursor:pointer;
+  font-weight:700; font-size:13px; cursor:pointer; white-space:nowrap;
 }
 .icon-btn{
   width:38px;height:38px;border-radius:50%;background:#F3F4F6;display:flex;align-items:center;
@@ -110,6 +120,64 @@ ul{list-style:none;}
 }
 .placeholder h2{color:var(--graphite); font-size:18px; margin-bottom:8px;}
 .placeholder p{font-size:13.5px;}
+
+/* ===== MODAL "NOVO RELACIONAMENTO" ===== */
+/* Modal central: funciona independente do estado da sidebar (colapsada ou não) */
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(15,20,30,.55); display:none;
+  align-items:center; justify-content:center; z-index:100; padding:20px;
+}
+.modal-overlay.open{display:flex;}
+.modal-box{
+  background:#fff; border-radius:16px; width:100%; max-width:440px; padding:26px;
+  box-shadow:0 20px 60px rgba(0,0,0,.3); max-height:90vh; overflow-y:auto;
+}
+.modal-title{font-size:16px;font-weight:700;color:var(--graphite);margin-bottom:4px;}
+.modal-subtitle{font-size:12.5px;color:var(--gray);margin-bottom:18px;}
+.modal-group-label{font-size:10.5px;font-weight:700;letter-spacing:1px;color:var(--gray);text-transform:uppercase;margin:14px 0 8px;}
+.modal-item{
+  display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:9px;
+  font-size:13.5px;font-weight:500;color:var(--graphite);cursor:pointer;border:1px solid transparent;
+}
+.modal-item:hover{background:#FBEAE0;color:var(--orange);border-color:#F6D3BC;}
+.modal-divider{height:1px;background:#eee;margin:14px 0;}
+.modal-close{
+  position:absolute; top:18px; right:20px; cursor:pointer; color:var(--gray); font-size:18px;
+}
+.modal-box{position:relative;}
+
+/* ===== RESPONSIVIDADE (não altera layout desktop) ===== */
+@media (max-width: 1024px){
+  .sidebar{ width:76px; }
+  .sidebar .brand-text, .sidebar .btn-novo .label,
+  .sidebar .nav-section-title, .sidebar .nav-item span:not(.ic){ display:none; }
+  .sidebar .nav-item{ justify-content:center; padding:12px 0; margin:1px 12px; }
+  .sidebar .btn-novo{ padding:12px 0; }
+  .main{ margin-left:76px; }
+  .sidebar.collapsed{ width:76px; } /* já colapsada por padrão neste breakpoint */
+  .sidebar:not(.collapsed) ~ .main{ margin-left:76px; }
+}
+
+@media (max-width: 768px){
+  .sidebar{
+    width:240px; left:-240px; transition:left .25s;
+  }
+  .sidebar.mobile-open{ left:0; }
+  .sidebar .brand-text, .sidebar .btn-novo .label,
+  .sidebar .nav-section-title, .sidebar .nav-item span:not(.ic){ display:flex; }
+  .sidebar .nav-item{ justify-content:flex-start; padding:10px 20px; margin:1px 8px; }
+  .sidebar .btn-novo{ padding:12px; }
+  .main{ margin-left:0 !important; }
+  .topbar{ padding:0 14px; gap:10px; }
+  .page-title{ display:none; }
+  .search-box{ max-width:none; }
+  .btn-top-novo span.full-label{ display:none; }
+  .mobile-toggle{ display:flex !important; }
+}
+.mobile-toggle{
+  display:none; width:38px;height:38px;border-radius:8px;background:#F3F4F6;
+  align-items:center;justify-content:center;cursor:pointer;font-size:16px;
+}
 </style>
 </head>
 <body>
@@ -117,24 +185,17 @@ ul{list-style:none;}
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-header">
-    <div class="logo-circle">G</div>
+    <!-- Slot de branding: substituir por <img src="logo-oficial.svg" alt="Grupo Gênesis Brasil"> quando disponível -->
+    <div class="brand-logo-slot">
+      <div class="logo-placeholder"></div>
+    </div>
     <div class="brand-text">GRUPO GÊNESIS BRASIL<span>CRM ECOSSISTEMA</span></div>
   </div>
 
   <div class="btn-novo-wrap">
-    <button class="btn-novo" onclick="document.getElementById('novoMenu').classList.toggle('open')">
-      <span>＋</span><span class="label">NOVO</span>
+    <button class="btn-novo" onclick="openNovoModal()">
+      <span>＋</span><span class="label">NOVO RELACIONAMENTO</span>
     </button>
-    <div class="novo-menu" id="novoMenu">
-      <div class="novo-item" data-route="novo-profissional">👤 Novo Profissional</div>
-      <div class="novo-item" data-route="nova-empresa">🏢 Nova Empresa</div>
-      <div class="novo-item" data-route="nova-associacao">🤝 Nova Associação/ONG</div>
-      <div class="novo-item" data-route="nova-instituicao">🎓 Nova Instituição de Ensino</div>
-      <div class="novo-item" data-route="novo-parceiro">🔗 Novo Parceiro Estratégico</div>
-      <div class="novo-divider"></div>
-      <div class="novo-item" data-route="nova-oportunidade">◎ Nova Oportunidade</div>
-      <div class="novo-item" data-route="nova-atividade">✓ Nova Atividade</div>
-    </div>
   </div>
 
   <!-- VISÃO GERAL -->
@@ -180,10 +241,16 @@ ul{list-style:none;}
 <!-- MAIN -->
 <div class="main">
   <header class="topbar">
+    <div class="mobile-toggle" onclick="document.getElementById('sidebar').classList.toggle('mobile-open')">☰</div>
     <div class="page-title" id="pageTitle">Visão Geral</div>
-    <div class="search-box">🔎 Buscar profissional, empresa, telefone, CPF, CNPJ...</div>
+
+    <div class="search-box">
+      <span class="ic-search">🔎</span>
+      <input type="text" class="search-input" placeholder="Buscar profissional, empresa, organização, telefone, CPF, CNPJ..." disabled>
+    </div>
+
     <div class="top-actions">
-      <button class="btn-top-novo" onclick="document.getElementById('novoMenu').classList.toggle('open')">＋ Novo</button>
+      <button class="btn-top-novo" onclick="openNovoModal()"><span class="full-label">＋ Novo Relacionamento</span></button>
       <div class="icon-btn">🔔<span class="badge"></span></div>
       <div class="icon-btn">?</div>
       <div class="user-mini">
@@ -204,8 +271,27 @@ ul{list-style:none;}
   </main>
 </div>
 
+<!-- MODAL: + NOVO RELACIONAMENTO -->
+<div class="modal-overlay" id="novoModal">
+  <div class="modal-box">
+    <span class="modal-close" onclick="closeNovoModal()">✕</span>
+    <div class="modal-title">Quem você está adicionando ao ecossistema?</div>
+    <div class="modal-subtitle">Selecione o tipo de relacionamento</div>
+
+    <div class="modal-item" data-route="novo-profissional">👤 Profissional / Filiado</div>
+    <div class="modal-item" data-route="nova-empresa">🏢 Empresa</div>
+    <div class="modal-item" data-route="nova-associacao">🤝 Associação / ONG / Entidade</div>
+    <div class="modal-item" data-route="nova-instituicao">🎓 Faculdade / Instituição de Ensino</div>
+    <div class="modal-item" data-route="novo-parceiro">🔗 Parceiro Estratégico</div>
+
+    <div class="modal-divider"></div>
+
+    <div class="modal-item" data-route="nova-oportunidade">◎ Nova Oportunidade</div>
+    <div class="modal-item" data-route="nova-atividade">✓ Nova Atividade</div>
+  </div>
+</div>
+
 <script>
-// Mapa de títulos por rota (placeholder consistente)
 const routeTitles = {
   "visao-geral":"Visão Geral",
   "minha-carteira":"Minha Carteira",
@@ -225,18 +311,24 @@ const routeTitles = {
   "ajuda-treinamento":"Ajuda / Treinamento",
   "novo-profissional":"Novo Profissional",
   "nova-empresa":"Nova Empresa",
-  "nova-associacao":"Nova Associação/ONG",
+  "nova-associacao":"Nova Associação/ONG/Entidade",
   "nova-instituicao":"Nova Instituição de Ensino",
   "novo-parceiro":"Novo Parceiro Estratégico",
   "nova-oportunidade":"Nova Oportunidade",
   "nova-atividade":"Nova Atividade"
 };
 
-document.querySelectorAll('[data-route]').forEach(el=>{
+document.querySelectorAll('.nav-item[data-route]').forEach(el=>{
   el.addEventListener('click', ()=>{
-    const route = el.getAttribute('data-route');
-    navigateTo(route);
-    document.getElementById('novoMenu').classList.remove('open');
+    navigateTo(el.getAttribute('data-route'));
+    document.getElementById('sidebar').classList.remove('mobile-open');
+  });
+});
+
+document.querySelectorAll('.modal-item[data-route]').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    navigateTo(el.getAttribute('data-route'));
+    closeNovoModal();
   });
 });
 
@@ -254,19 +346,17 @@ function navigateTo(route){
     </div>`;
 }
 
-// Fecha o menu +Novo ao clicar fora
-document.addEventListener('click', (e)=>{
-  const novoMenu = document.getElementById('novoMenu');
-  if(!e.target.closest('.btn-novo-wrap') && !e.target.closest('.btn-top-novo')){
-    novoMenu.classList.remove('open');
-  }
+function openNovoModal(){ document.getElementById('novoModal').classList.add('open'); }
+function closeNovoModal(){ document.getElementById('novoModal').classList.remove('open'); }
+document.getElementById('novoModal').addEventListener('click', (e)=>{
+  if(e.target.id === 'novoModal') closeNovoModal();
 });
 
-/* ===== CONTROLE DE PERMISSÕES =====
-   Perfis possíveis: 'consultor' | 'lider' | 'admin'
-   Itens sem data-permission ficam visíveis para todos.
+/* ===== CONTROLE DE PERMISSÕES (protótipo) =====
+   currentUserRole deve ser substituído pela sessão real de autenticação.
+   Ex.: const currentUserRole = auth.getUser().role;
 */
-const currentUserRole = 'admin'; // troca dinamicamente conforme usuário logado
+const currentUserRole = 'admin'; // MOCK — origem futura: módulo de autenticação
 
 function applyPermissions(role){
   document.querySelectorAll('[data-permission]').forEach(el=>{
