@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CRM Gênesis Brasil</title>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 <style>
 :root {
   --bg: #0a1628;
@@ -139,7 +140,6 @@ textarea { resize:vertical; min-height:100px; }
 /* ===== Kanban ===== */
 .board-container{display:flex;gap:20px;align-items:flex-start;overflow-x:auto;padding-bottom:20px;min-height:400px;}
 .board-list{background:rgba(13,31,60,.7);border-radius:16px;min-width:290px;max-width:290px;max-height:70vh;display:flex;flex-direction:column;border:1px solid #1a3a5c;transition:all .2s;}
-.board-list.drag-over{border-color:#f07b26;box-shadow:0 0 0 3px rgba(240,123,38,.2);}
 .board-list-header{padding:16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a3a5c;}
 .board-list-title{font-size:15px;font-weight:700;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:8px;}
 .board-list-count{background:rgba(255,255,255,.1);color:#94a3b8;font-size:12px;padding:2px 10px;border-radius:50px;}
@@ -150,6 +150,7 @@ textarea { resize:vertical; min-height:100px; }
 .board-card:active{cursor:grabbing;}
 .board-card:hover{border-color:#f07b26;box-shadow:0 6px 16px rgba(0,0,0,.3);transform:translateY(-2px);}
 .board-card.dragging{opacity:.4;}
+.board-ghost{opacity:.4;border:1px dashed #f07b26;}
 .board-card-label{display:inline-block;width:44px;height:8px;border-radius:4px;margin-bottom:8px;}
 .board-card-title{font-size:14px;font-weight:600;color:#e2e8f0;margin-bottom:4px;padding-right:20px;}
 .board-card-desc{font-size:12px;color:#64748b;line-height:1.5;}
@@ -457,7 +458,6 @@ let currentUser = null;
 let leads = [];
 let usuarios = [];
 let quadro = { listas: [] };
-let draggedCard = null, draggedFromList = null;
 let currentListId = null, selectedLabel = '';
 
 async function api(action, data) {
@@ -784,7 +784,7 @@ function verDetalhes(id){
   openModal('detalhes');
 }
 
-// ============ KANBAN ============
+// ============ KANBAN (com SortableJS - funciona no PC e no celular) ============
 function genId(){ return 'id_'+Date.now()+'_'+Math.random().toString(36).substr(2,5); }
 function defaultKanban(){ return { listas:[{id:genId(),titulo:'A Fazer',cartoes:[]},{id:genId(),titulo:'Em Andamento',cartoes:[]},{id:genId(),titulo:'Concluído',cartoes:[]}]}; }
 function openCardModal(listId){ currentListId=listId; selectedLabel=''; document.getElementById('cardTitulo').value=''; document.getElementById('cardDescricao').value=''; document.querySelectorAll('.label-color').forEach(c=>c.classList.remove('selected')); openModal('cartao'); }
@@ -837,48 +837,70 @@ async function salvarQuadro(){
   } catch(e) { showToast('Erro de conexão','error'); }
 }
 
-function onDragStart(e,cardId,listId){ draggedCard=cardId; draggedFromList=listId; e.dataTransfer.effectAllowed='move'; setTimeout(()=>{document.querySelectorAll('.board-card').forEach(c=>{if(c.dataset.cardId===cardId)c.classList.add('dragging');});},0); }
-function onDragEnd(){ document.querySelectorAll('.board-card').forEach(c=>c.classList.remove('dragging')); document.querySelectorAll('.board-list').forEach(l=>l.classList.remove('drag-over')); }
-function onDragOver(e,listId){ e.preventDefault(); e.dataTransfer.dropEffect='move'; document.querySelectorAll('.board-list').forEach(l=>l.classList.remove('drag-over')); const list=document.querySelector('.board-list[data-list-id="'+listId+'"]'); if(list) list.classList.add('drag-over'); }
-function onDragLeave(e,listId){ const list=document.querySelector('.board-list[data-list-id="'+listId+'"]'); if(list&&!list.contains(e.relatedTarget)) list.classList.remove('drag-over'); }
-function onDrop(e,listId){
-  e.preventDefault();
-  document.querySelectorAll('.board-list').forEach(l=>l.classList.remove('drag-over'));
-  if(!draggedCard||!draggedFromList) return;
-  const source = quadro.listas.find(l=>l.id===draggedFromList);
-  const target = quadro.listas.find(l=>l.id===listId);
-  if(!source||!target) return;
-  const idx = source.cartoes.findIndex(c=>c.id===draggedCard);
-  if(idx===-1) return;
-  const [card] = source.cartoes.splice(idx,1);
-  target.cartoes.push(card);
-  draggedCard=null; draggedFromList=null;
-  salvarQuadro(); renderQuadro();
-  showToast('Cartão movido! 📋','success');
-}
-
 function renderQuadro(){
   const board = document.getElementById('boardContainer');
   if(!board) return;
   if(!quadro||!quadro.listas||quadro.listas.length===0) quadro = defaultKanban();
   board.innerHTML = quadro.listas.map(lista=>{
     const cards = lista.cartoes.map(cartao=>`
-      <div class="board-card" draggable="true" data-card-id="${cartao.id}" ondragstart="onDragStart(event,'${cartao.id}','${lista.id}')" ondragend="onDragEnd()">
+      <div class="board-card" data-card-id="${cartao.id}">
         ${cartao.etiqueta?'<span class="board-card-label" style="background:'+cartao.etiqueta+'"></span>':''}
         <div class="board-card-title">${escapeHtml(cartao.titulo)}</div>
         ${cartao.descricao?'<div class="board-card-desc">'+escapeHtml(cartao.descricao)+'</div>':''}
-        <button class="board-card-delete" onclick="removerCartao(\''+lista.id+'\',\''+cartao.id+'\')">✕</button>
+        <button class="board-card-delete" onclick="removerCartao('${lista.id}','${cartao.id}')">✕</button>
       </div>`).join('');
     return `
-      <div class="board-list" data-list-id="${lista.id}" ondragover="onDragOver(event,'${lista.id}')" ondragleave="onDragLeave(event,'${lista.id}')" ondrop="onDrop(event,'${lista.id}')">
+      <div class="board-list" data-list-id="${lista.id}">
         <div class="board-list-header">
           <span class="board-list-title" ondblclick="renomearLista('${lista.id}')" title="Clique duplo para renomear">${escapeHtml(lista.titulo)} <span class="board-list-count">${lista.cartoes.length}</span></span>
           <button class="board-list-delete" onclick="removerLista('${lista.id}')">🗑</button>
         </div>
-        <div class="board-cards">${cards||'<div class="board-empty">Arraste cartões aqui</div>'}</div>
+        <div class="board-cards" data-list-id="${lista.id}">${cards||'<div class="board-empty">Arraste cartões aqui</div>'}</div>
         <button class="btn-add-card" onclick="openCardModal('${lista.id}')">+ Adicionar cartão</button>
       </div>`;
   }).join('') + '<button class="btn-add-list" onclick="openListModal()">+ Adicionar lista</button>';
+
+  initSortable();
+}
+
+function initSortable(){
+  document.querySelectorAll('.board-cards').forEach(cardsEl => {
+    new Sortable(cardsEl, {
+      group: 'kanban',
+      animation: 150,
+      ghostClass: 'board-ghost',
+      dragClass: 'dragging',
+      draggable: '.board-card',
+      filter: '.board-card-delete',
+      onEnd: function(evt){
+        if(evt.from === evt.to && evt.oldIndex === evt.newIndex) return;
+        sincronizarQuadroDoDom();
+        renderQuadro();
+        showToast('Cartão movido! 📋','success');
+      }
+    });
+  });
+}
+
+function sincronizarQuadroDoDom(){
+  const novasListas = [];
+  document.querySelectorAll('.board-cards').forEach(cardsEl => {
+    const listId = cardsEl.dataset.listId;
+    const original = quadro.listas.find(l => l.id === listId);
+    const novaLista = { id: listId, titulo: original ? original.titulo : '', cartoes: [] };
+    cardsEl.querySelectorAll('.board-card').forEach(cardEl => {
+      const cardId = cardEl.dataset.cardId;
+      let cardData = null;
+      for(const l of quadro.listas){
+        const c = l.cartoes.find(c => c.id === cardId);
+        if(c){ cardData = c; break; }
+      }
+      if(cardData) novaLista.cartoes.push(cardData);
+    });
+    novasListas.push(novaLista);
+  });
+  quadro.listas = novasListas;
+  salvarQuadro();
 }
 
 // ============ LABELS ============
