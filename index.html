@@ -18,88 +18,83 @@ button{font-family:inherit;cursor:pointer;}
 a{text-decoration:none;color:inherit;}
 input,select,textarea{font-family:inherit;}
 
-#app{display:flex;min-height:100vh;}
-#sidebar{
-  width:var(--sidebar-w);background:var(--card);border-right:1px solid var(--border);
+/* ===== LOGIN ===== */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#2f7d6b,#1f5347);}
+#loginScreen.hidden{display:none;}
+.login-box{background:#fff;border-radius:16px;padding:32px;max-width:380px;width:100%;box-shadow:0 10px 40px rgba(0,0,0,.2);}
+.login-box h1{font-size:22px;margin:0 0 2px;color:var(--accent);}
+.login-box .brand-sub{font-size:12px;color:var(--muted);margin:0 0 14px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;}
+.login-box p.welcome-text{color:var(--muted);font-size:13px;margin:0 0 22px;line-height:1.4;}
+.login-field{margin-bottom:14px;}
+.login-field label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;}
+.login-field input{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;}
+.login-field input:focus{outline:2px solid var(--accent-soft);border-color:var(--accent);}
+.login-btn{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-weight:600;font-size:14px;margin-top:6px;}
+.login-btn:hover{background:#256557;}
+.login-btn:disabled{opacity:.6;cursor:not-allowed;}
+.login-msg{font-size:13px;padding:10px 12px;border-radius:8px;margin-bottom:14px;display:none;}
+.login-msg.erro{background:var(--danger-soft);color:var(--danger);display:block;}
+.login-msg.info{background:var(--accent-soft);color:var(--accent);display:block;}
+.login-back{background:none;border:none;color:var(--muted);font-size:13px;margin-top:14px;cursor:pointer;text-decoration:underline;width:100%;text-align:center;}
+.login-welcome{font-size:14px;margin-bottom:16px;color:var(--text);}
+.login-welcome strong{color:var(--accent);}
+.cpf-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent-soft);color:var(--accent);font-size:12px;font-weight:600;padding:5px 10px;border-radius:20px;margin-bottom:14px;}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ===== APP LAYOUT ===== */
+#app{display:none;min-height:100vh;}
+#app.visible{display:flex;}
+#sidebar{width:var(--sidebar-w);background:var(--card);border-right:1px solid var(--border);
   display:flex;flex-direction:column;padding:20px 12px;position:fixed;top:0;left:0;bottom:0;
-  transition:transform .25s ease;z-index:40;
-}
+  transition:transform .25s ease;z-index:40;overflow-y:auto;}
 #sidebar .logo{font-weight:700;font-size:16px;padding:0 10px 20px;color:var(--accent);}
 #sidebar .logo small{display:block;font-weight:400;color:var(--muted);font-size:11px;margin-top:2px;}
-.nav-item{
-  display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;
-  color:var(--muted);font-size:14px;margin-bottom:2px;cursor:pointer;
-}
-.nav-item svg{width:18px;height:18px;flex-shrink:0;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;color:var(--muted);font-size:14px;margin-bottom:2px;cursor:pointer;}
 .nav-item:hover{background:var(--accent-soft);color:var(--accent);}
 .nav-item.active{background:var(--accent-soft);color:var(--accent);font-weight:600;}
 #main{flex:1;margin-left:var(--sidebar-w);min-height:100vh;display:flex;flex-direction:column;}
-
-#topbar{
-  height:var(--topbar-h);background:var(--card);border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:12px;padding:0 20px;position:sticky;top:0;z-index:30;
-}
-#hamburger{display:none;background:none;border:none;padding:6px;}
+#topbar{height:var(--topbar-h);background:var(--card);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;padding:0 20px;position:sticky;top:0;z-index:30;}
+#hamburger{display:none;background:none;border:none;padding:6px;font-size:18px;}
 #searchWrap{position:relative;flex:1;max-width:420px;}
-#search{
-  display:flex;align-items:center;gap:8px;background:var(--bg);
-  border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:var(--muted);
-}
+#search{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:var(--muted);}
 #search input{border:none;background:none;outline:none;flex:1;font-size:14px;color:var(--text);}
-#searchResults{
-  position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--card);
-  border:1px solid var(--border);border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.1);
-  max-height:340px;overflow-y:auto;z-index:60;display:none;
-}
+#searchResults{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.1);max-height:340px;overflow-y:auto;z-index:60;display:none;}
 #searchResults.open{display:block;}
 .sr-item{padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;font-size:13px;}
 .sr-item:last-child{border-bottom:none;}
 .sr-item:hover{background:var(--bg);}
-.sr-item .sr-type{font-size:10px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.03em;}
+.sr-item .sr-type{font-size:10px;font-weight:700;color:var(--accent);text-transform:uppercase;}
 .sr-item .sr-title{font-weight:600;margin-top:2px;}
 .sr-item .sr-sub{color:var(--muted);font-size:12px;margin-top:1px;}
 .sr-empty{padding:14px;color:var(--muted);font-size:13px;text-align:center;}
-
 .topbar-actions{display:flex;gap:8px;margin-left:auto;align-items:center;}
-.btn{
-  border:none;border-radius:10px;padding:9px 14px;font-size:13px;font-weight:600;
-  display:flex;align-items:center;gap:6px;white-space:nowrap;
-}
+.btn{border:none;border-radius:10px;padding:9px 14px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;white-space:nowrap;}
 .btn-primary{background:var(--accent);color:#fff;}
 .btn-primary:hover{background:#256557;}
 .btn-secondary{background:var(--accent-soft);color:var(--accent);}
 .btn-secondary:hover{background:#d6ebe4;}
 .btn-ghost{background:none;color:var(--muted);border:1px solid var(--border);}
 .btn-ghost:hover{background:var(--bg);}
-.icon-btn{background:none;border:none;padding:8px;border-radius:8px;color:var(--muted);position:relative;}
+.btn:disabled{opacity:.6;cursor:not-allowed;}
+.icon-btn{background:none;border:none;padding:8px;border-radius:8px;color:var(--muted);position:relative;font-size:16px;}
 .icon-btn:hover{background:var(--bg);}
-.badge-dot{
-  position:absolute;top:2px;right:2px;min-width:16px;height:16px;padding:0 3px;
-  background:var(--danger);border-radius:9px;display:none;
-  align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:700;
-}
-.avatar{width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;}
-
+.badge-dot{position:absolute;top:2px;right:2px;min-width:16px;height:16px;padding:0 3px;background:var(--danger);border-radius:9px;display:none;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:700;}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;cursor:pointer;}
 #notifWrap{position:relative;}
-#notifPanel{
-  position:absolute;top:calc(100% + 8px);right:0;width:320px;background:var(--card);
-  border:1px solid var(--border);border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.12);
-  z-index:60;display:none;max-height:420px;overflow-y:auto;
-}
+#notifPanel{position:absolute;top:calc(100% + 8px);right:0;width:320px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.12);z-index:60;display:none;max-height:420px;overflow-y:auto;}
 #notifPanel.open{display:block;}
 #notifPanel .np-header{padding:14px 16px 10px;border-bottom:1px solid var(--border);}
 #notifPanel .np-header h4{margin:0;font-size:15px;}
 #notifPanel .np-header p{margin:2px 0 0;font-size:12px;color:var(--muted);}
 .np-section{padding:8px 0;}
-.np-section .np-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;
-  color:var(--muted);padding:6px 16px 4px;}
-.notif-item{margin:0 10px 8px;padding:10px 12px;border-radius:10px;cursor:pointer;font-size:13px;
-  border:1px solid transparent;}
-.notif-item:hover{filter:brightness(0.98);}
+.np-section .np-section-title{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);padding:6px 16px 4px;}
+.notif-item{margin:0 10px 8px;padding:10px 12px;border-radius:10px;cursor:pointer;font-size:13px;border:1px solid transparent;}
 .notif-item.atrasado{background:var(--danger-soft);border-color:#f2c9c9;}
 .notif-item.hoje{background:var(--warn-soft);border-color:#f0d9b0;}
 .notif-item.semcuidado{background:var(--bg);border-color:var(--border);}
-.notif-item .n-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.02em;}
+.notif-item .n-tag{font-size:10px;font-weight:700;text-transform:uppercase;}
 .notif-item.atrasado .n-tag{color:var(--danger);}
 .notif-item.hoje .n-tag{color:var(--warn);}
 .notif-item.semcuidado .n-tag{color:var(--muted);}
@@ -108,40 +103,35 @@ input,select,textarea{font-family:inherit;}
 #notifPanel .np-footer{padding:10px 16px 14px;}
 #notifPanel .np-footer button{width:100%;}
 .np-empty{padding:24px 16px;text-align:center;color:var(--muted);font-size:13px;}
-
+#userMenu{position:absolute;top:calc(100% + 8px);right:0;width:200px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.12);z-index:60;display:none;overflow:hidden;}
+#userMenu.open{display:block;}
+#userMenu .um-header{padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px;}
+#userMenu .um-header strong{display:block;font-size:14px;}
+#userMenu .um-item{padding:10px 14px;font-size:13px;cursor:pointer;color:var(--text);}
+#userMenu .um-item:hover{background:var(--bg);}
 #content{padding:24px;flex:1;}
 .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap;}
 .page-header h1{font-size:20px;margin:0;}
 .page-header p{color:var(--muted);font-size:13px;margin:4px 0 0;}
-
-#bottomnav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--card);
-  border-top:1px solid var(--border);z-index:40;padding:6px 4px;padding-bottom:calc(6px + env(safe-area-inset-bottom));}
+#bottomnav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);z-index:40;padding:6px 4px;padding-bottom:calc(6px + env(safe-area-inset-bottom));}
 #bottomnav .nav-row{display:flex;justify-content:space-around;}
 #bottomnav .nav-item{flex-direction:column;font-size:10px;gap:2px;padding:6px 4px;flex:1;text-align:center;}
-#bottomnav .nav-item svg{width:20px;height:20px;}
-
 .fab-wrap{display:none;position:fixed;bottom:74px;right:18px;z-index:45;flex-direction:column;align-items:flex-end;gap:8px;}
-.fab-menu{display:none;flex-direction:column;gap:8px;background:var(--card);border:1px solid var(--border);
-  border-radius:12px;padding:8px;box-shadow:0 4px 14px rgba(0,0,0,.15);}
+.fab-menu{display:none;flex-direction:column;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:8px;box-shadow:0 4px 14px rgba(0,0,0,.15);}
 .fab-menu.open{display:flex;}
 .fab-menu button{white-space:nowrap;text-align:left;}
-.fab{width:54px;height:54px;border-radius:50%;background:var(--accent);color:#fff;border:none;
-  font-size:26px;box-shadow:0 4px 14px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;}
-
+.fab{width:54px;height:54px;border-radius:50%;background:var(--accent);color:#fff;border:none;font-size:26px;box-shadow:0 4px 14px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;}
 .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);}
 .grid{display:grid;gap:14px;}
 .grid-4{grid-template-columns:repeat(4,1fr);}
 .grid-2{grid-template-columns:repeat(2,1fr);}
 @media(max-width:900px){.grid-4{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:560px){.grid-4,.grid-2{grid-template-columns:1fr;}}
-
 .summary-card{padding:16px;}
 .summary-card .num{font-size:26px;font-weight:700;}
 .summary-card .label{color:var(--muted);font-size:12px;margin-top:4px;}
-
 .calendar-h{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:20px;}
-.cal-day{min-width:64px;text-align:center;padding:10px 6px;border-radius:12px;background:var(--card);
-  border:1px solid var(--border);cursor:pointer;flex-shrink:0;}
+.cal-day{min-width:64px;text-align:center;padding:10px 6px;border-radius:12px;background:var(--card);border:1px solid var(--border);cursor:pointer;flex-shrink:0;}
 .cal-day .dow{font-size:11px;color:var(--muted);}
 .cal-day .dom{font-size:16px;font-weight:700;margin:4px 0;}
 .cal-day .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);margin:0 auto;visibility:hidden;}
@@ -150,7 +140,6 @@ input,select,textarea{font-family:inherit;}
 .cal-day.selected{background:var(--accent);color:#fff;}
 .cal-day.selected .dow,.cal-day.selected .dom{color:#fff;}
 .cal-day.selected .dot{background:#fff;}
-
 .agenda-item{display:flex;align-items:flex-start;gap:12px;padding:14px;border-bottom:1px solid var(--border);}
 .agenda-item:last-child{border-bottom:none;}
 .agenda-time{width:52px;font-weight:700;font-size:13px;color:var(--accent);flex-shrink:0;}
@@ -159,18 +148,15 @@ input,select,textarea{font-family:inherit;}
 .agenda-body .meta{font-size:12px;color:var(--muted);margin-top:2px;}
 .agenda-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
 .agenda-actions .btn{padding:6px 10px;font-size:12px;}
-
 .tag{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;}
 .tag-stage{background:var(--accent-soft);color:var(--accent);}
 .tag-warn{background:var(--warn-soft);color:var(--warn);}
 .tag-danger{background:var(--danger-soft);color:var(--danger);}
-
 .kanban-wrap{display:flex;gap:14px;overflow-x:auto;padding-bottom:16px;-webkit-overflow-scrolling:touch;}
 .kanban-col{min-width:260px;flex-shrink:0;background:#f0f1f3;border-radius:var(--radius);padding:10px;transition:background .15s;}
 .kanban-col h3{font-size:13px;margin:4px 8px 10px;display:flex;justify-content:space-between;color:var(--text);}
 .kanban-col h3 span{color:var(--muted);font-weight:400;}
-.kcard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px;
-  cursor:grab;box-shadow:var(--shadow);touch-action:none;user-select:none;position:relative;}
+.kcard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px;cursor:grab;box-shadow:var(--shadow);touch-action:none;user-select:none;position:relative;}
 .kcard.dragging{opacity:.4;}
 .kcard.drag-clone{position:fixed;z-index:200;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.25);width:230px;}
 .kcard .name{font-weight:600;font-size:13px;}
@@ -179,7 +165,6 @@ input,select,textarea{font-family:inherit;}
 .kcard .foot{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:11px;color:var(--muted);}
 .kcard select.move-select{width:100%;margin-top:8px;font-size:11px;padding:4px;border-radius:6px;border:1px solid var(--border);}
 .kanban-col.drop-hover{background:#d9e8e2;outline:2px dashed var(--accent);}
-
 .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
 .filters select,.filters input{padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--card);}
 .list-row{display:flex;align-items:center;gap:14px;padding:14px;border-bottom:1px solid var(--border);cursor:pointer;}
@@ -187,15 +172,10 @@ input,select,textarea{font-family:inherit;}
 .list-row .col{flex:1;min-width:0;}
 .list-row .name{font-weight:600;font-size:14px;}
 .list-row .org{color:var(--muted);font-size:12px;}
-@media(max-width:700px){
-  .list-row{flex-wrap:wrap;}
-  .list-row .col{flex:1 1 45%;}
-}
-
+@media(max-width:700px){.list-row{flex-wrap:wrap;}.list-row .col{flex:1 1 45%;}}
 .org-card{padding:16px;}
 .org-card h3{margin:0 0 4px;font-size:15px;}
 .org-card .meta{color:var(--muted);font-size:12px;margin-bottom:10px;}
-
 .overlay{position:fixed;inset:0;background:rgba(20,20,30,.4);display:none;align-items:center;justify-content:center;z-index:100;padding:16px;overflow-y:auto;}
 .overlay.open{display:flex;}
 .modal{background:var(--card);border-radius:16px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto;padding:22px;position:relative;}
@@ -203,13 +183,10 @@ input,select,textarea{font-family:inherit;}
 .modal .sub{color:var(--muted);font-size:12px;margin-bottom:16px;}
 .field{margin-bottom:12px;}
 .field label{display:block;font-size:12px;font-weight:600;margin-bottom:5px;color:var(--muted);}
-.field input,.field select,.field textarea{
-  width:100%;padding:9px 11px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg);
-}
+.field input,.field select,.field textarea{width:100%;padding:9px 11px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg);}
 .field textarea{resize:vertical;min-height:60px;}
 .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap;}
 .close-x{position:absolute;top:16px;right:16px;background:none;border:none;font-size:18px;color:var(--muted);}
-
 .timeline{margin-top:16px;border-left:2px solid var(--border);padding-left:16px;}
 .tl-item{position:relative;padding-bottom:16px;}
 .tl-item::before{content:"";position:absolute;left:-22px;top:2px;width:9px;height:9px;border-radius:50%;background:var(--accent);}
@@ -217,33 +194,72 @@ input,select,textarea{font-family:inherit;}
 .tl-item .tl-date{font-size:11px;color:var(--muted);}
 .tl-item .tl-text{font-size:13px;margin-top:2px;}
 .tl-item.highlight{background:var(--accent-soft);border-radius:8px;padding:6px 8px;margin-left:-8px;}
-
 .empty{text-align:center;padding:40px 20px;color:var(--muted);}
 .empty .ic{font-size:34px;margin-bottom:8px;}
-
-@media(max-width:1024px){
-  #sidebar{transform:translateX(-100%);}
-  #sidebar.open{transform:translateX(0);}
-  #main{margin-left:0;}
-  #hamburger{display:block;}
-}
-@media(max-width:700px){
-  #bottomnav{display:block;}
-  .topbar-actions .btn span{display:none;}
-  .topbar-actions .btn{padding:9px;}
-  .topbar-actions .btn.hide-mobile-btn{display:none;}
-  #content{padding:14px;padding-bottom:100px;}
-  .fab-wrap{display:flex;}
-  #search{padding:9px 12px;}
-  #notifPanel{width:280px;right:-40px;}
-}
-@media(min-width:701px){.fab-wrap{display:none !important;}}
+.loading{text-align:center;padding:40px;color:var(--muted);}
+.loading .spin{display:inline-block;width:22px;height:22px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:10px;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--text);color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;z-index:500;box-shadow:0 6px 20px rgba(0,0,0,.2);display:none;max-width:90vw;}
+.toast.show{display:block;}
+.toast.erro{background:var(--danger);}
+.toast.sucesso{background:var(--accent);}
+.mask-cpf{font-family:monospace;letter-spacing:.03em;color:var(--muted);}
 .hide-desktop{display:none;}
+.admin-only{display:none;}
+body.is-admin .admin-only{display:block;}
+body.is-admin .nav-item.admin-only{display:flex;}
 @media(max-width:700px){.hide-desktop{display:block;}.hide-mobile{display:none;}}
+@media(max-width:1024px){#sidebar{transform:translateX(-100%);}#sidebar.open{transform:translateX(0);}#main{margin-left:0;}#hamburger{display:block;}}
+@media(max-width:700px){#bottomnav{display:block;}.topbar-actions .btn span{display:none;}.topbar-actions .btn{padding:9px;}.topbar-actions .btn.hide-mobile-btn{display:none;}#content{padding:14px;padding-bottom:100px;}.fab-wrap{display:flex;}#search{padding:9px 12px;}#notifPanel{width:280px;right:-40px;}}
+@media(min-width:701px){.fab-wrap{display:none !important;}}
 </style>
 </head>
 <body>
 
+<!-- ===================== TELA DE LOGIN ===================== -->
+<div id="loginScreen">
+  <div class="login-box">
+    <h1>CRM Pocket</h1>
+    <div class="brand-sub">Grupo Gênesis Brasil</div>
+    <p class="welcome-text" id="loginWelcomeText">Organize relacionamentos e próximos cuidados com simplicidade.</p>
+    <div class="login-msg" id="loginMsg"></div>
+
+    <!-- ETAPA 1: CPF -->
+    <div id="etapaCpf">
+      <div class="login-field">
+        <label>CPF</label>
+        <input id="inputCpf" placeholder="000.000.000-00" maxlength="14" inputmode="numeric" oninput="mascaraCPF(this)">
+      </div>
+      <button class="login-btn" id="btnContinuarCpf" onclick="verificarCpfEtapa()">Continuar</button>
+    </div>
+
+    <!-- ETAPA 2: LOGIN (já cadastrado) -->
+    <div id="etapaLogin" style="display:none;">
+      <div class="login-welcome">Olá, <strong id="nomeLoginTexto"></strong></div>
+      <div class="login-field">
+        <label>Senha</label>
+        <input id="inputSenhaLogin" type="password" placeholder="Digite sua senha" onkeydown="if(event.key==='Enter')fazerLoginEtapa()">
+      </div>
+      <button class="login-btn" id="btnEntrar" onclick="fazerLoginEtapa()">Entrar</button>
+      <button class="login-back" onclick="voltarEtapaCpf()">Usar outro CPF</button>
+    </div>
+
+    <!-- ETAPA 3: PRIMEIRO ACESSO -->
+    <div id="etapaCadastro" style="display:none;">
+      <div class="cpf-badge">✓ CPF reconhecido</div>
+      <div class="login-welcome">Primeiro acesso — complete seu cadastro</div>
+      <div class="login-field"><label>Nome completo</label><input id="cad-nome"></div>
+      <div class="login-field"><label>Cidade</label><input id="cad-cidade"></div>
+      <div class="login-field"><label>Telefone</label><input id="cad-telefone"></div>
+      <div class="login-field"><label>E-mail</label><input type="email" id="cad-email"></div>
+      <div class="login-field"><label>Criar senha</label><input type="password" id="cad-senha"></div>
+      <div class="login-field"><label>Confirmar senha</label><input type="password" id="cad-confirmar"></div>
+      <button class="login-btn" id="btnConcluirCadastro" onclick="concluirCadastroEtapa()">Concluir cadastro</button>
+      <button class="login-back" onclick="voltarEtapaCpf()">Usar outro CPF</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== APP PRINCIPAL ===================== -->
 <div id="app">
   <aside id="sidebar">
     <div class="logo">Gênesis Brasil<small>CRM Pocket</small></div>
@@ -259,13 +275,19 @@ input,select,textarea{font-family:inherit;}
       </div>
       <div class="topbar-actions">
         <button class="btn btn-primary" onclick="openModal('novoContato')">＋ <span>Novo contato</span></button>
-        <button class="btn btn-secondary hide-mobile-btn" onclick="openModal('novoAcomp')">＋ <span>Registrar acompanhamento</span></button>
+        <button class="btn btn-secondary hide-mobile-btn" onclick="openModal('novoAcomp')">＋ <span>Acompanhamento</span></button>
         <button class="btn btn-ghost hide-mobile-btn" onclick="openModal('agendarRetorno')">＋ <span>Agendar retorno</span></button>
         <div id="notifWrap">
-          <button class="icon-btn" title="Notificações" onclick="toggleNotif()">🔔<span class="badge-dot" id="notifDot"></span></button>
+          <button class="icon-btn" onclick="toggleNotif()">🔔<span class="badge-dot" id="notifDot"></span></button>
           <div id="notifPanel"></div>
         </div>
-        <div class="avatar">GB</div>
+        <div style="position:relative;">
+          <div class="avatar" id="avatarBtn" onclick="toggleUserMenu()">--</div>
+          <div id="userMenu">
+            <div class="um-header"><strong id="umNome"></strong><span id="umPerfil" style="color:var(--muted);font-size:12px;"></span></div>
+            <div class="um-item" onclick="fazerLogout()">Sair</div>
+          </div>
+        </div>
       </div>
     </header>
     <main id="content"></main>
@@ -274,18 +296,16 @@ input,select,textarea{font-family:inherit;}
 
 <div class="fab-wrap">
   <div class="fab-menu" id="fabMenu">
-    <button class="btn btn-secondary" onclick="closeFab();openModal('novoAcomp')">📝 Registrar acompanhamento</button>
+    <button class="btn btn-secondary" onclick="closeFab();openModal('novoAcomp')">📝 Acompanhamento</button>
     <button class="btn btn-secondary" onclick="closeFab();openModal('agendarRetorno')">📅 Agendar retorno</button>
     <button class="btn btn-secondary" onclick="closeFab();openModal('novoContato')">👤 Novo contato</button>
   </div>
   <button class="fab" onclick="toggleFab()">＋</button>
 </div>
 
-<nav id="bottomnav">
-  <div class="nav-row" id="bottomNavList"></div>
-</nav>
+<nav id="bottomnav"><div class="nav-row" id="bottomNavList"></div></nav>
 
-<!-- MODALS -->
+<!-- MODAIS -->
 <div class="overlay" id="overlay-novoContato">
   <div class="modal">
     <button class="close-x" onclick="closeModal('novoContato')">✕</button>
@@ -298,13 +318,12 @@ input,select,textarea{font-family:inherit;}
       <div class="field"><label>Organização</label><input id="nc-org" list="orgList"></div>
       <datalist id="orgList"></datalist>
       <div class="field"><label>Contexto inicial</label><textarea id="nc-ctx"></textarea></div>
-      <div class="field"><label>Responsável</label><select id="nc-resp"></select></div>
       <div class="field"><label>Etapa inicial da jornada</label><select id="nc-etapa"></select></div>
       <div class="field"><label>Próximo cuidado</label><input id="nc-cuidado" placeholder="Ex: Ligar para entender necessidade"></div>
       <div class="field"><label>Data do próximo cuidado</label><input type="date" id="nc-data"></div>
       <div class="modal-actions">
         <button type="button" class="btn btn-ghost" onclick="closeModal('novoContato')">Cancelar</button>
-        <button class="btn btn-primary" type="submit">Salvar contato</button>
+        <button class="btn btn-primary" type="submit" id="btnSalvarContato">Salvar contato</button>
       </div>
     </form>
   </div>
@@ -319,18 +338,14 @@ input,select,textarea{font-family:inherit;}
       <div class="field"><label>Pessoa</label><select required id="na-pessoa"></select></div>
       <div class="field"><label>Data</label><input type="date" id="na-data"></div>
       <div class="field"><label>Tipo de contato</label>
-        <select id="na-tipo">
-          <option>Conversa</option><option>Ligação</option><option>Reunião</option>
-          <option>Mensagem</option><option>Visita</option><option>Outro</option>
-        </select></div>
+        <select id="na-tipo"><option>Conversa</option><option>Ligação</option><option>Reunião</option><option>Mensagem</option><option>Visita</option><option>Outro</option></select></div>
       <div class="field"><label>Resumo da conversa</label><textarea id="na-resumo"></textarea></div>
       <div class="field"><label>Necessidade percebida</label><textarea id="na-necessidade"></textarea></div>
       <div class="field"><label>Próximo cuidado</label><input id="na-cuidado"></div>
       <div class="field"><label>Data do próximo cuidado</label><input type="date" id="na-cuidado-data"></div>
-      <div class="field"><label>Responsável</label><select id="na-resp"></select></div>
       <div class="modal-actions">
         <button type="button" class="btn btn-ghost" onclick="closeModal('novoAcomp')">Cancelar</button>
-        <button class="btn btn-primary" type="submit">Registrar</button>
+        <button class="btn btn-primary" type="submit" id="btnRegistrarAcomp">Registrar</button>
       </div>
     </form>
   </div>
@@ -345,14 +360,11 @@ input,select,textarea{font-family:inherit;}
       <div class="field"><label>Pessoa</label><select required id="ag-pessoa"></select></div>
       <div class="field"><label>Data</label><input required type="date" id="ag-data"></div>
       <div class="field"><label>Horário (opcional)</label><input type="time" id="ag-hora"></div>
-      <div class="field"><label>Tipo</label>
-        <select id="ag-tipo"><option>Ligação</option><option>Mensagem</option><option>Reunião</option><option>Visita</option><option>Outro</option></select></div>
-      <div class="field"><label>Lembrete curto</label><input id="ag-lembrete"></div>
-      <div class="field"><label>Responsável</label><select id="ag-resp"></select></div>
+      <div class="field"><label>Tipo</label><select id="ag-tipo"><option>Ligação</option><option>Mensagem</option><option>Reunião</option><option>Visita</option><option>Outro</option></select></div>
       <div class="field"><label>Próximo cuidado</label><input id="ag-cuidado"></div>
       <div class="modal-actions">
         <button type="button" class="btn btn-ghost" onclick="closeModal('agendarRetorno')">Cancelar</button>
-        <button class="btn btn-primary" type="submit">Agendar</button>
+        <button class="btn btn-primary" type="submit" id="btnAgendar">Agendar</button>
       </div>
     </form>
   </div>
@@ -366,346 +378,480 @@ input,select,textarea{font-family:inherit;}
   <div class="modal" id="concluirBody"></div>
 </div>
 
+<div class="overlay" id="overlay-novoConsultor">
+  <div class="modal">
+    <button class="close-x" onclick="closeModal('novoConsultor')">✕</button>
+    <h2>Pré-cadastrar consultor</h2>
+    <div class="sub">O consultor completará o cadastro no primeiro acesso</div>
+    <form id="formNovoConsultor" onsubmit="return submitNovoConsultor(event)">
+      <div class="field"><label>CPF</label><input required id="cs-cpf" maxlength="14" oninput="mascaraCPF(this)"></div>
+      <div class="field"><label>Nome (opcional)</label><input id="cs-nome"></div>
+      <div class="field"><label>Perfil</label><select id="cs-perfil"><option value="consultor">Consultor</option><option value="administrador">Administrador</option></select></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('novoConsultor')">Cancelar</button>
+        <button class="btn btn-primary" type="submit" id="btnCadastrarConsultor">Pré-cadastrar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
-/* ================= CONFIG / CONSTANTES ================= */
+/* =========================================================
+ * CONFIGURAÇÃO DA API
+ * ========================================================= */
+const API_URL = "COLE_AQUI_A_URL_DO_APPS_SCRIPT";
+
+const SESSION_KEY = 'crm_token';
+const SESSION_USER_KEY = 'crm_usuario';
+
+function salvarSessao(token, usuario){
+  localStorage.setItem(SESSION_KEY, token);
+  localStorage.setItem(SESSION_USER_KEY, JSON.stringify(usuario));
+}
+function obterToken(){ return localStorage.getItem(SESSION_KEY); }
+function obterUsuarioLocal(){
+  try{ return JSON.parse(localStorage.getItem(SESSION_USER_KEY) || 'null'); }catch(e){ return null; }
+}
+function limparSessao(){
+  localStorage.removeItem(SESSION_KEY);
+  localStorage.removeItem(SESSION_USER_KEY);
+}
+
+/* Função central de comunicação com o backend */
+async function api(acao, dados){
+  dados = dados || {};
+  const payload = Object.assign({ acao: acao, token: obterToken() }, dados);
+  try{
+    const resposta = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+    const json = await resposta.json();
+    if(!json.sucesso){
+      const msg = json.mensagem || 'Erro desconhecido.';
+      if(/sess[aã]o/i.test(msg) || /login/i.test(msg)){
+        limparSessao();
+        mostrarLogin();
+        mostrarMsgLogin(msg, 'info');
+      }
+      throw new Error(msg);
+    }
+    return json.dados;
+  }catch(erro){
+    if(erro.message === 'Failed to fetch'){
+      throw new Error('Não foi possível conectar. Verifique sua internet.');
+    }
+    throw erro;
+  }
+}
+
+/* =========================================================
+ * TOAST / MENSAGENS
+ * ========================================================= */
+let toastTimer=null;
+function toast(msg, tipo){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (tipo||'');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>{ t.className='toast'; }, 3200);
+}
+
+/* =========================================================
+ * MÁSCARA E VALIDAÇÃO DE CPF
+ * ========================================================= */
+function mascaraCPF(input){
+  let v = input.value.replace(/\D/g,'').slice(0,11);
+  if(v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+  else if(v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+  else if(v.length > 3) v = v.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+  input.value = v;
+}
+function cpfSomenteNumeros(v){ return (v||'').replace(/\D/g,''); }
+function mascararCpfExibicao(cpf){
+  cpf = cpfSomenteNumeros(cpf);
+  if(cpf.length !== 11) return '***.***.***-**';
+  return '***.***.***-' + cpf.slice(9);
+}
+
+/* =========================================================
+ * ESTADO GLOBAL
+ * ========================================================= */
 const ETAPAS = ["Primeiro contato","Escuta e entendimento","Construção de caminho","Acompanhamento","Decisão","Relacionamento contínuo"];
-const RESPONSAVEIS = ["Ana Beatriz","Carlos Eduardo","Mariana Souza","João Pedro"];
-const STORAGE_KEY = "crmPocketGenesisData_v1";
+let usuarioAtual = null; // {id, nome, perfil, cidade, telefone, email}
+let currentPage = "visaoDoDia";
+let selectedCalDate = null;
+let searchTerm = "";
+let cacheConsultores = []; // usado no admin para exibir nome do responsável e filtro
 
 const today = new Date(); today.setHours(0,0,0,0);
-const iso = d => d.toISOString().slice(0,10);
+const iso = d => Utilities_toISO(d);
+function Utilities_toISO(d){ return d.toISOString().slice(0,10); }
 const addDays = (d,n) => { const x=new Date(d); x.setDate(x.getDate()+n); return x; };
-const fmtDate = (dstr) => { if(!dstr) return "—"; const d=new Date(dstr+"T00:00:00"); return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}); };
+const fmtDate = (dstr) => { if(!dstr) return "—"; const d=new Date((dstr||'').slice(0,10)+"T00:00:00"); if(isNaN(d)) return "—"; return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}); };
 
-/* ================= DADOS DE EXEMPLO (usados só se não houver storage) ================= */
-function seedData(){
-  const organizacoes = [
-    {id:1,nome:"Instituto Vida Plena",segmento:"Saúde comunitária",cidade:"Curitiba",responsavel:"Ana Beatriz",obs:"Parceria em andamento para projeto social."},
-    {id:2,nome:"Construtora Horizonte",segmento:"Construção civil",cidade:"São José dos Pinhais",responsavel:"Carlos Eduardo",obs:""},
-    {id:3,nome:"Escola Novo Caminho",segmento:"Educação",cidade:"Curitiba",responsavel:"Mariana Souza",obs:"Interesse em programa de mentoria."},
-  ];
-
-  const pessoas = [
-    {id:1,nome:"Rafael Antunes",telefone:"(41) 99811-2233",email:"rafael@vidaplena.org",organizacaoId:1,
-     responsavel:"Ana Beatriz",contexto:"Buscando parceria para ações comunitárias no bairro.",necessidades:"Apoio institucional e voluntários.",
-     etapa:"Escuta e entendimento",proximoCuidado:"Ligar para apresentar proposta de parceria",proximaData:iso(today),
-     historico:[{data:iso(addDays(today,-10)),tipo:"criacao",texto:"Contato criado na etapa Primeiro contato."},
-                {data:iso(addDays(today,-6)),tipo:"movimentacao",texto:"Movido de Primeiro contato para Escuta e entendimento."}]},
-    {id:2,nome:"Juliana Prado",telefone:"(41) 98877-1122",email:"juliana@horizonte.com.br",organizacaoId:2,
-     responsavel:"Carlos Eduardo",contexto:"Conheceu o Grupo Gênesis em evento local.",necessidades:"Entender programas de apoio comunitário da construtora.",
-     etapa:"Primeiro contato",proximoCuidado:"Agendar primeira conversa",proximaData:iso(addDays(today,1)),
-     historico:[{data:iso(addDays(today,-2)),tipo:"criacao",texto:"Contato criado na etapa Primeiro contato."}]},
-    {id:3,nome:"Fernando Melo",telefone:"(41) 99123-4455",email:"fernando@gmail.com",organizacaoId:null,
-     responsavel:"Mariana Souza",contexto:"Indicado por membro da comunidade.",necessidades:"Ainda não identificadas.",
-     etapa:"Primeiro contato",proximoCuidado:"",proximaData:"",
-     historico:[{data:iso(addDays(today,-15)),tipo:"criacao",texto:"Contato criado na etapa Primeiro contato."}]},
-    {id:4,nome:"Patrícia Lins",telefone:"(41) 98765-4321",email:"patricia@novocaminho.edu.br",organizacaoId:3,
-     responsavel:"Mariana Souza",contexto:"Diretora da escola, interessada em mentoria para alunos.",necessidades:"Programa de mentoria e capacitação de professores.",
-     etapa:"Construção de caminho",proximoCuidado:"Enviar proposta de mentoria",proximaData:iso(addDays(today,-1)),
-     historico:[{data:iso(addDays(today,-20)),tipo:"criacao",texto:"Contato criado na etapa Primeiro contato."},
-                {data:iso(addDays(today,-8)),tipo:"movimentacao",texto:"Movido de Escuta e entendimento para Construção de caminho."}]},
-    {id:5,nome:"Marcos Vinícius",telefone:"(41) 99222-3344",email:"marcos@gmail.com",organizacaoId:null,
-     responsavel:"João Pedro",contexto:"Participou de reunião comunitária em julho.",necessidades:"Orientação sobre programas sociais.",
-     etapa:"Acompanhamento",proximoCuidado:"Verificar andamento da inscrição",proximaData:iso(today),
-     historico:[{data:iso(addDays(today,-30)),tipo:"criacao",texto:"Contato criado na etapa Primeiro contato."}]},
-    {id:6,nome:"Camila Rocha",telefone:"(41) 98888-7766",email:"camila@vidaplena.org",organizacaoId:1,
-     responsavel:"Ana Beatriz",contexto:"Coordenadora de projetos no Instituto.",necessidades:"Formalizar convênio.",
-     etapa:"Decisão",proximoCuidado:"Reunião de assinatura do convênio",proximaData:iso(addDays(today,2)),
-     historico:[{data:iso(addDays(today,-40)),tipo:"criacao",texto:"Contato criado na etapa Primeiro contato."}]},
-    {id:7,nome:"Eduardo Nogueira",telefone:"(41) 99000-1111",email:"eduardo@horizonte.com.br",organizacaoId:2,
-     responsavel:"Carlos Eduardo",contexto:"Relacionamento consolidado há 2 anos.",necessidades:"Manutenção do relacionamento.",
-     etapa:"Relacionamento contínuo",proximoCuidado:"",proximaData:"",
-     historico:[{data:iso(addDays(today,-700)),tipo:"criacao",texto:"Contato criado na etapa Primeiro contato."}]},
-    {id:8,nome:"Beatriz Amaral",telefone:"(41) 99555-6677",email:"beatriz@gmail.com",organizacaoId:null,
-     responsavel:"João Pedro",contexto:"Contato recente via indicação.",necessidades:"Não definida.",
-     etapa:"Escuta e entendimento",proximoCuidado:"Retornar ligação",proximaData:iso(addDays(today,-2)),
-     historico:[{data:iso(addDays(today,-5)),tipo:"criacao",texto:"Contato criado na etapa Primeiro contato."}]},
-  ];
-
-  const acompanhamentos = [
-    {id:1,pessoaId:1,data:iso(addDays(today,-5)),tipo:"Conversa",resumo:"Primeira conversa sobre possível parceria.",necessidade:"Apoio institucional",proximoCuidado:"Ligar para apresentar proposta",proximaData:iso(today),responsavel:"Ana Beatriz"},
-    {id:2,pessoaId:4,data:iso(addDays(today,-3)),tipo:"Reunião",resumo:"Reunião na escola sobre programa de mentoria.",necessidade:"Programa de mentoria",proximoCuidado:"Enviar proposta",proximaData:iso(addDays(today,-1)),responsavel:"Mariana Souza"},
-    {id:3,pessoaId:6,data:iso(addDays(today,-1)),tipo:"Ligação",resumo:"Alinhamento final do convênio.",necessidade:"Formalização",proximoCuidado:"Reunião de assinatura",proximaData:iso(addDays(today,2)),responsavel:"Ana Beatriz"},
-    {id:4,pessoaId:8,data:iso(addDays(today,-4)),tipo:"Mensagem",resumo:"Enviada mensagem de apresentação.",necessidade:"Não definida",proximoCuidado:"Retornar ligação",proximaData:iso(addDays(today,-2)),responsavel:"João Pedro"},
-  ];
-
-  const agenda = pessoas.filter(p=>p.proximaData).map(p=>({
-    id: p.id*10, pessoaId:p.id, data:p.proximaData, hora:"", tipo: p.proximoCuidado || "Retorno",
-    resumo:p.proximoCuidado, responsavel:p.responsavel, concluido:false
-  }));
-
-  return { pessoas, organizacoes, acompanhamentos, agenda, uid: 200 };
+/* =========================================================
+ * FLUXO DE LOGIN
+ * ========================================================= */
+function mostrarMsgLogin(msg, tipo){
+  const el = document.getElementById('loginMsg');
+  el.textContent = msg;
+  el.className = 'login-msg ' + (tipo||'erro');
+}
+function limparMsgLogin(){
+  const el = document.getElementById('loginMsg');
+  el.className = 'login-msg';
+  el.textContent = '';
 }
 
-/* ================= PERSISTÊNCIA (localStorage) ================= */
-let pessoas, organizacoes, acompanhamentos, agenda, uid;
+function mostrarLogin(){
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('app').classList.remove('visible');
+  voltarEtapaCpf();
+}
 
-function loadData(){
+function voltarEtapaCpf(){
+  document.getElementById('etapaCpf').style.display = 'block';
+  document.getElementById('etapaLogin').style.display = 'none';
+  document.getElementById('etapaCadastro').style.display = 'none';
+  document.getElementById('inputCpf').value = '';
+  limparMsgLogin();
+}
+
+let cpfAtualLogin = '';
+
+async function verificarCpfEtapa(){
+  const cpfRaw = document.getElementById('inputCpf').value;
+  const cpf = cpfSomenteNumeros(cpfRaw);
+  limparMsgLogin();
+
+  if(cpf.length !== 11){
+    mostrarMsgLogin('Digite um CPF válido com 11 números.');
+    return;
+  }
+
+  const btn = document.getElementById('btnContinuarCpf');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Verificando...';
+
   try{
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if(raw){
-      const parsed = JSON.parse(raw);
-      pessoas = parsed.pessoas || [];
-      organizacoes = parsed.organizacoes || [];
-      acompanhamentos = parsed.acompanhamentos || [];
-      agenda = parsed.agenda || [];
-      uid = parsed.uid || 200;
-      pessoas.forEach(p=>{ if(!p.historico) p.historico = []; });
+    const resultado = await api('verificar_cpf', { cpf: cpf });
+    cpfAtualLogin = cpf;
+
+    if(!resultado.existe){
+      mostrarMsgLogin(resultado.mensagem || 'Seu acesso ainda não está liberado. Fale com o administrador.');
       return;
     }
-  }catch(e){ console.warn("Erro ao ler localStorage, usando dados de exemplo.", e); }
-  const seed = seedData();
-  pessoas = seed.pessoas; organizacoes = seed.organizacoes;
-  acompanhamentos = seed.acompanhamentos; agenda = seed.agenda; uid = seed.uid;
-  saveAll();
-}
 
-function saveAll(){
-  try{
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ pessoas, organizacoes, acompanhamentos, agenda, uid }));
-  }catch(e){ console.warn("Não foi possível salvar no localStorage.", e); }
-}
+    document.getElementById('etapaCpf').style.display = 'none';
 
-/* ================= ESTADO / HELPERS ================= */
-let currentPage = "visaoDoDia";
-let selectedCalDate = iso(today);
-let searchTerm = "";
-
-const pessoaById = id => pessoas.find(p=>p.id===Number(id));
-const orgById = id => organizacoes.find(o=>o.id===Number(id));
-const orgNome = id => id ? (orgById(id)?.nome || "") : "";
-
-function isAtraso(p){ return p.proximaData && p.proximaData < iso(today) && p.etapa!=="Relacionamento contínuo"; }
-function semCuidado(p){ return !p.proximaData && p.etapa!=="Relacionamento contínuo"; }
-
-function addHistorico(pessoa, texto, tipo="nota"){
-  pessoa.historico = pessoa.historico || [];
-  pessoa.historico.push({ data: iso(today), tipo, texto });
-}
-
-function moverPessoaEtapa(pessoa, novaEtapa){
-  if(pessoa.etapa === novaEtapa) return;
-  const anterior = pessoa.etapa;
-  pessoa.etapa = novaEtapa;
-  addHistorico(pessoa, `Movido de ${anterior} para ${novaEtapa}.`, "movimentacao");
-  saveAll();
-}
-
-function limparRetornosPendentes(pessoaId){
-  agenda = agenda.filter(a => !(a.pessoaId===pessoaId && !a.concluido));
-}
-
-function criarRetorno({pessoaId,data,hora="",tipo="Retorno",resumo="",responsavel=""}){
-  limparRetornosPendentes(pessoaId);
-  const item = { id: ++uid, pessoaId, data, hora, tipo, resumo, responsavel, concluido:false };
-  agenda.push(item);
-  const p = pessoaById(pessoaId);
-  if(p){ p.proximaData = data; p.proximoCuidado = resumo || tipo; }
-  return item;
-}
-
-/* ================= NAV ================= */
-const NAV_ITEMS = [
-  {id:"visaoDoDia", label:"Visão do dia", icon:"🏠"},
-  {id:"pessoas", label:"Pessoas", icon:"👤"},
-  {id:"jornadas", label:"Jornadas", icon:"🧭"},
-  {id:"acompanhamentos", label:"Acompanhamentos", icon:"📝"},
-  {id:"organizacoes", label:"Organizações", icon:"🏢"},
-  {id:"configuracoes", label:"Configurações", icon:"⚙️"},
-];
-
-function renderNav(){
-  const list = document.getElementById('navList');
-  list.innerHTML = NAV_ITEMS.map(i=>`
-    <div class="nav-item ${currentPage===i.id?'active':''}" onclick="goTo('${i.id}')">
-      <span>${i.icon}</span><span>${i.label}</span>
-    </div>`).join('');
-  const bn = document.getElementById('bottomNavList');
-  bn.innerHTML = NAV_ITEMS.map(i=>`
-    <div class="nav-item ${currentPage===i.id?'active':''}" onclick="goTo('${i.id}')">
-      <span>${i.icon}</span><span>${i.label.split(' ')[0]}</span>
-    </div>`).join('');
-}
-
-function goTo(page){ currentPage = page; document.getElementById('sidebar').classList.remove('open'); closeSearchResults(); render(); }
-function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
-
-/* ================= BUSCA GLOBAL ================= */
-function onSearch(v){
-  searchTerm = v.trim().toLowerCase();
-  const box = document.getElementById('searchResults');
-  if(!searchTerm){ box.classList.remove('open'); box.innerHTML=''; if(currentPage==='pessoas') renderPessoas(); return; }
-
-  const results = [];
-
-  pessoas.forEach(p=>{
-    const hay = [p.nome,p.telefone,p.email,p.contexto,p.necessidades].join(' ').toLowerCase();
-    if(hay.includes(searchTerm)){
-      results.push({ type:'Pessoa', title:p.nome, sub:orgNome(p.organizacaoId)||'Sem organização', action:()=>{ closeSearchResults(); abrirPessoa(p.id); } });
+    if(resultado.primeiroAcesso){
+      document.getElementById('etapaCadastro').style.display = 'block';
+    } else {
+      document.getElementById('nomeLoginTexto').textContent = resultado.nome || '';
+      document.getElementById('etapaLogin').style.display = 'block';
+      setTimeout(()=>document.getElementById('inputSenhaLogin').focus(), 50);
     }
-  });
-
-  organizacoes.forEach(o=>{
-    const hay = [o.nome,o.segmento,o.cidade].join(' ').toLowerCase();
-    if(hay.includes(searchTerm)){
-      results.push({ type:'Organização', title:o.nome, sub:`${o.segmento||''} ${o.cidade?'• '+o.cidade:''}`, action:()=>{ closeSearchResults(); goTo('organizacoes'); } });
-    }
-  });
-
-  acompanhamentos.forEach(a=>{
-    const hay = [a.resumo,a.necessidade].join(' ').toLowerCase();
-    if(hay.includes(searchTerm)){
-      const p = pessoaById(a.pessoaId);
-      results.push({ type:'Acompanhamento', title:(a.resumo||'Acompanhamento').slice(0,50), sub:`${p?p.nome:''} • ${fmtDate(a.data)}`, action:()=>{ closeSearchResults(); abrirPessoa(a.pessoaId, a.id); } });
-    }
-  });
-
-  if(results.length===0){
-    box.innerHTML = `<div class="sr-empty">Nenhum resultado encontrado.</div>`;
-  } else {
-    box.innerHTML = results.slice(0,8).map((r,i)=>`
-      <div class="sr-item" onclick="window.__searchAction(${i})">
-        <div class="sr-type">${r.type}</div>
-        <div class="sr-title">${r.title}</div>
-        <div class="sr-sub">${r.sub}</div>
-      </div>`).join('');
-    window.__searchAction = (i)=>results[i].action();
+  }catch(erro){
+    mostrarMsgLogin(erro.message);
+  }finally{
+    btn.disabled = false; btn.innerHTML = 'Continuar';
   }
-  box.classList.add('open');
 }
 
-function closeSearchResults(){
-  document.getElementById('searchResults').classList.remove('open');
+async function fazerLoginEtapa(){
+  const senha = document.getElementById('inputSenhaLogin').value;
+  limparMsgLogin();
+  if(!senha){ mostrarMsgLogin('Digite sua senha.'); return; }
+
+  const btn = document.getElementById('btnEntrar');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Entrando...';
+
+  try{
+    const dados = await api('login', { cpf: cpfAtualLogin, senha: senha });
+    salvarSessao(dados.token, dados.consultor);
+    usuarioAtual = dados.consultor;
+    await iniciarApp();
+  }catch(erro){
+    mostrarMsgLogin(erro.message || 'CPF ou senha inválidos.');
+  }finally{
+    btn.disabled = false; btn.innerHTML = 'Entrar';
+  }
+}
+
+async function concluirCadastroEtapa(){
+  limparMsgLogin();
+  const nome = document.getElementById('cad-nome').value.trim();
+  const senha = document.getElementById('cad-senha').value;
+  const confirmar = document.getElementById('cad-confirmar').value;
+
+  if(!nome){ mostrarMsgLogin('Informe seu nome completo.'); return; }
+  if(senha.length < 8){ mostrarMsgLogin('A senha deve ter no mínimo 8 caracteres.'); return; }
+  if(senha !== confirmar){ mostrarMsgLogin('As senhas não coincidem.'); return; }
+
+  const btn = document.getElementById('btnConcluirCadastro');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Enviando...';
+
+  try{
+    const dados = await api('concluir_primeiro_acesso', {
+      cpf: cpfAtualLogin,
+      nome_completo: nome,
+      cidade: document.getElementById('cad-cidade').value.trim(),
+      telefone: document.getElementById('cad-telefone').value.trim(),
+      email: document.getElementById('cad-email').value.trim(),
+      senha: senha,
+      confirmar_senha: confirmar
+    });
+    salvarSessao(dados.token, dados.consultor);
+    usuarioAtual = dados.consultor;
+    await iniciarApp();
+  }catch(erro){
+    mostrarMsgLogin(erro.message);
+  }finally{
+    btn.disabled = false; btn.innerHTML = 'Concluir cadastro';
+  }
+}
+
+async function fazerLogout(){
+  try{ await api('logout'); }catch(e){}
+  limparSessao();
+  usuarioAtual = null;
+  document.getElementById('userMenu').classList.remove('open');
+  mostrarLogin();
+}
+
+/* =========================================================
+ * INICIALIZAÇÃO DO APP
+ * ========================================================= */
+async function verificarSessaoExistente(){
+  const token = obterToken();
+  if(!token){ mostrarLogin(); return; }
+
+  try{
+    const consultor = await api('obter_usuario_atual');
+    usuarioAtual = consultor;
+    await iniciarApp();
+  }catch(erro){
+    limparSessao();
+    mostrarLogin();
+  }
+}
+
+async function iniciarApp(){
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('app').classList.add('visible');
+  document.body.classList.toggle('is-admin', usuarioAtual.perfil === 'administrador');
+
+  const iniciais = (usuarioAtual.nome||'?').trim().split(' ').slice(0,2).map(p=>p[0]).join('').toUpperCase();
+  document.getElementById('avatarBtn').textContent = iniciais || '?';
+  document.getElementById('umNome').textContent = usuarioAtual.nome;
+  document.getElementById('umPerfil').textContent = usuarioAtual.perfil === 'administrador' ? 'Administrador' : 'Consultor';
+
+  selectedCalDate = iso(today);
+  currentPage = 'visaoDoDia';
+  await render();
+}
+
+function toggleUserMenu(){
+  document.getElementById('userMenu').classList.toggle('open');
 }
 
 document.addEventListener('click', (e)=>{
   if(!e.target.closest('#searchWrap')) closeSearchResults();
   if(!e.target.closest('#notifWrap')) document.getElementById('notifPanel').classList.remove('open');
   if(!e.target.closest('.fab-wrap')) closeFab();
+  if(!e.target.closest('#userMenu') && !e.target.closest('#avatarBtn')) document.getElementById('userMenu').classList.remove('open');
 });
 
-/* ================= NOTIFICAÇÕES ("Seu dia") ================= */
-function toggleNotif(){
-  const panel = document.getElementById('notifPanel');
-  if(panel.classList.contains('open')){ panel.classList.remove('open'); return; }
-  renderNotifPanel();
-  panel.classList.add('open');
+/* =========================================================
+ * NAVEGAÇÃO
+ * ========================================================= */
+const NAV_ITEMS = [
+  {id:"visaoDoDia", label:"Visão do dia", icon:"🏠"},
+  {id:"pessoas", label:"Pessoas", icon:"👤"},
+  {id:"jornadas", label:"Jornadas", icon:"🧭"},
+  {id:"acompanhamentos", label:"Acompanhamentos", icon:"📝"},
+  {id:"organizacoes", label:"Organizações", icon:"🏢"},
+  {id:"consultores", label:"Consultores", icon:"🧑‍💼", adminOnly:true},
+  {id:"configuracoes", label:"Configurações", icon:"⚙️"},
+];
+
+function renderNav(){
+  const isAdmin = usuarioAtual && usuarioAtual.perfil === 'administrador';
+  const itens = NAV_ITEMS.filter(i => !i.adminOnly || isAdmin);
+  const list = document.getElementById('navList');
+  list.innerHTML = itens.map(i=>`
+    <div class="nav-item ${currentPage===i.id?'active':''}" onclick="goTo('${i.id}')">
+      <span>${i.icon}</span><span>${i.label}</span>
+    </div>`).join('');
+  const bn = document.getElementById('bottomNavList');
+  bn.innerHTML = itens.slice(0,5).map(i=>`
+    <div class="nav-item ${currentPage===i.id?'active':''}" onclick="goTo('${i.id}')">
+      <span>${i.icon}</span><span>${i.label.split(' ')[0]}</span>
+    </div>`).join('');
 }
 
-function getNotifData(){
-  const atrasados = pessoas.filter(isAtraso);
-  const hojeP = pessoas.filter(p=>p.proximaData===iso(today));
-  const semCuidadoP = pessoas.filter(semCuidado);
-  return { atrasados, hojeP, semCuidadoP };
+async function goTo(page){
+  currentPage = page;
+  document.getElementById('sidebar').classList.remove('open');
+  closeSearchResults();
+  await render();
+}
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
+
+/* =========================================================
+ * BUSCA GLOBAL
+ * ========================================================= */
+let searchDebounce = null;
+function onSearch(v){
+  searchTerm = v.trim();
+  clearTimeout(searchDebounce);
+  const box = document.getElementById('searchResults');
+  if(!searchTerm){ box.classList.remove('open'); box.innerHTML=''; return; }
+  box.innerHTML = `<div class="sr-empty">Buscando...</div>`;
+  box.classList.add('open');
+  searchDebounce = setTimeout(async ()=>{
+    try{
+      const resultados = await api('busca_global', { termo: searchTerm });
+      renderSearchResults(resultados);
+    }catch(erro){
+      box.innerHTML = `<div class="sr-empty">Erro na busca: ${erro.message}</div>`;
+    }
+  }, 350);
+}
+
+function renderSearchResults(resultados){
+  const box = document.getElementById('searchResults');
+  if(!resultados || resultados.length===0){
+    box.innerHTML = `<div class="sr-empty">Nenhum resultado encontrado.</div>`;
+    return;
+  }
+  box.innerHTML = resultados.slice(0,10).map((r,i)=>`
+    <div class="sr-item" onclick="window.__searchAction(${i})">
+      <div class="sr-type">${r.tipo}</div>
+      <div class="sr-title">${r.titulo}</div>
+      <div class="sr-sub">${r.subtitulo||''}</div>
+    </div>`).join('');
+  window.__searchAction = (i)=>{
+    const r = resultados[i];
+    closeSearchResults();
+    if(r.tipo==='pessoa' || r.tipo==='acompanhamento') abrirPessoa(r.id);
+    else if(r.tipo==='organizacao') goTo('organizacoes');
+  };
+}
+function closeSearchResults(){ document.getElementById('searchResults').classList.remove('open'); }
+
+/* =========================================================
+ * NOTIFICAÇÕES
+ * ========================================================= */
+let notifCache = null;
+
+async function carregarNotificacoes(){
+  try{
+    notifCache = await api('obter_notificacoes');
+  }catch(e){ notifCache = { atrasados:[], para_hoje:[], sem_proximo_cuidado:[] }; }
+  atualizarNotifDot();
+}
+
+function atualizarNotifDot(){
+  if(!notifCache) return;
+  const total = notifCache.atrasados.length + notifCache.para_hoje.length + notifCache.sem_proximo_cuidado.length;
+  const dot = document.getElementById('notifDot');
+  if(total > 0){ dot.style.display='flex'; dot.textContent = total>9?'9+':total; }
+  else{ dot.style.display='none'; dot.textContent=''; }
+}
+
+async function toggleNotif(){
+  const panel = document.getElementById('notifPanel');
+  if(panel.classList.contains('open')){ panel.classList.remove('open'); return; }
+  panel.innerHTML = `<div class="loading"><div class="spin"></div>Carregando...</div>`;
+  panel.classList.add('open');
+  await carregarNotificacoes();
+  renderNotifPanel();
 }
 
 function renderNotifPanel(){
-  const { atrasados, hojeP, semCuidadoP } = getNotifData();
   const panel = document.getElementById('notifPanel');
-  const totalPend = atrasados.length + hojeP.length + semCuidadoP.length;
+  const { atrasados, para_hoje, sem_proximo_cuidado } = notifCache;
+  const total = atrasados.length + para_hoje.length + sem_proximo_cuidado.length;
 
-  if(totalPend === 0){
-    panel.innerHTML = `
-      <div class="np-header"><h4>Seu dia</h4></div>
-      <div class="np-empty">🎉 Nenhuma pendência agora. Tudo em dia.</div>
-    `;
+  if(total===0){
+    panel.innerHTML = `<div class="np-header"><h4>Seu dia</h4></div><div class="np-empty">🎉 Nenhuma pendência agora. Tudo em dia.</div>`;
     return;
   }
 
-  const secAtrasados = atrasados.length ? `
-    <div class="np-section">
-      <div class="np-section-title">Atrasados</div>
-      ${atrasados.map(p=>`
-        <div class="notif-item atrasado" onclick="abrirAlertaPessoa(${p.id})">
-          <div class="n-tag">Atrasado — ${p.nome}</div>
-          <div class="n-title">${p.proximoCuidado || 'Próximo cuidado não descrito'}</div>
-          <div class="n-sub">Vencido em ${fmtDate(p.proximaData)}</div>
-        </div>`).join('')}
-    </div>` : '';
+  const secAtrasados = atrasados.length ? `<div class="np-section"><div class="np-section-title">Atrasados</div>
+    ${atrasados.map(n=>`<div class="notif-item atrasado" onclick="abrirPessoa('${n.id_pessoa}')">
+      <div class="n-tag">Atrasado — ${n.nome_pessoa}</div>
+      <div class="n-title">${n.proximo_cuidado||'Próximo cuidado não descrito'}</div>
+      <div class="n-sub">Vencido em ${fmtDate(n.data)}${n.responsavel?' • '+n.responsavel:''}</div></div>`).join('')}</div>` : '';
 
-  const secHoje = hojeP.length ? `
-    <div class="np-section">
-      <div class="np-section-title">Para hoje</div>
-      ${hojeP.map(p=>`
-        <div class="notif-item hoje" onclick="abrirAlertaPessoa(${p.id})">
-          <div class="n-tag">Hoje — ${p.nome}</div>
-          <div class="n-title">${p.proximoCuidado || 'Compromisso do dia'}</div>
-          <div class="n-sub">Responsável: ${p.responsavel}</div>
-        </div>`).join('')}
-    </div>` : '';
+  const secHoje = para_hoje.length ? `<div class="np-section"><div class="np-section-title">Para hoje</div>
+    ${para_hoje.map(n=>`<div class="notif-item hoje" onclick="abrirPessoa('${n.id_pessoa}')">
+      <div class="n-tag">Hoje — ${n.nome_pessoa}</div>
+      <div class="n-title">${n.proximo_cuidado||'Compromisso do dia'}</div>
+      <div class="n-sub">${n.responsavel?'Responsável: '+n.responsavel:''}</div></div>`).join('')}</div>` : '';
 
-  const secSemCuidado = semCuidadoP.length ? `
-    <div class="np-section">
-      <div class="np-section-title">Sem próximo cuidado</div>
-      ${semCuidadoP.map(p=>`
-        <div class="notif-item semcuidado" onclick="abrirAlertaPessoa(${p.id})">
-          <div class="n-tag">Sem próximo cuidado — ${p.nome}</div>
-          <div class="n-title">Definir próximo passo do relacionamento</div>
-        </div>`).join('')}
-    </div>` : '';
+  const secSemCuidado = sem_proximo_cuidado.length ? `<div class="np-section"><div class="np-section-title">Sem próximo cuidado</div>
+    ${sem_proximo_cuidado.map(n=>`<div class="notif-item semcuidado" onclick="abrirPessoa('${n.id_pessoa}')">
+      <div class="n-tag">Sem próximo cuidado — ${n.nome_pessoa}</div>
+      <div class="n-title">Definir próximo passo do relacionamento</div></div>`).join('')}</div>` : '';
 
   panel.innerHTML = `
     <div class="np-header"><h4>Seu dia</h4><p>Pessoas que precisam da sua atenção agora</p></div>
     ${secAtrasados}${secHoje}${secSemCuidado}
-    <div class="np-footer">
-      <button class="btn btn-secondary" onclick="verAgendaCompleta()">Ver agenda completa</button>
-    </div>
+    <div class="np-footer"><button class="btn btn-secondary" onclick="verAgendaCompleta()">Ver agenda completa</button></div>
   `;
-}
-
-function abrirAlertaPessoa(pessoaId){
-  document.getElementById('notifPanel').classList.remove('open');
-  closeSearchResults();
-  abrirPessoa(pessoaId);
 }
 
 function verAgendaCompleta(){
   document.getElementById('notifPanel').classList.remove('open');
-  closeSearchResults();
   selectedCalDate = iso(today);
   goTo('visaoDoDia');
 }
 
-function updateNotifDot(){
-  const { atrasados, hojeP, semCuidadoP } = getNotifData();
-  const total = atrasados.length + hojeP.length + semCuidadoP.length;
-  const dot = document.getElementById('notifDot');
-  if(total > 0){
-    dot.style.display = 'flex';
-    dot.textContent = total > 9 ? '9+' : total;
-  } else {
-    dot.style.display = 'none';
-    dot.textContent = '';
-  }
-  if(document.getElementById('notifPanel').classList.contains('open')){
-    renderNotifPanel();
-  }
-}
-
-/* ================= FAB MOBILE ================= */
+/* =========================================================
+ * FAB
+ * ========================================================= */
 function toggleFab(){ document.getElementById('fabMenu').classList.toggle('open'); }
 function closeFab(){ document.getElementById('fabMenu').classList.remove('open'); }
 
-/* ================= RENDER ROUTER ================= */
-function render(){
+/* =========================================================
+ * ROTEADOR DE RENDER
+ * ========================================================= */
+async function render(){
   renderNav();
-  updateNotifDot();
+  await carregarNotificacoes();
   const c = document.getElementById('content');
-  if(currentPage==="visaoDoDia") renderVisaoDoDia(c);
-  else if(currentPage==="pessoas") renderPessoas(c);
-  else if(currentPage==="jornadas") renderJornadas(c);
-  else if(currentPage==="acompanhamentos") renderAcompanhamentosPage(c);
-  else if(currentPage==="organizacoes") renderOrganizacoes(c);
-  else if(currentPage==="configuracoes") renderConfiguracoes(c);
+  c.innerHTML = `<div class="loading"><div class="spin"></div>Carregando...</div>`;
+
+  try{
+    if(currentPage==="visaoDoDia") await renderVisaoDoDia(c);
+    else if(currentPage==="pessoas") await renderPessoas(c);
+    else if(currentPage==="jornadas") await renderJornadas(c);
+    else if(currentPage==="acompanhamentos") await renderAcompanhamentosPage(c);
+    else if(currentPage==="organizacoes") await renderOrganizacoes(c);
+    else if(currentPage==="consultores") await renderConsultores(c);
+    else if(currentPage==="configuracoes") await renderConfiguracoes(c);
+  }catch(erro){
+    c.innerHTML = `<div class="empty"><div class="ic">⚠️</div>${erro.message}</div>`;
+  }
 }
 
-/* ================= VISÃO DO DIA ================= */
-function renderVisaoDoDia(c){
+/* =========================================================
+ * VISÃO DO DIA
+ * ========================================================= */
+async function renderVisaoDoDia(c){
+  const resumo = await api('obter_resumo_do_dia');
+
   const days = [];
   for(let i=-3;i<=6;i++) days.push(iso(addDays(today,i)));
+  const agendaDoDia = resumo.agenda_do_dia || [];
 
   const calHtml = days.map(d=>{
-    const count = agenda.filter(a=>a.data===d && !a.concluido).length;
+    const count = (d===iso(today)) ? agendaDoDia.length : 0;
     const dt = new Date(d+"T00:00:00");
     const isToday = d===iso(today);
     const isSel = d===selectedCalDate;
@@ -716,214 +862,223 @@ function renderVisaoDoDia(c){
     </div>`;
   }).join('');
 
-  const hoje = iso(today);
-  const retornosHoje = agenda.filter(a=>a.data===hoje && !a.concluido).length;
-  const aguardando = pessoas.filter(p=>p.proximaData===hoje).length;
-  const semCuidadoN = pessoas.filter(semCuidado).length;
-  const atrasoN = pessoas.filter(isAtraso).length;
-
-  const agendaFiltrada = agenda.filter(a=>a.data===selectedCalDate && !a.concluido).sort((a,b)=>(a.hora||"").localeCompare(b.hora||""));
+  let itensDia = agendaDoDia;
+  if(selectedCalDate !== iso(today)){
+    itensDia = await api('listar_agenda_do_dia', { data: selectedCalDate });
+  }
 
   c.innerHTML = `
     <div class="page-header"><div><h1>Visão do dia</h1><p>Quem precisa da nossa atenção agora?</p></div></div>
     <div class="calendar-h">${calHtml}</div>
     <div class="grid grid-4" style="margin-bottom:22px;">
-      <div class="card summary-card"><div class="num">${retornosHoje}</div><div class="label">Retornos para hoje</div></div>
-      <div class="card summary-card"><div class="num">${aguardando}</div><div class="label">Pessoas aguardando retorno</div></div>
-      <div class="card summary-card"><div class="num">${semCuidadoN}</div><div class="label">Sem próximo cuidado</div></div>
-      <div class="card summary-card"><div class="num" style="color:${atrasoN>0?'var(--danger)':'var(--text)'}">${atrasoN}</div><div class="label">Acompanhamentos em atraso</div></div>
+      <div class="card summary-card"><div class="num">${resumo.retornos_para_hoje}</div><div class="label">Retornos para hoje</div></div>
+      <div class="card summary-card"><div class="num" style="color:${resumo.retornos_atrasados>0?'var(--danger)':'var(--text)'}">${resumo.retornos_atrasados}</div><div class="label">Atrasados</div></div>
+      <div class="card summary-card"><div class="num">${resumo.pessoas_sem_proximo_cuidado}</div><div class="label">Sem próximo cuidado</div></div>
+      <div class="card summary-card"><div class="num">${resumo.total_pendencias}</div><div class="label">Total de pendências</div></div>
     </div>
     <div class="card" style="padding:0;">
       <div style="padding:16px 16px 0;"><strong style="font-size:14px;">Agenda de ${fmtDate(selectedCalDate)}</strong></div>
-      ${agendaFiltrada.length ? agendaFiltrada.map(a=>renderAgendaItem(a)).join('') : `<div class="empty"><div class="ic">🕊️</div>Nenhum item na agenda para este dia.</div>`}
+      <div id="agendaDoDiaList">${itensDia.length ? itensDia.map(a=>renderAgendaItem(a)).join('') : `<div class="empty"><div class="ic">🕊️</div>Nenhum item na agenda para este dia.</div>`}</div>
     </div>
   `;
 }
 
-function selectCalDay(d){ selectedCalDate=d; renderVisaoDoDia(document.getElementById('content')); }
+async function selectCalDay(d){ selectedCalDate=d; await renderVisaoDoDia(document.getElementById('content')); }
 
 function renderAgendaItem(a){
-  const p = pessoaById(a.pessoaId);
-  if(!p) return '';
-  const atrasado = !a.concluido && a.data<iso(today);
+  const atrasado = a.status==='pendente' && a.data<iso(today);
   return `<div class="agenda-item">
     <div class="agenda-time">${a.hora||'—'}</div>
     <div class="agenda-body">
-      <div class="name">${p.nome} ${atrasado?'<span class="tag tag-danger">Atrasado</span>':''}</div>
-      <div class="meta">${a.tipo} • ${a.resumo||'—'} • ${a.responsavel}</div>
+      <div class="name">Pessoa • ${atrasado?'<span class="tag tag-danger">Atrasado</span>':''}</div>
+      <div class="meta">${a.tipo} • ${a.resumo||'—'} • ${a.responsavel||''}</div>
       <div class="agenda-actions">
-        <button class="btn btn-secondary" onclick="abrirConcluir(${a.pessoaId},${a.id})">Concluir</button>
-        <button class="btn btn-ghost" onclick="reagendar(${a.id})">Reagendar</button>
-        <button class="btn btn-ghost" onclick="prefillAcomp(${a.pessoaId})">Registrar acompanhamento</button>
+        <button class="btn btn-secondary" onclick="abrirConcluir('${a.pessoaId}','${a.id}')">Concluir</button>
+        <button class="btn btn-ghost" onclick="reagendar('${a.id}')">Reagendar</button>
+        <button class="btn btn-ghost" onclick="prefillAcomp('${a.pessoaId}')">Registrar acompanhamento</button>
+        <button class="btn btn-ghost" onclick="abrirPessoa('${a.pessoaId}')">Abrir pessoa</button>
       </div>
     </div>
   </div>`;
 }
 
-function reagendar(agendaId){
-  const a = agenda.find(x=>x.id===agendaId);
-  if(!a) return;
-  const nova = prompt("Nova data (AAAA-MM-DD):", a.data);
-  if(nova){
-    a.data = nova;
-    const p = pessoaById(a.pessoaId);
-    if(p) p.proximaData = nova;
-    saveAll();
-    render();
-  }
+async function reagendar(agendaId){
+  const nova = prompt("Nova data (AAAA-MM-DD):");
+  if(!nova) return;
+  try{
+    await api('reagendar_retorno', { id: agendaId, data: nova });
+    toast('Retorno reagendado.', 'sucesso');
+    await render();
+  }catch(erro){ toast(erro.message, 'erro'); }
 }
 
 function prefillAcomp(pessoaId){
-  openModal('novoAcomp');
-  document.getElementById('na-pessoa').value = pessoaId;
+  openModal('novoAcomp').then(()=>{ document.getElementById('na-pessoa').value = pessoaId; });
 }
 
-function abrirConcluir(pessoaId, agendaId){
-  const p = pessoaById(pessoaId);
+async function abrirConcluir(pessoaId, agendaId){
   const body = document.getElementById('concluirBody');
   body.innerHTML = `
     <button class="close-x" onclick="closeModal('concluir')">✕</button>
     <h2>Concluir retorno</h2>
-    <div class="sub">${p.nome}</div>
-    <div class="field"><label>Resultado</label><textarea id="cc-resultado" placeholder="Como foi a conversa?"></textarea></div>
-    <div class="field"><label>Observação</label><input id="cc-obs"></div>
+    <div class="field"><label>Resultado / resumo</label><textarea id="cc-resultado" placeholder="Como foi a conversa?"></textarea></div>
+    <div class="field"><label>Necessidade percebida</label><input id="cc-obs"></div>
     <div class="field"><label>Próximo cuidado</label><input id="cc-cuidado"></div>
     <div class="field"><label>Nova data (se necessário)</label><input type="date" id="cc-data"></div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('concluir')">Cancelar</button>
-      <button class="btn btn-primary" onclick="confirmarConcluir(${pessoaId},${agendaId})">Salvar</button>
+      <button class="btn btn-primary" id="btnConfirmarConcluir" onclick="confirmarConcluir('${pessoaId}','${agendaId}')">Salvar</button>
     </div>`;
   document.getElementById('overlay-concluir').classList.add('open');
 }
 
-function confirmarConcluir(pessoaId, agendaId){
-  const p = pessoaById(pessoaId);
-  const resultado = document.getElementById('cc-resultado').value;
-  const obs = document.getElementById('cc-obs').value;
-  const cuidado = document.getElementById('cc-cuidado').value;
-  const novaData = document.getElementById('cc-data').value;
-
-  const a = agenda.find(x=>x.id===agendaId);
-  if(a) a.concluido = true;
-
-  acompanhamentos.push({id:++uid, pessoaId, data:iso(today), tipo:"Conversa",
-    resumo:resultado || "Retorno concluído", necessidade:obs||"", proximoCuidado:cuidado, proximaData:novaData, responsavel:p.responsavel});
-
-  addHistorico(p, `Retorno concluído: ${resultado || 'sem detalhes'}.`, "retorno");
-
-  if(novaData){
-    criarRetorno({pessoaId, data:novaData, tipo:cuidado||"Retorno", resumo:cuidado, responsavel:p.responsavel});
-  } else {
-    p.proximoCuidado = cuidado || "";
-    p.proximaData = "";
+async function confirmarConcluir(pessoaId, agendaId){
+  const btn = document.getElementById('btnConfirmarConcluir');
+  btn.disabled = true; btn.textContent = 'Salvando...';
+  try{
+    await api('concluir_retorno', {
+      id: agendaId,
+      dadosConclusao: {
+        resumo: document.getElementById('cc-resultado').value,
+        necessidade_percebida: document.getElementById('cc-obs').value,
+        novo_cuidado: document.getElementById('cc-cuidado').value,
+        nova_data: document.getElementById('cc-data').value
+      }
+    });
+    toast('Retorno concluído.', 'sucesso');
+    closeModal('concluir');
+    await render();
+  }catch(erro){
+    toast(erro.message, 'erro');
+  }finally{
+    btn.disabled = false; btn.textContent = 'Salvar';
   }
-
-  saveAll();
-  closeModal('concluir');
-  render();
 }
 
-/* ================= PESSOAS ================= */
-function renderPessoas(c){
-  c = c || document.getElementById('content');
-  const filtroEtapa = document.getElementById('f-etapa')?.value || '';
-  const filtroResp = document.getElementById('f-resp')?.value || '';
-  const filtroAtraso = document.getElementById('f-atraso')?.checked || false;
+/* =========================================================
+ * PESSOAS
+ * ========================================================= */
+let pessoasCache = [];
+let filtroPessoas = { etapa:'', atraso:false, responsavel:'' };
 
-  let lista = pessoas.filter(p=>{
-    if(filtroEtapa && p.etapa!==filtroEtapa) return false;
-    if(filtroResp && p.responsavel!==filtroResp) return false;
-    if(filtroAtraso && !isAtraso(p)) return false;
+async function renderPessoas(c){
+  c = c || document.getElementById('content');
+  pessoasCache = await api('listar_pessoas');
+
+  const isAdmin = usuarioAtual.perfil === 'administrador';
+  if(isAdmin && cacheConsultores.length===0){
+    try{ cacheConsultores = await api('listar_consultores'); }catch(e){}
+  }
+
+  let lista = pessoasCache.filter(p=>{
+    if(filtroPessoas.etapa && p.etapa!==filtroPessoas.etapa) return false;
+    if(filtroPessoas.atraso && !isAtraso(p)) return false;
+    if(isAdmin && filtroPessoas.responsavel && String(p.responsavelId)!==String(filtroPessoas.responsavel)) return false;
     return true;
   });
 
+  const filtroRespHtml = isAdmin ? `<select id="f-resp" onchange="onFiltroPessoas()"><option value="">Todos os responsáveis</option>${cacheConsultores.map(cn=>`<option value="${cn.id}" ${filtroPessoas.responsavel===cn.id?'selected':''}>${cn.nome}</option>`).join('')}</select>` : '';
+
   c.innerHTML = `
-    <div class="page-header"><div><h1>Pessoas</h1><p>${pessoas.length} pessoas no relacionamento</p></div>
+    <div class="page-header"><div><h1>Pessoas</h1><p>${lista.length} pessoas no relacionamento</p></div>
       <button class="btn btn-primary hide-mobile" onclick="openModal('novoContato')">＋ Novo contato</button></div>
     <div class="filters">
-      <select id="f-etapa" onchange="renderPessoas()"><option value="">Todas as etapas</option>${ETAPAS.map(e=>`<option ${filtroEtapa===e?'selected':''}>${e}</option>`).join('')}</select>
-      <select id="f-resp" onchange="renderPessoas()"><option value="">Todos os responsáveis</option>${RESPONSAVEIS.map(r=>`<option ${filtroResp===r?'selected':''}>${r}</option>`).join('')}</select>
-      <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);"><input type="checkbox" id="f-atraso" ${filtroAtraso?'checked':''} onchange="renderPessoas()"> Em atraso</label>
+      <select id="f-etapa" onchange="onFiltroPessoas()"><option value="">Todas as etapas</option>${ETAPAS.map(e=>`<option ${filtroPessoas.etapa===e?'selected':''}>${e}</option>`).join('')}</select>
+      ${filtroRespHtml}
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);"><input type="checkbox" id="f-atraso" ${filtroPessoas.atraso?'checked':''} onchange="onFiltroPessoas()"> Em atraso</label>
     </div>
     <div class="card" style="padding:0;">
       ${lista.length ? lista.map(p=>`
-        <div class="list-row" onclick="abrirPessoa(${p.id})">
-          <div class="col"><div class="name">${p.nome}</div><div class="org">${orgNome(p.organizacaoId)||'Sem organização'}</div></div>
+        <div class="list-row" onclick="abrirPessoa('${p.id}')">
+          <div class="col"><div class="name">${p.nome}</div><div class="org">${p.organizacaoId?'Vinculado':'Sem organização'}</div></div>
           <div class="col"><span class="tag tag-stage">${p.etapa}</span></div>
-          <div class="col" style="font-size:13px;color:var(--muted);">${p.responsavel}</div>
+          ${isAdmin?`<div class="col" style="font-size:13px;color:var(--muted);">${p.responsavel}</div>`:''}
           <div class="col" style="font-size:13px;">${p.proximoCuidado||'—'}<div style="color:var(--muted);font-size:11px;">${p.proximaData?fmtDate(p.proximaData):''} ${isAtraso(p)?'<span class="tag tag-danger">Atraso</span>':''}${semCuidado(p)?'<span class="tag tag-warn">Sem cuidado</span>':''}</div></div>
         </div>`).join('') : `<div class="empty"><div class="ic">🔍</div>Nenhuma pessoa encontrada.</div>`}
     </div>
   `;
 }
 
-function abrirPessoa(id, destacarAcompId){
-  const p = pessoaById(id);
-  if(!p) return;
-  const historicoAcomp = acompanhamentos.filter(a=>a.pessoaId===p.id).map(a=>({...a, _sortKey:a.data, _kind:'acomp'}));
-  const historicoMov = (p.historico||[]).map(h=>({...h, _sortKey:h.data, _kind:h.tipo}));
-  const timeline = [...historicoAcomp, ...historicoMov].sort((a,b)=>a._sortKey.localeCompare(b._sortKey));
+function onFiltroPessoas(){
+  filtroPessoas.etapa = document.getElementById('f-etapa').value;
+  filtroPessoas.atraso = document.getElementById('f-atraso').checked;
+  const fr = document.getElementById('f-resp');
+  filtroPessoas.responsavel = fr ? fr.value : '';
+  renderPessoas();
+}
 
+function isAtraso(p){ return p.proximaData && p.proximaData < iso(today) && p.etapa!=="Relacionamento contínuo"; }
+function semCuidado(p){ return !p.proximaData && p.etapa!=="Relacionamento contínuo"; }
+
+async function abrirPessoa(id){
+  const overlay = document.getElementById('overlay-pessoaDetalhe');
   const body = document.getElementById('pessoaDetalheBody');
-  body.innerHTML = `
-    <button class="close-x" onclick="closeModal('pessoaDetalhe')">✕</button>
-    <h2>${p.nome}</h2>
-    <div class="sub">${orgNome(p.organizacaoId)||'Sem organização'} • ${p.telefone||''} ${p.email?'• '+p.email:''}</div>
-    <div style="margin:10px 0;"><span class="tag tag-stage">${p.etapa}</span></div>
-    <div style="font-size:13px;margin-bottom:8px;"><strong>Contexto inicial:</strong> ${p.contexto||'—'}</div>
-    <div style="font-size:13px;margin-bottom:8px;"><strong>Necessidades observadas:</strong> ${p.necessidades||'—'}</div>
-    <div style="font-size:13px;margin-bottom:8px;"><strong>Responsável:</strong> ${p.responsavel}</div>
-    <div style="font-size:13px;margin-bottom:14px;background:${p.proximoCuidado?'var(--accent-soft)':'var(--bg)'};padding:8px 10px;border-radius:8px;">
-      <strong>Próximo cuidado:</strong> ${p.proximoCuidado||'—'} ${p.proximaData?'('+fmtDate(p.proximaData)+')':''}
-    </div>
-    <div class="modal-actions" style="justify-content:flex-start;flex-wrap:wrap;">
-      <button class="btn btn-secondary" onclick="closeModal('pessoaDetalhe');prefillAcomp(${p.id});">Registrar acompanhamento</button>
-      <button class="btn btn-ghost" onclick="closeModal('pessoaDetalhe');document.getElementById('ag-pessoa').value=${p.id};openModal('agendarRetorno');">Agendar retorno</button>
-      <button class="btn btn-ghost" onclick="moverJornadaPrompt(${p.id})">Mover na jornada</button>
-    </div>
-    <div class="timeline">
-      <div class="tl-item"><div class="tl-date">Contato criado</div><div class="tl-text">Etapa inicial da jornada.</div></div>
-      ${timeline.map(item=>{
-        if(item._kind==='acomp'){
-          const highlight = destacarAcompId && item.id===destacarAcompId;
-          return `<div class="tl-item ${highlight?'highlight':''}"><div class="tl-date">${fmtDate(item.data)} • ${item.tipo}</div><div class="tl-text">${item.resumo}${item.necessidade?' — '+item.necessidade:''}</div></div>`;
-        }
-        return `<div class="tl-item tl-move"><div class="tl-date">${fmtDate(item.data)} • Movimentação</div><div class="tl-text">${item.texto}</div></div>`;
-      }).join('')}
-    </div>
-  `;
-  document.getElementById('overlay-pessoaDetalhe').classList.add('open');
+  body.innerHTML = `<div class="loading"><div class="spin"></div>Carregando...</div>`;
+  overlay.classList.add('open');
 
-  if(destacarAcompId){
-    setTimeout(()=>{
-      const el = body.querySelector('.highlight');
-      if(el) el.scrollIntoView({behavior:'smooth', block:'center'});
-    },100);
+  try{
+    const p = await api('buscar_pessoa', { id: id });
+    const historico = p.historico || [];
+    const movimentacoes = p.movimentacoes || [];
+    const timeline = [
+      ...historico.map(h=>({data:h.data, texto:`${h.tipo} — ${h.resumo||''} ${h.necessidade?'('+h.necessidade+')':''}`, kind:'acomp'})),
+      ...movimentacoes.map(m=>({data:m.data, texto:m.descricao, kind:'mov'}))
+    ].sort((a,b)=>(a.data||'').localeCompare(b.data||''));
+
+    body.innerHTML = `
+      <button class="close-x" onclick="closeModal('pessoaDetalhe')">✕</button>
+      <h2>${p.nome}</h2>
+      <div class="sub">${p.telefone||''} ${p.email?'• '+p.email:''}</div>
+      <div style="margin:10px 0;"><span class="tag tag-stage">${p.etapa}</span></div>
+      <div style="font-size:13px;margin-bottom:8px;"><strong>Contexto inicial:</strong> ${p.contexto||'—'}</div>
+      <div style="font-size:13px;margin-bottom:8px;"><strong>Necessidades observadas:</strong> ${p.necessidades||'—'}</div>
+      <div style="font-size:13px;margin-bottom:8px;"><strong>Responsável:</strong> ${p.responsavel}</div>
+      <div style="font-size:13px;margin-bottom:14px;background:${p.proximoCuidado?'var(--accent-soft)':'var(--bg)'};padding:8px 10px;border-radius:8px;">
+        <strong>Próximo cuidado:</strong> ${p.proximoCuidado||'—'} ${p.proximaData?'('+fmtDate(p.proximaData)+')':''}
+      </div>
+      <div class="modal-actions" style="justify-content:flex-start;flex-wrap:wrap;">
+        <button class="btn btn-secondary" onclick="closeModal('pessoaDetalhe');prefillAcomp('${p.id}');">Registrar acompanhamento</button>
+        <button class="btn btn-ghost" onclick="closeModal('pessoaDetalhe');openModal('agendarRetorno').then(()=>document.getElementById('ag-pessoa').value='${p.id}');">Agendar retorno</button>
+        <button class="btn btn-ghost" onclick="moverJornadaPrompt('${p.id}','${p.etapa}')">Mover na jornada</button>
+      </div>
+      <div class="timeline">
+        ${timeline.length ? timeline.map(item=>`<div class="tl-item ${item.kind==='mov'?'tl-move':''}"><div class="tl-date">${fmtDate(item.data)}</div><div class="tl-text">${item.texto}</div></div>`).join('') : '<div class="tl-item"><div class="tl-text">Sem histórico ainda.</div></div>'}
+      </div>
+    `;
+  }catch(erro){
+    body.innerHTML = `<button class="close-x" onclick="closeModal('pessoaDetalhe')">✕</button><div class="empty"><div class="ic">⚠️</div>${erro.message}</div>`;
   }
 }
 
-function moverJornadaPrompt(id){
-  const p = pessoaById(id);
-  const idx = ETAPAS.indexOf(p.etapa);
+async function moverJornadaPrompt(id, etapaAtual){
+  const idx = ETAPAS.indexOf(etapaAtual);
   const opts = ETAPAS.map((e,i)=>`${i}: ${e}`).join('\n');
   const escolha = prompt("Mover para qual etapa?\n"+opts, idx);
   if(escolha!==null && ETAPAS[escolha]){
-    moverPessoaEtapa(p, ETAPAS[escolha]);
-    closeModal('pessoaDetalhe');
-    render();
+    try{
+      await api('mover_pessoa_jornada', { id: id, etapa: ETAPAS[escolha] });
+      toast('Etapa atualizada.', 'sucesso');
+      closeModal('pessoaDetalhe');
+      await render();
+    }catch(erro){ toast(erro.message, 'erro'); }
   }
 }
 
-/* ================= JORNADAS (KANBAN) — mouse + touch ================= */
+/* =========================================================
+ * JORNADAS — KANBAN
+ * ========================================================= */
 let dragPessoaId = null;
+let kanbanPessoas = [];
 
-function renderJornadas(c){
+async function renderJornadas(c){
   c = c || document.getElementById('content');
+  kanbanPessoas = await api('listar_pessoas');
+
   c.innerHTML = `
     <div class="page-header"><div><h1>Jornadas</h1><p>Cada pessoa em uma etapa da jornada de relacionamento</p></div></div>
     <div class="kanban-wrap" id="kanbanWrap">
       ${ETAPAS.map(etapa=>{
-        const cards = pessoas.filter(p=>p.etapa===etapa);
+        const cards = kanbanPessoas.filter(p=>p.etapa===etapa);
         return `<div class="kanban-col" data-etapa="${etapa}" ondragover="event.preventDefault();this.classList.add('drop-hover')" ondragleave="this.classList.remove('drop-hover')" ondrop="onDrop(event,'${etapa}')">
           <h3>${etapa} <span>${cards.length}</span></h3>
           ${cards.map(p=>renderKCard(p)).join('') || `<div class="empty" style="padding:20px 10px;"><div class="ic">·</div>Sem pessoas aqui</div>`}
@@ -937,75 +1092,67 @@ function renderJornadas(c){
 function renderKCard(p){
   const opts = ETAPAS.map(e=>`<option value="${e}" ${e===p.etapa?'selected':''}>${e}</option>`).join('');
   return `<div class="kcard" data-pessoa-id="${p.id}" draggable="true"
-      ondragstart="onDragStart(event,${p.id})" ondragend="this.classList.remove('dragging')"
-      onclick="if(event.target.tagName!=='SELECT')abrirPessoa(${p.id})">
+      ondragstart="onDragStart(event,'${p.id}')" ondragend="this.classList.remove('dragging')"
+      onclick="if(event.target.tagName!=='SELECT')abrirPessoa('${p.id}')">
     <div class="name">${p.nome}</div>
-    <div class="org">${orgNome(p.organizacaoId)||''}</div>
     <div class="ctx">${p.contexto ? p.contexto.slice(0,70) : ''}</div>
     <div class="foot"><span>${p.responsavel}</span><span>${p.proximaData?fmtDate(p.proximaData):'—'}</span></div>
     <div class="foot" style="margin-top:2px;">${p.proximoCuidado||'<em>Sem próximo cuidado</em>'}</div>
-    <select class="move-select hide-desktop" onchange="moverEtapaSelect(${p.id}, this.value)">${opts}</select>
+    <select class="move-select hide-desktop" onchange="moverEtapaSelect('${p.id}', this.value)">${opts}</select>
   </div>`;
 }
 
-/* --- Mouse drag (desktop) --- */
 function onDragStart(ev,id){ dragPessoaId=id; ev.target.classList.add('dragging'); }
-function onDrop(ev,etapa){
+
+async function onDrop(ev,etapa){
   ev.preventDefault(); ev.currentTarget.classList.remove('drop-hover');
   if(dragPessoaId){
-    const p = pessoaById(dragPessoaId);
-    moverPessoaEtapa(p, etapa);
-    dragPessoaId=null;
-    renderJornadas();
-    render();
+    const id = dragPessoaId; dragPessoaId=null;
+    try{
+      await api('mover_pessoa_jornada', { id: id, etapa: etapa });
+      toast('Etapa atualizada.', 'sucesso');
+      await renderJornadas();
+      await carregarNotificacoes();
+    }catch(erro){ toast(erro.message, 'erro'); await renderJornadas(); }
   }
 }
-function moverEtapaSelect(id, etapa){
-  const p = pessoaById(id);
-  moverPessoaEtapa(p, etapa);
-  renderJornadas();
-  render();
+
+async function moverEtapaSelect(id, etapa){
+  try{
+    await api('mover_pessoa_jornada', { id: id, etapa: etapa });
+    toast('Etapa atualizada.', 'sucesso');
+    await renderJornadas();
+    await carregarNotificacoes();
+  }catch(erro){ toast(erro.message, 'erro'); await renderJornadas(); }
 }
 
-/* --- Touch drag (mobile/tablet): toque e segurar para arrastar --- */
 function attachTouchHandlers(){
   const cards = document.querySelectorAll('.kcard');
   cards.forEach(card=>{
-    let holdTimer = null;
-    let startX, startY;
-    let moved = false;
-    let dragging = false;
-    let ghost = null;
+    let holdTimer=null, startX, startY, dragging=false, ghost=null;
 
     card.addEventListener('touchstart', (e)=>{
-      const t = e.touches[0];
-      startX = t.clientX; startY = t.clientY;
-      moved = false; dragging = false;
+      const t = e.touches[0]; startX=t.clientX; startY=t.clientY; dragging=false;
       holdTimer = setTimeout(()=>{
-        dragging = true;
-        card.classList.add('dragging');
-        ghost = card.cloneNode(true);
-        ghost.classList.add('drag-clone');
-        ghost.style.left = (t.clientX-115)+'px';
-        ghost.style.top = (t.clientY-40)+'px';
+        dragging=true; card.classList.add('dragging');
+        ghost = card.cloneNode(true); ghost.classList.add('drag-clone');
+        ghost.style.left=(t.clientX-115)+'px'; ghost.style.top=(t.clientY-40)+'px';
         document.body.appendChild(ghost);
       }, 220);
     }, {passive:true});
 
     card.addEventListener('touchmove', (e)=>{
       const t = e.touches[0];
-      if(Math.abs(t.clientX-startX)>8 || Math.abs(t.clientY-startY)>8) moved = true;
       if(!dragging) return;
       e.preventDefault();
-      if(ghost){ ghost.style.left = (t.clientX-115)+'px'; ghost.style.top = (t.clientY-40)+'px'; }
-
+      if(ghost){ ghost.style.left=(t.clientX-115)+'px'; ghost.style.top=(t.clientY-40)+'px'; }
       document.querySelectorAll('.kanban-col').forEach(col=>col.classList.remove('drop-hover'));
       const under = document.elementFromPoint(t.clientX, t.clientY);
       const col = under && under.closest('.kanban-col');
       if(col) col.classList.add('drop-hover');
     }, {passive:false});
 
-    card.addEventListener('touchend', (e)=>{
+    card.addEventListener('touchend', async (e)=>{
       clearTimeout(holdTimer);
       if(dragging){
         const t = e.changedTouches[0];
@@ -1016,209 +1163,264 @@ function attachTouchHandlers(){
         card.classList.remove('dragging');
         if(col){
           const novaEtapa = col.getAttribute('data-etapa');
-          const pessoaId = Number(card.getAttribute('data-pessoa-id'));
-          const p = pessoaById(pessoaId);
-          moverPessoaEtapa(p, novaEtapa);
-          renderJornadas();
-          render();
+          const pessoaId = card.getAttribute('data-pessoa-id');
+          try{
+            await api('mover_pessoa_jornada', { id: pessoaId, etapa: novaEtapa });
+            toast('Etapa atualizada.', 'sucesso');
+            await renderJornadas();
+            await carregarNotificacoes();
+          }catch(erro){ toast(erro.message, 'erro'); await renderJornadas(); }
         }
       }
-      dragging = false; moved = false;
+      dragging=false;
     });
 
     card.addEventListener('touchcancel', ()=>{
       clearTimeout(holdTimer);
       if(ghost) ghost.remove();
       card.classList.remove('dragging');
-      dragging = false;
+      dragging=false;
     });
   });
 }
 
-/* ================= ACOMPANHAMENTOS ================= */
-function renderAcompanhamentosPage(c){
+/* =========================================================
+ * ACOMPANHAMENTOS
+ * ========================================================= */
+async function renderAcompanhamentosPage(c){
   c = c || document.getElementById('content');
-  const filtroResp = document.getElementById('af-resp')?.value || '';
-  const filtroTipo = document.getElementById('af-tipo')?.value || '';
-
-  let lista = acompanhamentos.filter(a=>{
-    if(filtroResp && a.responsavel!==filtroResp) return false;
-    if(filtroTipo && a.tipo!==filtroTipo) return false;
-    return true;
-  }).sort((a,b)=>b.data.localeCompare(a.data));
+  const lista = await api('listar_acompanhamentos');
+  lista.sort((a,b)=>(b.data||'').localeCompare(a.data||''));
 
   c.innerHTML = `
     <div class="page-header"><div><h1>Acompanhamentos</h1><p>Histórico cronológico de conversas</p></div>
       <button class="btn btn-primary hide-mobile" onclick="openModal('novoAcomp')">＋ Registrar</button></div>
-    <div class="filters">
-      <select id="af-resp" onchange="renderAcompanhamentosPage()"><option value="">Todos os responsáveis</option>${RESPONSAVEIS.map(r=>`<option ${filtroResp===r?'selected':''}>${r}</option>`).join('')}</select>
-      <select id="af-tipo" onchange="renderAcompanhamentosPage()"><option value="">Todos os tipos</option>${["Conversa","Ligação","Reunião","Mensagem","Visita","Outro"].map(t=>`<option ${filtroTipo===t?'selected':''}>${t}</option>`).join('')}</select>
-    </div>
     <div class="card" style="padding:0;">
-      ${lista.length ? lista.map(a=>{
-        const p = pessoaById(a.pessoaId);
-        return `<div class="list-row" onclick="abrirPessoa(${a.pessoaId},${a.id})">
-          <div class="col"><div class="name">${p?.nome||'—'}</div><div class="org">${fmtDate(a.data)} • ${a.tipo}</div></div>
+      ${lista.length ? lista.map(a=>`
+        <div class="list-row" onclick="abrirPessoa('${a.pessoaId}')">
+          <div class="col"><div class="name">${fmtDate(a.data)} • ${a.tipo}</div></div>
           <div class="col" style="font-size:13px;">${a.resumo}</div>
           <div class="col" style="font-size:12px;color:var(--muted);">${a.necessidade||''}</div>
           <div class="col" style="font-size:12px;color:var(--muted);">${a.responsavel}</div>
-        </div>`;
-      }).join('') : `<div class="empty"><div class="ic">📝</div>Nenhum acompanhamento encontrado.</div>`}
+        </div>`).join('') : `<div class="empty"><div class="ic">📝</div>Nenhum acompanhamento encontrado.</div>`}
     </div>
   `;
 }
 
-/* ================= ORGANIZAÇÕES ================= */
-function renderOrganizacoes(c){
+/* =========================================================
+ * ORGANIZAÇÕES
+ * ========================================================= */
+async function renderOrganizacoes(c){
   c = c || document.getElementById('content');
+  const orgs = await api('listar_organizacoes');
+  const isAdmin = usuarioAtual.perfil === 'administrador';
+
   c.innerHTML = `
-    <div class="page-header"><div><h1>Organizações</h1><p>${organizacoes.length} organizações vinculadas</p></div></div>
+    <div class="page-header"><div><h1>Organizações</h1><p>${orgs.length} organizações vinculadas</p></div></div>
     <div class="grid grid-2">
-      ${organizacoes.map(o=>{
-        const vinculadas = pessoas.filter(p=>p.organizacaoId===o.id);
-        const proximos = vinculadas.filter(p=>p.proximaData).sort((a,b)=>a.proximaData.localeCompare(b.proximaData));
-        return `<div class="card org-card" id="org-${o.id}">
+      ${orgs.length ? orgs.map(o=>`
+        <div class="card org-card">
           <h3>${o.nome}</h3>
-          <div class="meta">${o.segmento} • ${o.cidade} • Responsável: ${o.responsavel}</div>
-          <div style="font-size:13px;margin-bottom:8px;"><strong>Pessoas vinculadas:</strong> ${vinculadas.map(p=>`<a onclick="abrirPessoa(${p.id})" style="color:var(--accent);cursor:pointer;">${p.nome}</a>`).join(', ')||'Nenhuma'}</div>
-          <div style="font-size:13px;">${o.obs||''}</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:8px;">Próximo cuidado: ${proximos[0]? proximos[0].proximoCuidado+' — '+fmtDate(proximos[0].proximaData) : '—'}</div>
-        </div>`;
-      }).join('')}
+          <div class="meta">${o.segmento||''} ${o.cidade?'• '+o.cidade:''} ${isAdmin?'• Resp. próprio':''}</div>
+          <div style="font-size:13px;">${o.observacoes||''}</div>
+        </div>`).join('') : `<div class="empty"><div class="ic">🏢</div>Nenhuma organização cadastrada.</div>`}
     </div>
   `;
 }
 
-/* ================= CONFIGURAÇÕES ================= */
-function renderConfiguracoes(c){
+/* =========================================================
+ * CONSULTORES (ADMIN)
+ * ========================================================= */
+async function renderConsultores(c){
+  c = c || document.getElementById('content');
+  if(usuarioAtual.perfil !== 'administrador'){
+    c.innerHTML = `<div class="empty"><div class="ic">🔒</div>Acesso restrito ao administrador.</div>`;
+    return;
+  }
+  cacheConsultores = await api('listar_consultores');
+
+  c.innerHTML = `
+    <div class="page-header"><div><h1>Consultores</h1><p>${cacheConsultores.length} consultores cadastrados</p></div>
+      <button class="btn btn-primary" onclick="openModal('novoConsultor')">＋ Pré-cadastrar consultor</button></div>
+    <div class="card" style="padding:0;">
+      ${cacheConsultores.map(cn=>`
+        <div class="list-row" style="cursor:default;">
+          <div class="col"><div class="name">${cn.nome||'(cadastro pendente)'}</div><div class="org">${cn.email||''}</div></div>
+          <div class="col"><span class="tag tag-stage">${cn.perfil==='administrador'?'Administrador':'Consultor'}</span></div>
+          <div class="col" style="font-size:12px;">${cn.status==='ativo'?'✅ Ativo':'⛔ Inativo'}</div>
+          <div class="col" style="font-size:12px;color:var(--muted);">${cn.ultimoAcesso?fmtDate(cn.ultimoAcesso):'Nunca acessou'}</div>
+          <div class="col">
+            <button class="btn btn-ghost" onclick="alternarStatusConsultor('${cn.id}','${cn.status==='ativo'?'inativo':'ativo'}')">${cn.status==='ativo'?'Inativar':'Ativar'}</button>
+          </div>
+        </div>`).join('')}
+    </div>
+  `;
+}
+
+async function alternarStatusConsultor(id, novoStatus){
+  try{
+    await api('alterar_status_consultor', { id: id, status: novoStatus });
+    toast('Status atualizado.', 'sucesso');
+    await renderConsultores();
+  }catch(erro){ toast(erro.message, 'erro'); }
+}
+
+async function submitNovoConsultor(ev){
+  ev.preventDefault();
+  const cpf = cpfSomenteNumeros(document.getElementById('cs-cpf').value);
+  const btn = document.getElementById('btnCadastrarConsultor');
+  btn.disabled = true; btn.textContent = 'Cadastrando...';
+  try{
+    await api('cadastrar_consultor', {
+      cpf: cpf,
+      nome_completo: document.getElementById('cs-nome').value.trim(),
+      perfil: document.getElementById('cs-perfil').value
+    });
+    toast('CPF pré-cadastrado. O consultor concluirá seus dados no primeiro acesso.', 'sucesso');
+    document.getElementById('formNovoConsultor').reset();
+    closeModal('novoConsultor');
+    await renderConsultores();
+  }catch(erro){
+    toast(erro.message, 'erro');
+  }finally{
+    btn.disabled = false; btn.textContent = 'Pré-cadastrar';
+  }
+  return false;
+}
+
+/* =========================================================
+ * CONFIGURAÇÕES
+ * ========================================================= */
+async function renderConfiguracoes(c){
   c = c || document.getElementById('content');
   c.innerHTML = `
     <div class="page-header"><div><h1>Configurações</h1><p>Preferências gerais do CRM Pocket</p></div></div>
     <div class="card" style="max-width:480px;">
-      <div class="field"><label>Nome da equipe</label><input value="Grupo Gênesis Brasil" readonly></div>
-      <div class="field"><label>Responsáveis</label><input value="${RESPONSAVEIS.join(', ')}" readonly></div>
-      <div class="field"><label>Etapas da jornada</label><input value="${ETAPAS.join(' → ')}" readonly></div>
-      <div class="field">
-        <label>Dados locais</label>
-        <button class="btn btn-ghost" onclick="if(confirm('Isso vai apagar todos os dados salvos localmente e restaurar os dados de exemplo. Continuar?')){localStorage.removeItem(STORAGE_KEY);location.reload();}">Restaurar dados de exemplo</button>
-      </div>
-      <p style="font-size:12px;color:var(--muted);">Versão Pocket — simples, leve e focada em relacionamento humano. Os dados são salvos automaticamente no seu navegador.</p>
+      <div class="field"><label>Nome</label><input value="${usuarioAtual.nome}" readonly></div>
+      <div class="field"><label>Perfil</label><input value="${usuarioAtual.perfil==='administrador'?'Administrador':'Consultor'}" readonly></div>
+      <div class="field"><label>Cidade</label><input value="${usuarioAtual.cidade||''}" readonly></div>
+      <div class="field"><label>Telefone</label><input value="${usuarioAtual.telefone||''}" readonly></div>
+      <div class="field"><label>E-mail</label><input value="${usuarioAtual.email||''}" readonly></div>
+      <p style="font-size:12px;color:var(--muted);">CRM Pocket — simples, leve e focado em relacionamento humano.</p>
     </div>
   `;
 }
 
-/* ================= MODAIS ================= */
-function fillSelects(){
-  document.getElementById('nc-resp').innerHTML = RESPONSAVEIS.map(r=>`<option>${r}</option>`).join('');
+/* =========================================================
+ * MODAIS — abertura, preenchimento e submissão
+ * ========================================================= */
+async function fillSelects(){
   document.getElementById('nc-etapa').innerHTML = ETAPAS.map(e=>`<option>${e}</option>`).join('');
-  document.getElementById('na-resp').innerHTML = RESPONSAVEIS.map(r=>`<option>${r}</option>`).join('');
-  document.getElementById('ag-resp').innerHTML = RESPONSAVEIS.map(r=>`<option>${r}</option>`).join('');
-  const pessoaOpts = pessoas.map(p=>`<option value="${p.id}">${p.nome}</option>`).join('');
+
+  const pessoasParaSelect = pessoasCache.length ? pessoasCache : await api('listar_pessoas');
+  pessoasCache = pessoasParaSelect;
+  const pessoaOpts = pessoasParaSelect.map(p=>`<option value="${p.id}">${p.nome}</option>`).join('');
   document.getElementById('na-pessoa').innerHTML = pessoaOpts;
   document.getElementById('ag-pessoa').innerHTML = pessoaOpts;
-  document.getElementById('orgList').innerHTML = organizacoes.map(o=>`<option value="${o.nome}">`).join('');
+
+  try{
+    const orgs = await api('listar_organizacoes');
+    document.getElementById('orgList').innerHTML = orgs.map(o=>`<option value="${o.nome}">`).join('');
+  }catch(e){}
 }
 
-function openModal(name){
-  fillSelects();
+async function openModal(name){
+  await fillSelects();
   document.getElementById('overlay-'+name).classList.add('open');
 }
 function closeModal(name){ document.getElementById('overlay-'+name).classList.remove('open'); }
 
-function submitNovoContato(ev){
+async function submitNovoContato(ev){
   ev.preventDefault();
-  const orgNomeVal = document.getElementById('nc-org').value.trim();
-  let organizacaoId = null;
-  if(orgNomeVal){
-    let org = organizacoes.find(o=>o.nome.toLowerCase()===orgNomeVal.toLowerCase());
-    if(!org){ org = {id:++uid,nome:orgNomeVal,segmento:"",cidade:"",responsavel:document.getElementById('nc-resp').value,obs:""}; organizacoes.push(org); }
-    organizacaoId = org.id;
+  const btn = document.getElementById('btnSalvarContato');
+  btn.disabled = true; btn.textContent = 'Salvando...';
+  try{
+    const orgNome = document.getElementById('nc-org').value.trim();
+    if(orgNome){
+      const orgs = await api('listar_organizacoes');
+      const existente = orgs.find(o=>o.nome.toLowerCase()===orgNome.toLowerCase());
+      var idOrganizacao = existente ? existente.id : (await api('criar_organizacao', { nome: orgNome })).id;
+    }
+    await api('criar_pessoa', {
+      nome: document.getElementById('nc-nome').value,
+      telefone: document.getElementById('nc-tel').value,
+      email: document.getElementById('nc-email').value,
+      id_organizacao: idOrganizacao || '',
+      contexto_inicial: document.getElementById('nc-ctx').value,
+      etapa_jornada: document.getElementById('nc-etapa').value,
+      proximo_cuidado: document.getElementById('nc-cuidado').value,
+      proxima_data: document.getElementById('nc-data').value
+    });
+    toast('Contato criado com sucesso.', 'sucesso');
+    document.getElementById('formNovoContato').reset();
+    closeModal('novoContato');
+    await render();
+  }catch(erro){
+    toast(erro.message, 'erro');
+  }finally{
+    btn.disabled = false; btn.textContent = 'Salvar contato';
   }
-  const etapaInicial = document.getElementById('nc-etapa').value;
-  const p = {
-    id: ++uid,
-    nome: document.getElementById('nc-nome').value,
-    telefone: document.getElementById('nc-tel').value,
-    email: document.getElementById('nc-email').value,
-    organizacaoId,
-    responsavel: document.getElementById('nc-resp').value,
-    contexto: document.getElementById('nc-ctx').value,
-    necessidades: "",
-    etapa: etapaInicial,
-    proximoCuidado: document.getElementById('nc-cuidado').value,
-    proximaData: document.getElementById('nc-data').value,
-    historico: [{ data: iso(today), tipo:"criacao", texto:`Contato criado na etapa ${etapaInicial}.` }]
-  };
-  pessoas.push(p);
-  if(p.proximaData) criarRetorno({pessoaId:p.id, data:p.proximaData, tipo:p.proximoCuidado||"Retorno", resumo:p.proximoCuidado, responsavel:p.responsavel});
-
-  saveAll();
-  document.getElementById('formNovoContato').reset();
-  closeModal('novoContato');
-  render();
   return false;
 }
 
-function submitNovoAcomp(ev){
+async function submitNovoAcomp(ev){
   ev.preventDefault();
-  const pessoaId = parseInt(document.getElementById('na-pessoa').value);
-  const p = pessoaById(pessoaId);
-  const data = document.getElementById('na-data').value || iso(today);
-  const cuidadoData = document.getElementById('na-cuidado-data').value;
-  const cuidado = document.getElementById('na-cuidado').value;
-  const resp = document.getElementById('na-resp').value;
-  const resumo = document.getElementById('na-resumo').value;
-  const necessidade = document.getElementById('na-necessidade').value;
-
-  acompanhamentos.push({
-    id: ++uid, pessoaId, data,
-    tipo: document.getElementById('na-tipo').value,
-    resumo, necessidade,
-    proximoCuidado: cuidado, proximaData: cuidadoData, responsavel: resp
-  });
-
-  if(p && necessidade) p.necessidades = necessidade;
-
-  if(cuidadoData){
-    criarRetorno({pessoaId, data:cuidadoData, tipo:cuidado||"Retorno", resumo:cuidado, responsavel:resp});
-  } else if(p){
-    p.proximoCuidado = cuidado || p.proximoCuidado;
+  const btn = document.getElementById('btnRegistrarAcomp');
+  btn.disabled = true; btn.textContent = 'Registrando...';
+  try{
+    await api('criar_acompanhamento', {
+      id_pessoa: document.getElementById('na-pessoa').value,
+      data: document.getElementById('na-data').value || iso(today),
+      tipo_contato: document.getElementById('na-tipo').value,
+      resumo: document.getElementById('na-resumo').value,
+      necessidade_percebida: document.getElementById('na-necessidade').value,
+      proximo_cuidado: document.getElementById('na-cuidado').value,
+      proxima_data: document.getElementById('na-cuidado-data').value
+    });
+    toast('Acompanhamento registrado.', 'sucesso');
+    document.getElementById('formNovoAcomp').reset();
+    closeModal('novoAcomp');
+    await render();
+  }catch(erro){
+    toast(erro.message, 'erro');
+  }finally{
+    btn.disabled = false; btn.textContent = 'Registrar';
   }
-
-  saveAll();
-  document.getElementById('formNovoAcomp').reset();
-  closeModal('novoAcomp');
-  render();
   return false;
 }
 
-function submitAgendar(ev){
+async function submitAgendar(ev){
   ev.preventDefault();
-  const pessoaId = parseInt(document.getElementById('ag-pessoa').value);
-  const data = document.getElementById('ag-data').value;
-  const hora = document.getElementById('ag-hora').value;
-  const tipo = document.getElementById('ag-tipo').value;
-  const lembrete = document.getElementById('ag-lembrete').value;
-  const resp = document.getElementById('ag-resp').value;
-  const cuidado = document.getElementById('ag-cuidado').value;
-
-  criarRetorno({pessoaId, data, hora, tipo, resumo: cuidado || lembrete || tipo, responsavel: resp});
-
-  saveAll();
-  document.getElementById('formAgendar').reset();
-  closeModal('agendarRetorno');
-  render();
+  const btn = document.getElementById('btnAgendar');
+  btn.disabled = true; btn.textContent = 'Agendando...';
+  try{
+    await api('criar_retorno', {
+      id_pessoa: document.getElementById('ag-pessoa').value,
+      data: document.getElementById('ag-data').value,
+      hora: document.getElementById('ag-hora').value,
+      tipo: document.getElementById('ag-tipo').value,
+      resumo: document.getElementById('ag-cuidado').value
+    });
+    toast('Retorno agendado.', 'sucesso');
+    document.getElementById('formAgendar').reset();
+    closeModal('agendarRetorno');
+    await render();
+  }catch(erro){
+    toast(erro.message, 'erro');
+  }finally{
+    btn.disabled = false; btn.textContent = 'Agendar';
+  }
   return false;
 }
 
-/* Fechar modal clicando fora */
 document.querySelectorAll('.overlay').forEach(ov=>{
   ov.addEventListener('click',e=>{ if(e.target===ov) ov.classList.remove('open'); });
 });
 
-/* ================= INIT ================= */
-loadData();
-render();
+/* =========================================================
+ * INIT
+ * ========================================================= */
+verificarSessaoExistente();
 </script>
 </body>
 </html>
