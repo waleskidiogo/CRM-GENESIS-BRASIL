@@ -73,24 +73,41 @@ input,select,textarea{font-family:inherit;}
 .btn-ghost:hover{background:var(--bg);}
 .icon-btn{background:none;border:none;padding:8px;border-radius:8px;color:var(--muted);position:relative;}
 .icon-btn:hover{background:var(--bg);}
-.badge-dot{position:absolute;top:4px;right:4px;width:8px;height:8px;background:var(--danger);border-radius:50%;display:none;}
+.badge-dot{
+  position:absolute;top:2px;right:2px;min-width:16px;height:16px;padding:0 3px;
+  background:var(--danger);border-radius:9px;display:none;
+  align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:700;
+}
 .avatar{width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;}
 
 #notifWrap{position:relative;}
 #notifPanel{
-  position:absolute;top:calc(100% + 8px);right:0;width:300px;background:var(--card);
+  position:absolute;top:calc(100% + 8px);right:0;width:320px;background:var(--card);
   border:1px solid var(--border);border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.12);
-  z-index:60;display:none;max-height:360px;overflow-y:auto;
+  z-index:60;display:none;max-height:420px;overflow-y:auto;
 }
 #notifPanel.open{display:block;}
-#notifPanel h4{margin:0;padding:12px 14px;font-size:13px;border-bottom:1px solid var(--border);}
-.notif-item{padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;font-size:13px;}
-.notif-item:hover{background:var(--bg);}
-.notif-item:last-child{border-bottom:none;}
-.notif-item .n-tag{font-size:10px;font-weight:700;text-transform:uppercase;}
-.notif-item .n-tag.danger{color:var(--danger);}
-.notif-item .n-tag.warn{color:var(--warn);}
-.notif-item .n-tag.muted{color:var(--muted);}
+#notifPanel .np-header{padding:14px 16px 10px;border-bottom:1px solid var(--border);}
+#notifPanel .np-header h4{margin:0;font-size:15px;}
+#notifPanel .np-header p{margin:2px 0 0;font-size:12px;color:var(--muted);}
+.np-section{padding:8px 0;}
+.np-section .np-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;
+  color:var(--muted);padding:6px 16px 4px;}
+.notif-item{margin:0 10px 8px;padding:10px 12px;border-radius:10px;cursor:pointer;font-size:13px;
+  border:1px solid transparent;}
+.notif-item:hover{filter:brightness(0.98);}
+.notif-item.atrasado{background:var(--danger-soft);border-color:#f2c9c9;}
+.notif-item.hoje{background:var(--warn-soft);border-color:#f0d9b0;}
+.notif-item.semcuidado{background:var(--bg);border-color:var(--border);}
+.notif-item .n-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.02em;}
+.notif-item.atrasado .n-tag{color:var(--danger);}
+.notif-item.hoje .n-tag{color:var(--warn);}
+.notif-item.semcuidado .n-tag{color:var(--muted);}
+.notif-item .n-title{font-weight:600;margin-top:3px;}
+.notif-item .n-sub{color:var(--muted);font-size:12px;margin-top:1px;}
+#notifPanel .np-footer{padding:10px 16px 14px;}
+#notifPanel .np-footer button{width:100%;}
+.np-empty{padding:24px 16px;text-align:center;color:var(--muted);font-size:13px;}
 
 #content{padding:24px;flex:1;}
 .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap;}
@@ -218,6 +235,7 @@ input,select,textarea{font-family:inherit;}
   #content{padding:14px;padding-bottom:100px;}
   .fab-wrap{display:flex;}
   #search{padding:9px 12px;}
+  #notifPanel{width:280px;right:-40px;}
 }
 @media(min-width:701px){.fab-wrap{display:none !important;}}
 .hide-desktop{display:none;}
@@ -432,7 +450,6 @@ function loadData(){
       acompanhamentos = parsed.acompanhamentos || [];
       agenda = parsed.agenda || [];
       uid = parsed.uid || 200;
-      // garantir campo historico em pessoas antigas
       pessoas.forEach(p=>{ if(!p.historico) p.historico = []; });
       return;
     }
@@ -466,7 +483,6 @@ function addHistorico(pessoa, texto, tipo="nota"){
   pessoa.historico.push({ data: iso(today), tipo, texto });
 }
 
-/* Registra movimentação de etapa + histórico, usado em todos os pontos de mudança de etapa */
 function moverPessoaEtapa(pessoa, novaEtapa){
   if(pessoa.etapa === novaEtapa) return;
   const anterior = pessoa.etapa;
@@ -475,7 +491,6 @@ function moverPessoaEtapa(pessoa, novaEtapa){
   saveAll();
 }
 
-/* Garante único retorno pendente por pessoa: remove pendentes anteriores */
 function limparRetornosPendentes(pessoaId){
   agenda = agenda.filter(a => !(a.pessoaId===pessoaId && !a.concluido));
 }
@@ -569,7 +584,7 @@ document.addEventListener('click', (e)=>{
   if(!e.target.closest('.fab-wrap')) closeFab();
 });
 
-/* ================= NOTIFICAÇÕES ================= */
+/* ================= NOTIFICAÇÕES ("Seu dia") ================= */
 function toggleNotif(){
   const panel = document.getElementById('notifPanel');
   if(panel.classList.contains('open')){ panel.classList.remove('open'); return; }
@@ -587,22 +602,84 @@ function getNotifData(){
 function renderNotifPanel(){
   const { atrasados, hojeP, semCuidadoP } = getNotifData();
   const panel = document.getElementById('notifPanel');
-  const itens = [
-    ...atrasados.map(p=>({tag:'Atrasado', cls:'danger', text:`${p.nome} — ${p.proximoCuidado||'retorno pendente'}`, id:p.id})),
-    ...hojeP.map(p=>({tag:'Hoje', cls:'warn', text:`${p.nome} — ${p.proximoCuidado||'retorno agendado'}`, id:p.id})),
-    ...semCuidadoP.map(p=>({tag:'Sem cuidado', cls:'muted', text:`${p.nome} — nenhum próximo cuidado definido`, id:p.id})),
-  ];
-  panel.innerHTML = `<h4>Pendências</h4>` + (itens.length ?
-    itens.map(i=>`<div class="notif-item" onclick="closeSearchResults();document.getElementById('notifPanel').classList.remove('open');abrirPessoa(${i.id})">
-      <div class="n-tag ${i.cls}">${i.tag}</div><div>${i.text}</div>
-    </div>`).join('')
-    : `<div class="sr-empty">Nenhuma pendência agora. 🎉</div>`);
+  const totalPend = atrasados.length + hojeP.length + semCuidadoP.length;
+
+  if(totalPend === 0){
+    panel.innerHTML = `
+      <div class="np-header"><h4>Seu dia</h4></div>
+      <div class="np-empty">🎉 Nenhuma pendência agora. Tudo em dia.</div>
+    `;
+    return;
+  }
+
+  const secAtrasados = atrasados.length ? `
+    <div class="np-section">
+      <div class="np-section-title">Atrasados</div>
+      ${atrasados.map(p=>`
+        <div class="notif-item atrasado" onclick="abrirAlertaPessoa(${p.id})">
+          <div class="n-tag">Atrasado — ${p.nome}</div>
+          <div class="n-title">${p.proximoCuidado || 'Próximo cuidado não descrito'}</div>
+          <div class="n-sub">Vencido em ${fmtDate(p.proximaData)}</div>
+        </div>`).join('')}
+    </div>` : '';
+
+  const secHoje = hojeP.length ? `
+    <div class="np-section">
+      <div class="np-section-title">Para hoje</div>
+      ${hojeP.map(p=>`
+        <div class="notif-item hoje" onclick="abrirAlertaPessoa(${p.id})">
+          <div class="n-tag">Hoje — ${p.nome}</div>
+          <div class="n-title">${p.proximoCuidado || 'Compromisso do dia'}</div>
+          <div class="n-sub">Responsável: ${p.responsavel}</div>
+        </div>`).join('')}
+    </div>` : '';
+
+  const secSemCuidado = semCuidadoP.length ? `
+    <div class="np-section">
+      <div class="np-section-title">Sem próximo cuidado</div>
+      ${semCuidadoP.map(p=>`
+        <div class="notif-item semcuidado" onclick="abrirAlertaPessoa(${p.id})">
+          <div class="n-tag">Sem próximo cuidado — ${p.nome}</div>
+          <div class="n-title">Definir próximo passo do relacionamento</div>
+        </div>`).join('')}
+    </div>` : '';
+
+  panel.innerHTML = `
+    <div class="np-header"><h4>Seu dia</h4><p>Pessoas que precisam da sua atenção agora</p></div>
+    ${secAtrasados}${secHoje}${secSemCuidado}
+    <div class="np-footer">
+      <button class="btn btn-secondary" onclick="verAgendaCompleta()">Ver agenda completa</button>
+    </div>
+  `;
+}
+
+function abrirAlertaPessoa(pessoaId){
+  document.getElementById('notifPanel').classList.remove('open');
+  closeSearchResults();
+  abrirPessoa(pessoaId);
+}
+
+function verAgendaCompleta(){
+  document.getElementById('notifPanel').classList.remove('open');
+  closeSearchResults();
+  selectedCalDate = iso(today);
+  goTo('visaoDoDia');
 }
 
 function updateNotifDot(){
   const { atrasados, hojeP, semCuidadoP } = getNotifData();
   const total = atrasados.length + hojeP.length + semCuidadoP.length;
-  document.getElementById('notifDot').style.display = total>0 ? 'block':'none';
+  const dot = document.getElementById('notifDot');
+  if(total > 0){
+    dot.style.display = 'flex';
+    dot.textContent = total > 9 ? '9+' : total;
+  } else {
+    dot.style.display = 'none';
+    dot.textContent = '';
+  }
+  if(document.getElementById('notifPanel').classList.contains('open')){
+    renderNotifPanel();
+  }
 }
 
 /* ================= FAB MOBILE ================= */
@@ -688,7 +765,7 @@ function reagendar(agendaId){
   if(!a) return;
   const nova = prompt("Nova data (AAAA-MM-DD):", a.data);
   if(nova){
-    a.data = nova; // atualiza o MESMO item, sem duplicar
+    a.data = nova;
     const p = pessoaById(a.pessoaId);
     if(p) p.proximaData = nova;
     saveAll();
@@ -796,7 +873,9 @@ function abrirPessoa(id, destacarAcompId){
     <div style="font-size:13px;margin-bottom:8px;"><strong>Contexto inicial:</strong> ${p.contexto||'—'}</div>
     <div style="font-size:13px;margin-bottom:8px;"><strong>Necessidades observadas:</strong> ${p.necessidades||'—'}</div>
     <div style="font-size:13px;margin-bottom:8px;"><strong>Responsável:</strong> ${p.responsavel}</div>
-    <div style="font-size:13px;margin-bottom:14px;"><strong>Próximo cuidado:</strong> ${p.proximoCuidado||'—'} ${p.proximaData?'('+fmtDate(p.proximaData)+')':''}</div>
+    <div style="font-size:13px;margin-bottom:14px;background:${p.proximoCuidado?'var(--accent-soft)':'var(--bg)'};padding:8px 10px;border-radius:8px;">
+      <strong>Próximo cuidado:</strong> ${p.proximoCuidado||'—'} ${p.proximaData?'('+fmtDate(p.proximaData)+')':''}
+    </div>
     <div class="modal-actions" style="justify-content:flex-start;flex-wrap:wrap;">
       <button class="btn btn-secondary" onclick="closeModal('pessoaDetalhe');prefillAcomp(${p.id});">Registrar acompanhamento</button>
       <button class="btn btn-ghost" onclick="closeModal('pessoaDetalhe');document.getElementById('ag-pessoa').value=${p.id};openModal('agendarRetorno');">Agendar retorno</button>
@@ -837,7 +916,6 @@ function moverJornadaPrompt(id){
 
 /* ================= JORNADAS (KANBAN) — mouse + touch ================= */
 let dragPessoaId = null;
-let touchDrag = null; // {ghost, pessoaId, startX, startY, originCard}
 
 function renderJornadas(c){
   c = c || document.getElementById('content');
@@ -879,12 +957,14 @@ function onDrop(ev,etapa){
     moverPessoaEtapa(p, etapa);
     dragPessoaId=null;
     renderJornadas();
+    render();
   }
 }
 function moverEtapaSelect(id, etapa){
   const p = pessoaById(id);
   moverPessoaEtapa(p, etapa);
   renderJornadas();
+  render();
 }
 
 /* --- Touch drag (mobile/tablet): toque e segurar para arrastar --- */
@@ -940,6 +1020,7 @@ function attachTouchHandlers(){
           const p = pessoaById(pessoaId);
           moverPessoaEtapa(p, novaEtapa);
           renderJornadas();
+          render();
         }
       }
       dragging = false; moved = false;
