@@ -1,225 +1,818 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CRM Ecossistema Grupo Gênesis Brasil</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Bevan&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Montserrat', sans-serif; background-color: #F7F6F4; }
-    .font-display { font-family: 'Bevan', serif; }
-    .menu-item.active {
-      background-color: rgba(232, 106, 31, 0.1);
-      color: #E86A1F;
-      border-left: 4px solid #E86A1F;
-    }
-    .page { display: none; }
-    .page.active { display: block; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRM Pocket — Grupo Gênesis Brasil</title>
+<style>
+:root{
+  --bg:#f7f8fa; --card:#ffffff; --border:#e6e8eb;
+  --text:#1f2430; --muted:#7b8394; --accent:#2f7d6b; --accent-soft:#e5f2ee;
+  --warn:#c9822a; --warn-soft:#fbf0e2; --danger:#c94a4a; --danger-soft:#fbe9e9;
+  --radius:14px; --shadow:0 2px 10px rgba(20,20,30,.05);
+  --sidebar-w:220px; --topbar-h:64px;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;background:var(--bg);color:var(--text);}
+button{font-family:inherit;cursor:pointer;}
+a{text-decoration:none;color:inherit;}
+input,select,textarea{font-family:inherit;}
+
+/* LAYOUT */
+#app{display:flex;min-height:100vh;}
+#sidebar{
+  width:var(--sidebar-w);background:var(--card);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;padding:20px 12px;position:fixed;top:0;left:0;bottom:0;
+  transition:transform .25s ease;z-index:40;
+}
+#sidebar .logo{font-weight:700;font-size:16px;padding:0 10px 20px;color:var(--accent);}
+#sidebar .logo small{display:block;font-weight:400;color:var(--muted);font-size:11px;margin-top:2px;}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;
+  color:var(--muted);font-size:14px;margin-bottom:2px;cursor:pointer;
+}
+.nav-item svg{width:18px;height:18px;flex-shrink:0;}
+.nav-item:hover{background:var(--accent-soft);color:var(--accent);}
+.nav-item.active{background:var(--accent-soft);color:var(--accent);font-weight:600;}
+#main{flex:1;margin-left:var(--sidebar-w);min-height:100vh;display:flex;flex-direction:column;}
+
+#topbar{
+  height:var(--topbar-h);background:var(--card);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;padding:0 20px;position:sticky;top:0;z-index:30;
+}
+#hamburger{display:none;background:none;border:none;padding:6px;}
+#search{
+  flex:1;max-width:420px;display:flex;align-items:center;gap:8px;background:var(--bg);
+  border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:var(--muted);
+}
+#search input{border:none;background:none;outline:none;flex:1;font-size:14px;color:var(--text);}
+.topbar-actions{display:flex;gap:8px;margin-left:auto;align-items:center;}
+.btn{
+  border:none;border-radius:10px;padding:9px 14px;font-size:13px;font-weight:600;
+  display:flex;align-items:center;gap:6px;white-space:nowrap;
+}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:hover{background:#256557;}
+.btn-secondary{background:var(--accent-soft);color:var(--accent);}
+.btn-secondary:hover{background:#d6ebe4;}
+.btn-ghost{background:none;color:var(--muted);border:1px solid var(--border);}
+.btn-ghost:hover{background:var(--bg);}
+.icon-btn{background:none;border:none;padding:8px;border-radius:8px;color:var(--muted);position:relative;}
+.icon-btn:hover{background:var(--bg);}
+.badge-dot{position:absolute;top:4px;right:4px;width:8px;height:8px;background:var(--danger);border-radius:50%;}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;}
+
+#content{padding:24px;flex:1;}
+.page-header{display:flex;align-items:center;justify-content:between;margin-bottom:20px;gap:12px;flex-wrap:wrap;}
+.page-header h1{font-size:20px;margin:0;}
+.page-header p{color:var(--muted);font-size:13px;margin:4px 0 0;}
+
+/* Bottom nav mobile */
+#bottomnav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--card);
+  border-top:1px solid var(--border);z-index:40;padding:6px 4px;}
+#bottomnav .nav-row{display:flex;justify-content:space-around;}
+#bottomnav .nav-item{flex-direction:column;font-size:10px;gap:2px;padding:6px 4px;flex:1;text-align:center;}
+#bottomnav .nav-item svg{width:20px;height:20px;}
+
+.fab{display:none;position:fixed;bottom:74px;right:18px;width:54px;height:54px;border-radius:50%;
+  background:var(--accent);color:#fff;border:none;font-size:26px;box-shadow:0 4px 14px rgba(0,0,0,.2);z-index:45;}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);}
+.grid{display:grid;gap:14px;}
+.grid-4{grid-template-columns:repeat(4,1fr);}
+.grid-2{grid-template-columns:repeat(2,1fr);}
+@media(max-width:900px){.grid-4{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.grid-4,.grid-2{grid-template-columns:1fr;}}
+
+.summary-card{padding:16px;}
+.summary-card .num{font-size:26px;font-weight:700;}
+.summary-card .label{color:var(--muted);font-size:12px;margin-top:4px;}
+
+/* Calendario horizontal */
+.calendar-h{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:20px;}
+.cal-day{min-width:64px;text-align:center;padding:10px 6px;border-radius:12px;background:var(--card);
+  border:1px solid var(--border);cursor:pointer;flex-shrink:0;}
+.cal-day .dow{font-size:11px;color:var(--muted);}
+.cal-day .dom{font-size:16px;font-weight:700;margin:4px 0;}
+.cal-day .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);margin:0 auto;visibility:hidden;}
+.cal-day.has-events .dot{visibility:visible;}
+.cal-day.today{border-color:var(--accent);}
+.cal-day.selected{background:var(--accent);color:#fff;}
+.cal-day.selected .dow,.cal-day.selected .dom{color:#fff;}
+.cal-day.selected .dot{background:#fff;}
+
+/* Agenda list */
+.agenda-item{display:flex;align-items:flex-start;gap:12px;padding:14px;border-bottom:1px solid var(--border);}
+.agenda-item:last-child{border-bottom:none;}
+.agenda-time{width:52px;font-weight:700;font-size:13px;color:var(--accent);flex-shrink:0;}
+.agenda-body{flex:1;min-width:0;}
+.agenda-body .name{font-weight:600;font-size:14px;}
+.agenda-body .meta{font-size:12px;color:var(--muted);margin-top:2px;}
+.agenda-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.agenda-actions .btn{padding:6px 10px;font-size:12px;}
+
+.tag{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;}
+.tag-stage{background:var(--accent-soft);color:var(--accent);}
+.tag-warn{background:var(--warn-soft);color:var(--warn);}
+.tag-danger{background:var(--danger-soft);color:var(--danger);}
+
+/* Kanban */
+.kanban-wrap{display:flex;gap:14px;overflow-x:auto;padding-bottom:16px;}
+.kanban-col{min-width:260px;flex-shrink:0;background:#f0f1f3;border-radius:var(--radius);padding:10px;}
+.kanban-col h3{font-size:13px;margin:4px 8px 10px;display:flex;justify-content:space-between;color:var(--text);}
+.kanban-col h3 span{color:var(--muted);font-weight:400;}
+.kcard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px;
+  cursor:grab;box-shadow:var(--shadow);}
+.kcard.dragging{opacity:.4;}
+.kcard .name{font-weight:600;font-size:13px;}
+.kcard .org{color:var(--muted);font-size:11px;margin-top:1px;}
+.kcard .ctx{font-size:12px;color:var(--text);margin:6px 0;line-height:1.35;}
+.kcard .foot{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:11px;color:var(--muted);}
+.kcard select.move-select{width:100%;margin-top:8px;font-size:11px;padding:4px;border-radius:6px;border:1px solid var(--border);}
+.kanban-col.drop-hover{background:#e5eaea;}
+
+/* Pessoas list */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.filters select,.filters input{padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--card);}
+.list-row{display:flex;align-items:center;gap:14px;padding:14px;border-bottom:1px solid var(--border);cursor:pointer;}
+.list-row:hover{background:var(--bg);}
+.list-row .col{flex:1;min-width:0;}
+.list-row .name{font-weight:600;font-size:14px;}
+.list-row .org{color:var(--muted);font-size:12px;}
+@media(max-width:700px){
+  .list-row{flex-wrap:wrap;}
+  .list-row .col{flex:1 1 45%;}
+}
+
+/* Organizações */
+.org-card{padding:16px;}
+.org-card h3{margin:0 0 4px;font-size:15px;}
+.org-card .meta{color:var(--muted);font-size:12px;margin-bottom:10px;}
+
+/* Modal */
+.overlay{position:fixed;inset:0;background:rgba(20,20,30,.4);display:none;align-items:center;justify-content:center;z-index:100;padding:16px;}
+.overlay.open{display:flex;}
+.modal{background:var(--card);border-radius:16px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto;padding:22px;}
+.modal h2{margin:0 0 4px;font-size:17px;}
+.modal .sub{color:var(--muted);font-size:12px;margin-bottom:16px;}
+.field{margin-bottom:12px;}
+.field label{display:block;font-size:12px;font-weight:600;margin-bottom:5px;color:var(--muted);}
+.field input,.field select,.field textarea{
+  width:100%;padding:9px 11px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg);
+}
+.field textarea{resize:vertical;min-height:60px;}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;}
+.close-x{position:absolute;top:16px;right:16px;background:none;border:none;font-size:18px;color:var(--muted);}
+
+/* Detalhe pessoa panel */
+.detail-panel .overlay{}
+.timeline{margin-top:16px;border-left:2px solid var(--border);padding-left:16px;}
+.tl-item{position:relative;padding-bottom:16px;}
+.tl-item::before{content:"";position:absolute;left:-22px;top:2px;width:9px;height:9px;border-radius:50%;background:var(--accent);}
+.tl-item .tl-date{font-size:11px;color:var(--muted);}
+.tl-item .tl-text{font-size:13px;margin-top:2px;}
+
+.empty{text-align:center;padding:40px 20px;color:var(--muted);}
+.empty .ic{font-size:34px;margin-bottom:8px;}
+
+/* Responsive: sidebar collapse */
+@media(max-width:1024px){
+  #sidebar{transform:translateX(-100%);}
+  #sidebar.open{transform:translateX(0);}
+  #main{margin-left:0;}
+  #hamburger{display:block;}
+}
+@media(max-width:700px){
+  #bottomnav{display:block;}
+  .topbar-actions .btn span{display:none;}
+  .topbar-actions .btn{padding:9px;}
+  #content{padding:14px;padding-bottom:90px;}
+  .fab{display:flex;align-items:center;justify-content:center;}
+  #search{max-width:none;}
+}
+@media(min-width:701px){.fab{display:none !important;}}
+.hide-desktop{display:none;}
+@media(max-width:700px){.hide-desktop{display:block;}.hide-mobile{display:none;}}
+</style>
 </head>
 <body>
 
-  <div class="flex">
+<div id="app">
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <div class="logo">Gênesis Brasil<small>CRM Pocket</small></div>
+    <nav id="navList"></nav>
+  </aside>
 
-    <!-- SIDEBAR -->
-    <aside class="w-64 h-screen bg-[#2C2C2C] flex flex-col sticky top-0 overflow-y-auto">
-      <div class="p-6 border-b border-white/10">
-        <h1 class="font-display text-[#E86A1F] text-xl">GÊNESIS</h1>
-        <span class="text-[#6A6A6A] text-xs">Grupo Gênesis Brasil</span>
+  <div id="main">
+    <header id="topbar">
+      <button id="hamburger" onclick="toggleSidebar()">☰</button>
+      <div id="search">🔎 <input id="searchInput" placeholder="Buscar pessoa, organização ou acompanhamento" oninput="onSearch(this.value)"></div>
+      <div class="topbar-actions">
+        <button class="btn btn-primary" onclick="openModal('novoContato')">＋ <span>Novo contato</span></button>
+        <button class="btn btn-secondary" onclick="openModal('novoAcomp')">＋ <span>Registrar acompanhamento</span></button>
+        <button class="btn btn-ghost" onclick="openModal('agendarRetorno')">＋ <span>Agendar retorno</span></button>
+        <button class="icon-btn" title="Notificações">🔔<span class="badge-dot" id="notifDot"></span></button>
+        <div class="avatar">GB</div>
       </div>
-
-      <nav class="flex-1 py-4" id="menu">
-        <a data-page="visao-geral" class="menu-item active flex items-center gap-3 px-6 py-3 text-white/80 text-sm border-l-4 border-transparent hover:bg-[#E86A1F]/10 hover:text-[#E86A1F] cursor-pointer">📊 Visão Geral</a>
-        <a data-page="minha-carteira" class="menu-item flex items-center gap-3 px-6 py-3 text-white/80 text-sm border-l-4 border-transparent hover:bg-[#E86A1F]/10 hover:text-[#E86A1F] cursor-pointer">💼 Minha Carteira</a>
-        <a data-page="agenda-tarefas" class="menu-item flex items-center gap-3 px-6 py-3 text-white/80 text-sm border-l-4 border-transparent hover:bg-[#E86A1F]/10 hover:text-[#E86A1F] cursor-pointer">🗓️ Agenda & Tarefas</a>
-        <a data-page="atendimentos" class="menu-item flex items-center gap-3 px-6 py-3 text-white/80 text-sm border-l-4 border-transparent hover:bg-[#E86A1F]/10 hover:text-[#E86A1F] cursor-pointer">🎧 Atendimentos</a>
-        <a data-page="profissionais-filiados" class="menu-item flex items-center gap-3 px-6 py-3 text-white/80 text-sm border-l-4 border-transparent hover:bg-[#E86A1F]/10 hover:text-[#E86A1F] cursor-pointer">👥 Profissionais Filiados</a>
-        <a data-page="organizacoes" class="menu-item flex items-center gap-3 px-6 py-3 text-white/80 text-sm border-l-4 border-transparent hover:bg-[#E86A1F]/10 hover:text-[#E86A1F] cursor-pointer">🏢 Organizações</a>
-        <a data-page="oportunidades" class="menu-item flex items-center gap-3 px-6 py-3 text-white/80 text-sm border-l-4 border-transparent hover:bg-[#E86A1F]/10 hover:text-[#E86A1F] cursor-pointer">🎯 Oportunidades</a>
-        <a data-page="funis" class="menu-item flex items-center gap-3 px-6 py-3 text-white/80 text-sm border-l-4 border-transparent hover:bg-[#E86A1F]/10 hover:text-[#E86A1F] cursor-pointer">🔀 Funis</a>
-        <a data-page="necessidades-solucoes" class="menu-item flex items-center gap-3 px-6 py-3 text-white/80 text-sm border-l-4 border-transparent hover:bg-[#E86A1F]/10 hover:text-[#E86A1F] cursor-pointer">💡 Necessidades & Soluções</a>
-        <a data-page="parceiros-beneficios" class="menu-item flex items-center gap-3 px-6 py-3 text-white/80 text-sm border-l-4 border-transparent hover:bg-[#E86A1F]/10 hover:text-[#E86A1F] cursor-pointer">🤝 Parceiros & Benefícios</a>
-        <a data-page="mapa-ecossistema" class="menu-item flex items-center gap-3 px-6 py-3 text-white/80 text-sm border-l-4 border-transparent hover:bg-[#E86A1F]/10 hover:text-[#E86A1F] cursor-pointer">🗺️ Mapa do Ecossistema</a>
-        <a data-page="minha-equipe" class="menu-item flex items-center gap-3 px-6 py-3 text-white/80 text-sm border-l-4 border-transparent hover:bg-[#E86A1F]/10 hover:text-[#E86A1F] cursor-pointer">👤 Minha Equipe</a>
-        <a data-page="inteligencia-indicadores" class="menu-item flex items-center gap-3 px-6 py-3 text-white/80 text-sm border-l-4 border-transparent hover:bg-[#E86A1F]/10 hover:text-[#E86A1F] cursor-pointer">📈 Inteligência & Indicadores</a>
-        <a data-page="relatorios" class="menu-item flex items-center gap-3 px-6 py-3 text-white/80 text-sm border-l-4 border-transparent hover:bg-[#E86A1F]/10 hover:text-[#E86A1F] cursor-pointer">📄 Relatórios</a>
-        <a data-page="administracao" class="menu-item flex items-center gap-3 px-6 py-3 text-white/80 text-sm border-l-4 border-transparent hover:bg-[#E86A1F]/10 hover:text-[#E86A1F] cursor-pointer">⚙️ Administração</a>
-        <a data-page="ajuda-treinamento" class="menu-item flex items-center gap-3 px-6 py-3 text-white/80 text-sm border-l-4 border-transparent hover:bg-[#E86A1F]/10 hover:text-[#E86A1F] cursor-pointer">❓ Ajuda & Treinamento</a>
-      </nav>
-
-      <div class="p-4 border-t border-white/10 text-[#6A6A6A] text-xs">v1.0 · CRM Gênesis</div>
-    </aside>
-
-    <!-- CONTEÚDO -->
-    <div class="flex-1">
-
-      <!-- HEADER -->
-      <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6">
-        <h2 id="page-title" class="font-bold text-[#2C2C2C] text-lg">Visão Geral</h2>
-        <div class="flex items-center gap-2">
-          <div class="w-9 h-9 rounded-full bg-[#E86A1F] text-white flex items-center justify-center font-bold text-sm">D</div>
-          <span class="text-sm text-[#2C2C2C]">Diogo</span>
-        </div>
-      </header>
-
-      <!-- PÁGINAS -->
-      <main class="p-6">
-
-        <section id="visao-geral" class="page active">
-          <div class="bg-white rounded-xl p-6 shadow-sm">
-            <h3 class="font-display text-2xl text-[#2C2C2C] mb-2">Visão Geral</h3>
-            <p class="text-[#6A6A6A] text-sm">Dashboard com resumo geral do CRM.</p>
-            <div id="dados-visao-geral" class="mt-4">Carregando dados...</div>
-          </div>
-        </section>
-
-        <section id="minha-carteira" class="page">
-          <div class="bg-white rounded-xl p-6 shadow-sm">
-            <h3 class="font-display text-2xl text-[#2C2C2C] mb-2">Minha Carteira</h3>
-            <p class="text-[#6A6A6A] text-sm">Módulo em construção — Etapa futura do projeto.</p>
-          </div>
-        </section>
-
-        <section id="agenda-tarefas" class="page">
-          <div class="bg-white rounded-xl p-6 shadow-sm">
-            <h3 class="font-display text-2xl text-[#2C2C2C] mb-2">Agenda & Tarefas</h3>
-            <p class="text-[#6A6A6A] text-sm">Módulo em construção — Etapa futura do projeto.</p>
-          </div>
-        </section>
-
-        <section id="atendimentos" class="page">
-          <div class="bg-white rounded-xl p-6 shadow-sm">
-            <h3 class="font-display text-2xl text-[#2C2C2C] mb-2">Atendimentos</h3>
-            <p class="text-[#6A6A6A] text-sm">Módulo em construção — Etapa futura do projeto.</p>
-          </div>
-        </section>
-
-        <section id="profissionais-filiados" class="page">
-          <div class="bg-white rounded-xl p-6 shadow-sm">
-            <h3 class="font-display text-2xl text-[#2C2C2C] mb-2">Profissionais Filiados</h3>
-            <p class="text-[#6A6A6A] text-sm">Módulo em construção — Etapa futura do projeto.</p>
-          </div>
-        </section>
-
-        <section id="organizacoes" class="page">
-          <div class="bg-white rounded-xl p-6 shadow-sm">
-            <h3 class="font-display text-2xl text-[#2C2C2C] mb-2">Organizações</h3>
-            <p class="text-[#6A6A6A] text-sm">Módulo em construção — Etapa futura do projeto.</p>
-          </div>
-        </section>
-
-        <section id="oportunidades" class="page">
-          <div class="bg-white rounded-xl p-6 shadow-sm">
-            <h3 class="font-display text-2xl text-[#2C2C2C] mb-2">Oportunidades</h3>
-            <p class="text-[#6A6A6A] text-sm">Módulo em construção — Etapa futura do projeto.</p>
-          </div>
-        </section>
-
-        <section id="funis" class="page">
-          <div class="bg-white rounded-xl p-6 shadow-sm">
-            <h3 class="font-display text-2xl text-[#2C2C2C] mb-2">Funis</h3>
-            <p class="text-[#6A6A6A] text-sm">Módulo em construção — Etapa futura do projeto.</p>
-          </div>
-        </section>
-
-        <section id="necessidades-solucoes" class="page">
-          <div class="bg-white rounded-xl p-6 shadow-sm">
-            <h3 class="font-display text-2xl text-[#2C2C2C] mb-2">Necessidades & Soluções</h3>
-            <p class="text-[#6A6A6A] text-sm">Módulo em construção — Etapa futura do projeto.</p>
-          </div>
-        </section>
-
-        <section id="parceiros-beneficios" class="page">
-          <div class="bg-white rounded-xl p-6 shadow-sm">
-            <h3 class="font-display text-2xl text-[#2C2C2C] mb-2">Parceiros & Benefícios</h3>
-            <p class="text-[#6A6A6A] text-sm">Módulo em construção — Etapa futura do projeto.</p>
-          </div>
-        </section>
-
-        <section id="mapa-ecossistema" class="page">
-          <div class="bg-white rounded-xl p-6 shadow-sm">
-            <h3 class="font-display text-2xl text-[#2C2C2C] mb-2">Mapa do Ecossistema</h3>
-            <p class="text-[#6A6A6A] text-sm">Módulo em construção — Etapa futura do projeto.</p>
-          </div>
-        </section>
-
-        <section id="minha-equipe" class="page">
-          <div class="bg-white rounded-xl p-6 shadow-sm">
-            <h3 class="font-display text-2xl text-[#2C2C2C] mb-2">Minha Equipe</h3>
-            <p class="text-[#6A6A6A] text-sm">Módulo em construção — Etapa futura do projeto.</p>
-          </div>
-        </section>
-
-        <section id="inteligencia-indicadores" class="page">
-          <div class="bg-white rounded-xl p-6 shadow-sm">
-            <h3 class="font-display text-2xl text-[#2C2C2C] mb-2">Inteligência & Indicadores</h3>
-            <p class="text-[#6A6A6A] text-sm">Módulo em construção — Etapa futura do projeto.</p>
-          </div>
-        </section>
-
-        <section id="relatorios" class="page">
-          <div class="bg-white rounded-xl p-6 shadow-sm">
-            <h3 class="font-display text-2xl text-[#2C2C2C] mb-2">Relatórios</h3>
-            <p class="text-[#6A6A6A] text-sm">Módulo em construção — Etapa futura do projeto.</p>
-          </div>
-        </section>
-
-        <section id="administracao" class="page">
-          <div class="bg-white rounded-xl p-6 shadow-sm">
-            <h3 class="font-display text-2xl text-[#2C2C2C] mb-2">Administração</h3>
-            <p class="text-[#6A6A6A] text-sm">Módulo em construção — Etapa futura do projeto.</p>
-          </div>
-        </section>
-
-        <section id="ajuda-treinamento" class="page">
-          <div class="bg-white rounded-xl p-6 shadow-sm">
-            <h3 class="font-display text-2xl text-[#2C2C2C] mb-2">Ajuda & Treinamento</h3>
-            <p class="text-[#6A6A6A] text-sm">Módulo em construção — Etapa futura do projeto.</p>
-          </div>
-        </section>
-
-      </main>
-    </div>
+    </header>
+    <main id="content"></main>
   </div>
+</div>
 
-  <script>
-    // ============================
-    // NAVEGAÇÃO ENTRE PÁGINAS
-    // ============================
-    const menuItems = document.querySelectorAll('.menu-item');
-    const pages = document.querySelectorAll('.page');
-    const pageTitle = document.getElementById('page-title');
+<button class="fab" onclick="openModal('novoContato')">＋</button>
 
-    menuItems.forEach(item => {
-      item.addEventListener('click', () => {
-        const target = item.getAttribute('data-page');
+<nav id="bottomnav">
+  <div class="nav-row" id="bottomNavList"></div>
+</nav>
 
-        menuItems.forEach(m => m.classList.remove('active'));
-        item.classList.add('active');
+<!-- MODALS -->
+<div class="overlay" id="overlay-novoContato">
+  <div class="modal">
+    <button class="close-x" onclick="closeModal('novoContato')">✕</button>
+    <h2>Novo contato</h2>
+    <div class="sub">Adicione uma pessoa ao relacionamento</div>
+    <form id="formNovoContato" onsubmit="return submitNovoContato(event)">
+      <div class="field"><label>Nome</label><input required id="nc-nome"></div>
+      <div class="field"><label>Telefone</label><input id="nc-tel"></div>
+      <div class="field"><label>E-mail</label><input type="email" id="nc-email"></div>
+      <div class="field"><label>Organização</label><input id="nc-org" list="orgList"></div>
+      <datalist id="orgList"></datalist>
+      <div class="field"><label>Contexto inicial</label><textarea id="nc-ctx"></textarea></div>
+      <div class="field"><label>Responsável</label>
+        <select id="nc-resp"></select></div>
+      <div class="field"><label>Etapa inicial da jornada</label>
+        <select id="nc-etapa"></select></div>
+      <div class="field"><label>Próximo cuidado</label><input id="nc-cuidado" placeholder="Ex: Ligar para entender necessidade"></div>
+      <div class="field"><label>Data do próximo cuidado</label><input type="date" id="nc-data"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('novoContato')">Cancelar</button>
+        <button class="btn btn-primary" type="submit">Salvar contato</button>
+      </div>
+    </form>
+  </div>
+</div>
 
-        pages.forEach(p => p.classList.remove('active'));
-        document.getElementById(target).classList.add('active');
+<div class="overlay" id="overlay-novoAcomp">
+  <div class="modal">
+    <button class="close-x" onclick="closeModal('novoAcomp')">✕</button>
+    <h2>Registrar acompanhamento</h2>
+    <div class="sub">Guarde o essencial da conversa</div>
+    <form id="formNovoAcomp" onsubmit="return submitNovoAcomp(event)">
+      <div class="field"><label>Pessoa</label><select required id="na-pessoa"></select></div>
+      <div class="field"><label>Data</label><input type="date" id="na-data"></div>
+      <div class="field"><label>Tipo de contato</label>
+        <select id="na-tipo">
+          <option>Conversa</option><option>Ligação</option><option>Reunião</option>
+          <option>Mensagem</option><option>Visita</option><option>Outro</option>
+        </select></div>
+      <div class="field"><label>Resumo da conversa</label><textarea id="na-resumo"></textarea></div>
+      <div class="field"><label>Necessidade percebida</label><textarea id="na-necessidade"></textarea></div>
+      <div class="field"><label>Próximo cuidado</label><input id="na-cuidado"></div>
+      <div class="field"><label>Data do próximo cuidado</label><input type="date" id="na-cuidado-data"></div>
+      <div class="field"><label>Responsável</label><select id="na-resp"></select></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('novoAcomp')">Cancelar</button>
+        <button class="btn btn-primary" type="submit">Registrar</button>
+      </div>
+    </form>
+  </div>
+</div>
 
-        pageTitle.textContent = item.textContent.trim().replace(/^\S+\s/, '');
-      });
-    });
+<div class="overlay" id="overlay-agendarRetorno">
+  <div class="modal">
+    <button class="close-x" onclick="closeModal('agendarRetorno')">✕</button>
+    <h2>Agendar retorno</h2>
+    <div class="sub">Nunca perca um próximo cuidado</div>
+    <form id="formAgendar" onsubmit="return submitAgendar(event)">
+      <div class="field"><label>Pessoa</label><select required id="ag-pessoa"></select></div>
+      <div class="field"><label>Data</label><input required type="date" id="ag-data"></div>
+      <div class="field"><label>Horário (opcional)</label><input type="time" id="ag-hora"></div>
+      <div class="field"><label>Tipo</label>
+        <select id="ag-tipo"><option>Ligação</option><option>Mensagem</option><option>Reunião</option><option>Visita</option><option>Outro</option></select></div>
+      <div class="field"><label>Lembrete curto</label><input id="ag-lembrete"></div>
+      <div class="field"><label>Responsável</label><select id="ag-resp"></select></div>
+      <div class="field"><label>Próximo cuidado</label><input id="ag-cuidado"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('agendarRetorno')">Cancelar</button>
+        <button class="btn btn-primary" type="submit">Agendar</button>
+      </div>
+    </form>
+  </div>
+</div>
 
-    // ============================
-    // BACKEND (Google Apps Script)
-    // ============================
-    const URL_BACKEND = "COLE_AQUI_A_URL_DO_SEU_APPS_SCRIPT";
+<div class="overlay" id="overlay-pessoaDetalhe">
+  <div class="modal" style="max-width:600px;" id="pessoaDetalheBody"></div>
+</div>
 
-    fetch(URL_BACKEND)
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById("dados-visao-geral").innerHTML =
-          `<pre class="text-xs bg-gray-50 p-3 rounded">${JSON.stringify(data, null, 2)}</pre>`;
-      })
-      .catch(err => {
-        document.getElementById("dados-visao-geral").innerText = "Erro ao carregar dados: " + err;
-      });
-  </script>
+<div class="overlay" id="overlay-concluir">
+  <div class="modal" id="concluirBody"></div>
+</div>
 
+<script>
+/* ================= DADOS ================= */
+const ETAPAS = ["Primeiro contato","Escuta e entendimento","Construção de caminho","Acompanhamento","Decisão","Relacionamento contínuo"];
+const RESPONSAVEIS = ["Ana Beatriz","Carlos Eduardo","Mariana Souza","João Pedro"];
+
+let uid = 100;
+const today = new Date(); today.setHours(0,0,0,0);
+const iso = d => d.toISOString().slice(0,10);
+const addDays = (d,n) => { const x=new Date(d); x.setDate(x.getDate()+n); return x; };
+const fmtDate = (dstr) => { if(!dstr) return "—"; const d=new Date(dstr+"T00:00:00"); return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}); };
+
+let organizacoes = [
+  {id:1,nome:"Instituto Vida Plena",segmento:"Saúde comunitária",cidade:"Curitiba",responsavel:"Ana Beatriz",obs:"Parceria em andamento para projeto social."},
+  {id:2,nome:"Construtora Horizonte",segmento:"Construção civil",cidade:"São José dos Pinhais",responsavel:"Carlos Eduardo",obs:""},
+  {id:3,nome:"Escola Novo Caminho",segmento:"Educação",cidade:"Curitiba",responsavel:"Mariana Souza",obs:"Interesse em programa de mentoria."},
+];
+
+let pessoas = [
+  {id:1,nome:"Rafael Antunes",telefone:"(41) 99811-2233",email:"rafael@vidaplena.org",organizacaoId:1,
+   responsavel:"Ana Beatriz",contexto:"Buscando parceria para ações comunitárias no bairro.",necessidades:"Apoio institucional e voluntários.",
+   etapa:"Escuta e entendimento",proximoCuidado:"Ligar para apresentar proposta de parceria",proximaData:iso(today)},
+  {id:2,nome:"Juliana Prado",telefone:"(41) 98877-1122",email:"juliana@horizonte.com.br",organizacaoId:2,
+   responsavel:"Carlos Eduardo",contexto:"Conheceu o Grupo Gênesis em evento local.",necessidades:"Entender programas de apoio comunitário da construtora.",
+   etapa:"Primeiro contato",proximoCuidado:"Agendar primeira conversa",proximaData:iso(addDays(today,1))},
+  {id:3,nome:"Fernando Melo",telefone:"(41) 99123-4455",email:"fernando@gmail.com",organizacaoId:null,
+   responsavel:"Mariana Souza",contexto:"Indicado por membro da comunidade.",necessidades:"Ainda não identificadas.",
+   etapa:"Primeiro contato",proximoCuidado:"",proximaData:""},
+  {id:4,nome:"Patrícia Lins",telefone:"(41) 98765-4321",email:"patricia@novocaminho.edu.br",organizacaoId:3,
+   responsavel:"Mariana Souza",contexto:"Diretora da escola, interessada em mentoria para alunos.",necessidades:"Programa de mentoria e capacitação de professores.",
+   etapa:"Construção de caminho",proximoCuidado:"Enviar proposta de mentoria",proximaData:iso(addDays(today,-1))},
+  {id:5,nome:"Marcos Vinícius",telefone:"(41) 99222-3344",email:"marcos@gmail.com",organizacaoId:null,
+   responsavel:"João Pedro",contexto:"Participou de reunião comunitária em julho.",necessidades:"Orientação sobre programas sociais.",
+   etapa:"Acompanhamento",proximoCuidado:"Verificar andamento da inscrição",proximaData:iso(today)},
+  {id:6,nome:"Camila Rocha",telefone:"(41) 98888-7766",email:"camila@vidaplena.org",organizacaoId:1,
+   responsavel:"Ana Beatriz",contexto:"Coordenadora de projetos no Instituto.",necessidades:"Formalizar convênio.",
+   etapa:"Decisão",proximoCuidado:"Reunião de assinatura do convênio",proximaData:iso(addDays(today,2))},
+  {id:7,nome:"Eduardo Nogueira",telefone:"(41) 99000-1111",email:"eduardo@horizonte.com.br",organizacaoId:2,
+   responsavel:"Carlos Eduardo",contexto:"Relacionamento consolidado há 2 anos.",necessidades:"Manutenção do relacionamento.",
+   etapa:"Relacionamento contínuo",proximoCuidado:"",proximaData:""},
+  {id:8,nome:"Beatriz Amaral",telefone:"(41) 99555-6677",email:"beatriz@gmail.com",organizacaoId:null,
+   responsavel:"João Pedro",contexto:"Contato recente via indicação.",necessidades:"Não definida.",
+   etapa:"Escuta e entendimento",proximoCuidado:"Retornar ligação",proximaData:iso(addDays(today,-2))},
+];
+
+let acompanhamentos = [
+  {id:1,pessoaId:1,data:iso(addDays(today,-5)),tipo:"Conversa",resumo:"Primeira conversa sobre possível parceria.",necessidade:"Apoio institucional",proximoCuidado:"Ligar para apresentar proposta",proximaData:iso(today),responsavel:"Ana Beatriz"},
+  {id:2,pessoaId:4,data:iso(addDays(today,-3)),tipo:"Reunião",resumo:"Reunião na escola sobre programa de mentoria.",necessidade:"Programa de mentoria",proximoCuidado:"Enviar proposta",proximaData:iso(addDays(today,-1)),responsavel:"Mariana Souza"},
+  {id:3,pessoaId:6,data:iso(addDays(today,-1)),tipo:"Ligação",resumo:"Alinhamento final do convênio.",necessidade:"Formalização",proximoCuidado:"Reunião de assinatura",proximaData:iso(addDays(today,2)),responsavel:"Ana Beatriz"},
+  {id:4,pessoaId:8,data:iso(addDays(today,-4)),tipo:"Mensagem",resumo:"Enviada mensagem de apresentação.",necessidade:"Não definida",proximoCuidado:"Retornar ligação",proximaData:iso(addDays(today,-2)),responsavel:"João Pedro"},
+];
+
+// Agenda: gerada a partir dos próximos cuidados das pessoas
+function buildAgenda(){
+  return pessoas.filter(p=>p.proximaData).map(p=>({
+    pessoaId:p.id, data:p.proximaData, hora:"", tipo: p.proximoCuidado || "Retorno",
+    resumo:p.proximoCuidado, responsavel:p.responsavel, concluido:false
+  }));
+}
+let agenda = buildAgenda();
+
+/* ================= ESTADO / HELPERS ================= */
+let currentPage = "visaoDoDia";
+let selectedCalDate = iso(today);
+let searchTerm = "";
+
+const pessoaById = id => pessoas.find(p=>p.id===id);
+const orgById = id => organizacoes.find(o=>o.id===id);
+const orgNome = id => id ? (orgById(id)?.nome || "") : "";
+
+function isAtraso(p){ return p.proximaData && p.proximaData < iso(today) && p.etapa!=="Relacionamento contínuo"; }
+function semCuidado(p){ return !p.proximaData && p.etapa!=="Relacionamento contínuo"; }
+
+/* ================= NAV ================= */
+const NAV_ITEMS = [
+  {id:"visaoDoDia", label:"Visão do dia", icon:"🏠"},
+  {id:"pessoas", label:"Pessoas", icon:"👤"},
+  {id:"jornadas", label:"Jornadas", icon:"🧭"},
+  {id:"acompanhamentos", label:"Acompanhamentos", icon:"📝"},
+  {id:"organizacoes", label:"Organizações", icon:"🏢"},
+  {id:"configuracoes", label:"Configurações", icon:"⚙️"},
+];
+
+function renderNav(){
+  const list = document.getElementById('navList');
+  list.innerHTML = NAV_ITEMS.map(i=>`
+    <div class="nav-item ${currentPage===i.id?'active':''}" onclick="goTo('${i.id}')">
+      <span>${i.icon}</span><span>${i.label}</span>
+    </div>`).join('');
+  const bn = document.getElementById('bottomNavList');
+  bn.innerHTML = NAV_ITEMS.map(i=>`
+    <div class="nav-item ${currentPage===i.id?'active':''}" onclick="goTo('${i.id}')">
+      <span>${i.icon}</span><span>${i.label.split(' ')[0]}</span>
+    </div>`).join('');
+}
+
+function goTo(page){ currentPage = page; document.getElementById('sidebar').classList.remove('open'); render(); }
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
+function onSearch(v){ searchTerm = v.toLowerCase(); if(currentPage==='pessoas') renderPessoas(); }
+
+/* ================= RENDER ROUTER ================= */
+function render(){
+  renderNav();
+  updateNotifDot();
+  const c = document.getElementById('content');
+  if(currentPage==="visaoDoDia") renderVisaoDoDia(c);
+  else if(currentPage==="pessoas") renderPessoas(c);
+  else if(currentPage==="jornadas") renderJornadas(c);
+  else if(currentPage==="acompanhamentos") renderAcompanhamentosPage(c);
+  else if(currentPage==="organizacoes") renderOrganizacoes(c);
+  else if(currentPage==="configuracoes") renderConfiguracoes(c);
+}
+
+function updateNotifDot(){
+  const pend = agenda.filter(a=>!a.concluido && a.data<=iso(today)).length;
+  document.getElementById('notifDot').style.display = pend>0 ? 'block':'none';
+}
+
+/* ================= VISÃO DO DIA ================= */
+function renderVisaoDoDia(c){
+  const days = [];
+  for(let i=-3;i<=6;i++) days.push(iso(addDays(today,i)));
+
+  const calHtml = days.map(d=>{
+    const count = agenda.filter(a=>a.data===d && !a.concluido).length;
+    const dt = new Date(d+"T00:00:00");
+    const isToday = d===iso(today);
+    const isSel = d===selectedCalDate;
+    return `<div class="cal-day ${isToday?'today':''} ${isSel?'selected':''} ${count>0?'has-events':''}" onclick="selectCalDay('${d}')">
+      <div class="dow">${dt.toLocaleDateString('pt-BR',{weekday:'short'}).replace('.','')}</div>
+      <div class="dom">${dt.getDate()}</div>
+      <div class="dot"></div>
+    </div>`;
+  }).join('');
+
+  const hoje = iso(today);
+  const retornosHoje = agenda.filter(a=>a.data===hoje && !a.concluido).length;
+  const aguardando = pessoas.filter(p=>p.proximaData===hoje).length;
+  const semCuidadoN = pessoas.filter(semCuidado).length;
+  const atrasoN = pessoas.filter(isAtraso).length;
+
+  const agendaFiltrada = agenda.filter(a=>a.data===selectedCalDate).sort((a,b)=>(a.hora||"").localeCompare(b.hora||""));
+
+  c.innerHTML = `
+    <div class="page-header"><div><h1>Visão do dia</h1><p>Quem precisa da nossa atenção agora?</p></div></div>
+    <div class="calendar-h">${calHtml}</div>
+    <div class="grid grid-4" style="margin-bottom:22px;">
+      <div class="card summary-card"><div class="num">${retornosHoje}</div><div class="label">Retornos para hoje</div></div>
+      <div class="card summary-card"><div class="num">${aguardando}</div><div class="label">Pessoas aguardando retorno</div></div>
+      <div class="card summary-card"><div class="num">${semCuidadoN}</div><div class="label">Sem próximo cuidado</div></div>
+      <div class="card summary-card"><div class="num" style="color:${atrasoN>0?'var(--danger)':'var(--text)'}">${atrasoN}</div><div class="label">Acompanhamentos em atraso</div></div>
+    </div>
+    <div class="card" style="padding:0;">
+      <div style="padding:16px 16px 0;"><strong style="font-size:14px;">Agenda de ${fmtDate(selectedCalDate)}</strong></div>
+      ${agendaFiltrada.length ? agendaFiltrada.map(a=>renderAgendaItem(a)).join('') : `<div class="empty"><div class="ic">🕊️</div>Nenhum item na agenda para este dia.</div>`}
+    </div>
+  `;
+}
+
+function selectCalDay(d){ selectedCalDate=d; renderVisaoDoDia(document.getElementById('content')); }
+
+function renderAgendaItem(a){
+  const p = pessoaById(a.pessoaId);
+  if(!p) return '';
+  const atrasado = !a.concluido && a.data<iso(today);
+  return `<div class="agenda-item">
+    <div class="agenda-time">${a.hora||'—'}</div>
+    <div class="agenda-body">
+      <div class="name">${p.nome} ${atrasado?'<span class="tag tag-danger">Atrasado</span>':''} ${a.concluido?'<span class="tag tag-stage">Concluído</span>':''}</div>
+      <div class="meta">${a.tipo} • ${a.resumo||'—'} • ${a.responsavel}</div>
+      ${!a.concluido?`<div class="agenda-actions">
+        <button class="btn btn-secondary" onclick="abrirConcluir(${a.pessoaId},'${a.data}')">Concluir</button>
+        <button class="btn btn-ghost" onclick="reagendar(${a.pessoaId},'${a.data}')">Reagendar</button>
+        <button class="btn btn-ghost" onclick="prefillAcomp(${a.pessoaId})">Registrar acompanhamento</button>
+      </div>`:''}
+    </div>
+  </div>`;
+}
+
+function reagendar(pessoaId, dataAtual){
+  const a = agenda.find(x=>x.pessoaId===pessoaId && x.data===dataAtual);
+  const nova = prompt("Nova data (AAAA-MM-DD):", dataAtual);
+  if(nova){ a.data=nova; const p=pessoaById(pessoaId); p.proximaData=nova; render(); }
+}
+
+function prefillAcomp(pessoaId){
+  openModal('novoAcomp');
+  document.getElementById('na-pessoa').value = pessoaId;
+}
+
+function abrirConcluir(pessoaId, data){
+  const p = pessoaById(pessoaId);
+  const body = document.getElementById('concluirBody');
+  body.innerHTML = `
+    <button class="close-x" onclick="closeModal('concluir')">✕</button>
+    <h2>Concluir retorno</h2>
+    <div class="sub">${p.nome}</div>
+    <div class="field"><label>Resultado</label><textarea id="cc-resultado" placeholder="Como foi a conversa?"></textarea></div>
+    <div class="field"><label>Observação</label><input id="cc-obs"></div>
+    <div class="field"><label>Próximo cuidado</label><input id="cc-cuidado"></div>
+    <div class="field"><label>Nova data (se necessário)</label><input type="date" id="cc-data"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('concluir')">Cancelar</button>
+      <button class="btn btn-primary" onclick="confirmarConcluir(${pessoaId},'${data}')">Salvar</button>
+    </div>`;
+  document.getElementById('overlay-concluir').classList.add('open');
+}
+
+function confirmarConcluir(pessoaId, data){
+  const p = pessoaById(pessoaId);
+  const resultado = document.getElementById('cc-resultado').value;
+  const obs = document.getElementById('cc-obs').value;
+  const cuidado = document.getElementById('cc-cuidado').value;
+  const novaData = document.getElementById('cc-data').value;
+
+  const a = agenda.find(x=>x.pessoaId===pessoaId && x.data===data);
+  if(a) a.concluido = true;
+
+  acompanhamentos.push({id:++uid, pessoaId, data:iso(today), tipo:"Conversa",
+    resumo:resultado || "Retorno concluído", necessidade:obs||"", proximoCuidado:cuidado, proximaData:novaData, responsavel:p.responsavel});
+
+  p.proximoCuidado = cuidado || "";
+  p.proximaData = novaData || "";
+  if(novaData) agenda.push({pessoaId,data:novaData,hora:"",tipo:cuidado||"Retorno",resumo:cuidado,responsavel:p.responsavel,concluido:false});
+
+  closeModal('concluir');
+  render();
+}
+
+/* ================= PESSOAS ================= */
+function renderPessoas(c){
+  c = c || document.getElementById('content');
+  const filtroEtapa = document.getElementById('f-etapa')?.value || '';
+  const filtroResp = document.getElementById('f-resp')?.value || '';
+  const filtroAtraso = document.getElementById('f-atraso')?.checked || false;
+
+  let lista = pessoas.filter(p=>{
+    if(searchTerm && !(p.nome.toLowerCase().includes(searchTerm) || orgNome(p.organizacaoId).toLowerCase().includes(searchTerm))) return false;
+    if(filtroEtapa && p.etapa!==filtroEtapa) return false;
+    if(filtroResp && p.responsavel!==filtroResp) return false;
+    if(filtroAtraso && !isAtraso(p)) return false;
+    return true;
+  });
+
+  c.innerHTML = `
+    <div class="page-header"><div><h1>Pessoas</h1><p>${pessoas.length} pessoas no relacionamento</p></div>
+      <button class="btn btn-primary hide-mobile" onclick="openModal('novoContato')">＋ Novo contato</button></div>
+    <div class="filters">
+      <select id="f-etapa" onchange="renderPessoas()"><option value="">Todas as etapas</option>${ETAPAS.map(e=>`<option ${filtroEtapa===e?'selected':''}>${e}</option>`).join('')}</select>
+      <select id="f-resp" onchange="renderPessoas()"><option value="">Todos os responsáveis</option>${RESPONSAVEIS.map(r=>`<option ${filtroResp===r?'selected':''}>${r}</option>`).join('')}</select>
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);"><input type="checkbox" id="f-atraso" ${filtroAtraso?'checked':''} onchange="renderPessoas()"> Em atraso</label>
+    </div>
+    <div class="card" style="padding:0;">
+      ${lista.length ? lista.map(p=>`
+        <div class="list-row" onclick="abrirPessoa(${p.id})">
+          <div class="col"><div class="name">${p.nome}</div><div class="org">${orgNome(p.organizacaoId)||'Sem organização'}</div></div>
+          <div class="col"><span class="tag tag-stage">${p.etapa}</span></div>
+          <div class="col" style="font-size:13px;color:var(--muted);">${p.responsavel}</div>
+          <div class="col" style="font-size:13px;">${p.proximoCuidado||'—'}<div style="color:var(--muted);font-size:11px;">${p.proximaData?fmtDate(p.proximaData):''} ${isAtraso(p)?'<span class="tag tag-danger">Atraso</span>':''}${semCuidado(p)?'<span class="tag tag-warn">Sem cuidado</span>':''}</div></div>
+        </div>`).join('') : `<div class="empty"><div class="ic">🔍</div>Nenhuma pessoa encontrada.</div>`}
+    </div>
+  `;
+}
+
+function abrirPessoa(id){
+  const p = pessoaById(id);
+  const historico = acompanhamentos.filter(a=>a.pessoaId===id).sort((a,b)=>b.data.localeCompare(a.data));
+  const body = document.getElementById('pessoaDetalheBody');
+  body.innerHTML = `
+    <button class="close-x" onclick="closeModal('pessoaDetalhe')">✕</button>
+    <h2>${p.nome}</h2>
+    <div class="sub">${orgNome(p.organizacaoId)||'Sem organização'} • ${p.telefone||''} ${p.email?'• '+p.email:''}</div>
+    <div style="margin:10px 0;"><span class="tag tag-stage">${p.etapa}</span></div>
+    <div style="font-size:13px;margin-bottom:8px;"><strong>Contexto inicial:</strong> ${p.contexto||'—'}</div>
+    <div style="font-size:13px;margin-bottom:8px;"><strong>Necessidades observadas:</strong> ${p.necessidades||'—'}</div>
+    <div style="font-size:13px;margin-bottom:8px;"><strong>Responsável:</strong> ${p.responsavel}</div>
+    <div style="font-size:13px;margin-bottom:14px;"><strong>Próximo cuidado:</strong> ${p.proximoCuidado||'—'} ${p.proximaData?'('+fmtDate(p.proximaData)+')':''}</div>
+    <div class="modal-actions" style="justify-content:flex-start;flex-wrap:wrap;">
+      <button class="btn btn-secondary" onclick="closeModal('pessoaDetalhe');prefillAcomp(${p.id});">Registrar acompanhamento</button>
+      <button class="btn btn-ghost" onclick="closeModal('pessoaDetalhe');document.getElementById('ag-pessoa').value=${p.id};openModal('agendarRetorno');">Agendar retorno</button>
+      <button class="btn btn-ghost" onclick="moverJornadaPrompt(${p.id})">Mover na jornada</button>
+    </div>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-date">Contato criado</div><div class="tl-text">Etapa inicial: ${p.etapa}</div></div>
+      ${historico.map(h=>`<div class="tl-item"><div class="tl-date">${fmtDate(h.data)} • ${h.tipo}</div><div class="tl-text">${h.resumo}${h.necessidade?' — '+h.necessidade:''}</div></div>`).join('')}
+    </div>
+  `;
+  document.getElementById('overlay-pessoaDetalhe').classList.add('open');
+}
+
+function moverJornadaPrompt(id){
+  const p = pessoaById(id);
+  const idx = ETAPAS.indexOf(p.etapa);
+  const opts = ETAPAS.map((e,i)=>`${i}: ${e}`).join('\n');
+  const escolha = prompt("Mover para qual etapa?\n"+opts, idx);
+  if(escolha!==null && ETAPAS[escolha]){ p.etapa = ETAPAS[escolha]; closeModal('pessoaDetalhe'); render(); }
+}
+
+/* ================= JORNADAS (KANBAN) ================= */
+let dragPessoaId = null;
+
+function renderJornadas(c){
+  c = c || document.getElementById('content');
+  c.innerHTML = `
+    <div class="page-header"><div><h1>Jornadas</h1><p>Cada pessoa em uma etapa da jornada de relacionamento</p></div></div>
+    <div class="kanban-wrap" id="kanbanWrap">
+      ${ETAPAS.map(etapa=>{
+        const cards = pessoas.filter(p=>p.etapa===etapa);
+        return `<div class="kanban-col" data-etapa="${etapa}" ondragover="event.preventDefault();this.classList.add('drop-hover')" ondragleave="this.classList.remove('drop-hover')" ondrop="onDrop(event,'${etapa}')">
+          <h3>${etapa} <span>${cards.length}</span></h3>
+          ${cards.map(p=>renderKCard(p)).join('') || `<div class="empty" style="padding:20px 10px;"><div class="ic">·</div>Sem pessoas aqui</div>`}
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+
+function renderKCard(p){
+  const opts = ETAPAS.map(e=>`<option value="${e}" ${e===p.etapa?'selected':''}>${e}</option>`).join('');
+  return `<div class="kcard" draggable="true" ondragstart="onDragStart(event,${p.id})" ondragend="this.classList.remove('dragging')" onclick="if(event.target.tagName!=='SELECT')abrirPessoa(${p.id})">
+    <div class="name">${p.nome}</div>
+    <div class="org">${orgNome(p.organizacaoId)||''}</div>
+    <div class="ctx">${p.contexto ? p.contexto.slice(0,70) : ''}</div>
+    <div class="foot"><span>${p.responsavel}</span><span>${p.proximaData?fmtDate(p.proximaData):'—'}</span></div>
+    <div class="foot" style="margin-top:2px;">${p.proximoCuidado||'<em>Sem próximo cuidado</em>'}</div>
+    <select class="move-select hide-desktop" onchange="moverEtapaSelect(${p.id}, this.value)">${opts}</select>
+  </div>`;
+}
+
+function onDragStart(ev,id){ dragPessoaId=id; ev.target.classList.add('dragging'); }
+function onDrop(ev,etapa){
+  ev.preventDefault(); ev.currentTarget.classList.remove('drop-hover');
+  if(dragPessoaId){ pessoaById(dragPessoaId).etapa = etapa; dragPessoaId=null; renderJornadas(); }
+}
+function moverEtapaSelect(id, etapa){ pessoaById(id).etapa = etapa; renderJornadas(); }
+
+/* ================= ACOMPANHAMENTOS ================= */
+function renderAcompanhamentosPage(c){
+  c = c || document.getElementById('content');
+  const filtroResp = document.getElementById('af-resp')?.value || '';
+  const filtroTipo = document.getElementById('af-tipo')?.value || '';
+
+  let lista = acompanhamentos.filter(a=>{
+    if(filtroResp && a.responsavel!==filtroResp) return false;
+    if(filtroTipo && a.tipo!==filtroTipo) return false;
+    return true;
+  }).sort((a,b)=>b.data.localeCompare(a.data));
+
+  c.innerHTML = `
+    <div class="page-header"><div><h1>Acompanhamentos</h1><p>Histórico cronológico de conversas</p></div>
+      <button class="btn btn-primary hide-mobile" onclick="openModal('novoAcomp')">＋ Registrar</button></div>
+    <div class="filters">
+      <select id="af-resp" onchange="renderAcompanhamentosPage()"><option value="">Todos os responsáveis</option>${RESPONSAVEIS.map(r=>`<option ${filtroResp===r?'selected':''}>${r}</option>`).join('')}</select>
+      <select id="af-tipo" onchange="renderAcompanhamentosPage()"><option value="">Todos os tipos</option>${["Conversa","Ligação","Reunião","Mensagem","Visita","Outro"].map(t=>`<option ${filtroTipo===t?'selected':''}>${t}</option>`).join('')}</select>
+    </div>
+    <div class="card" style="padding:0;">
+      ${lista.length ? lista.map(a=>{
+        const p = pessoaById(a.pessoaId);
+        return `<div class="list-row" style="cursor:default;">
+          <div class="col"><div class="name">${p?.nome||'—'}</div><div class="org">${fmtDate(a.data)} • ${a.tipo}</div></div>
+          <div class="col" style="font-size:13px;">${a.resumo}</div>
+          <div class="col" style="font-size:12px;color:var(--muted);">${a.necessidade||''}</div>
+          <div class="col" style="font-size:12px;color:var(--muted);">${a.responsavel}</div>
+        </div>`;
+      }).join('') : `<div class="empty"><div class="ic">📝</div>Nenhum acompanhamento encontrado.</div>`}
+    </div>
+  `;
+}
+
+/* ================= ORGANIZAÇÕES ================= */
+function renderOrganizacoes(c){
+  c = c || document.getElementById('content');
+  c.innerHTML = `
+    <div class="page-header"><div><h1>Organizações</h1><p>${organizacoes.length} organizações vinculadas</p></div></div>
+    <div class="grid grid-2">
+      ${organizacoes.map(o=>{
+        const vinculadas = pessoas.filter(p=>p.organizacaoId===o.id);
+        const proximos = vinculadas.filter(p=>p.proximaData).sort((a,b)=>a.proximaData.localeCompare(b.proximaData));
+        return `<div class="card org-card">
+          <h3>${o.nome}</h3>
+          <div class="meta">${o.segmento} • ${o.cidade} • Responsável: ${o.responsavel}</div>
+          <div style="font-size:13px;margin-bottom:8px;"><strong>Pessoas vinculadas:</strong> ${vinculadas.map(p=>p.nome).join(', ')||'Nenhuma'}</div>
+          <div style="font-size:13px;">${o.obs||''}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:8px;">Próximo cuidado: ${proximos[0]? proximos[0].proximoCuidado+' — '+fmtDate(proximos[0].proximaData) : '—'}</div>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+
+/* ================= CONFIGURAÇÕES ================= */
+function renderConfiguracoes(c){
+  c = c || document.getElementById('content');
+  c.innerHTML = `
+    <div class="page-header"><div><h1>Configurações</h1><p>Preferências gerais do CRM Pocket</p></div></div>
+    <div class="card" style="max-width:480px;">
+      <div class="field"><label>Nome da equipe</label><input value="Grupo Gênesis Brasil"></div>
+      <div class="field"><label>Responsáveis</label><input value="${RESPONSAVEIS.join(', ')}" readonly></div>
+      <div class="field"><label>Etapas da jornada</label><input value="${ETAPAS.join(' → ')}" readonly></div>
+      <p style="font-size:12px;color:var(--muted);">Versão Pocket — simples, leve e focada em relacionamento humano.</p>
+    </div>
+  `;
+}
+
+/* ================= MODAIS ================= */
+function fillSelects(){
+  document.getElementById('nc-resp').innerHTML = RESPONSAVEIS.map(r=>`<option>${r}</option>`).join('');
+  document.getElementById('nc-etapa').innerHTML = ETAPAS.map(e=>`<option>${e}</option>`).join('');
+  document.getElementById('na-resp').innerHTML = RESPONSAVEIS.map(r=>`<option>${r}</option>`).join('');
+  document.getElementById('ag-resp').innerHTML = RESPONSAVEIS.map(r=>`<option>${r}</option>`).join('');
+  const pessoaOpts = pessoas.map(p=>`<option value="${p.id}">${p.nome}</option>`).join('');
+  document.getElementById('na-pessoa').innerHTML = pessoaOpts;
+  document.getElementById('ag-pessoa').innerHTML = pessoaOpts;
+  document.getElementById('orgList').innerHTML = organizacoes.map(o=>`<option value="${o.nome}">`).join('');
+}
+
+function openModal(name){
+  fillSelects();
+  document.getElementById('overlay-'+name).classList.add('open');
+}
+function closeModal(name){ document.getElementById('overlay-'+name).classList.remove('open'); }
+
+function submitNovoContato(ev){
+  ev.preventDefault();
+  const orgNomeVal = document.getElementById('nc-org').value.trim();
+  let organizacaoId = null;
+  if(orgNomeVal){
+    let org = organizacoes.find(o=>o.nome.toLowerCase()===orgNomeVal.toLowerCase());
+    if(!org){ org = {id:++uid,nome:orgNomeVal,segmento:"",cidade:"",responsavel:document.getElementById('nc-resp').value,obs:""}; organizacoes.push(org); }
+    organizacaoId = org.id;
+  }
+  const p = {
+    id: ++uid,
+    nome: document.getElementById('nc-nome').value,
+    telefone: document.getElementById('nc-tel').value,
+    email: document.getElementById('nc-email').value,
+    organizacaoId,
+    responsavel: document.getElementById('nc-resp').value,
+    contexto: document.getElementById('nc-ctx').value,
+    necessidades: "",
+    etapa: document.getElementById('nc-etapa').value,
+    proximoCuidado: document.getElementById('nc-cuidado').value,
+    proximaData: document.getElementById('nc-data').value,
+  };
+  pessoas.push(p);
+  if(p.proximaData) agenda.push({pessoaId:p.id,data:p.proximaData,hora:"",tipo:p.proximoCuidado||"Retorno",resumo:p.proximoCuidado,responsavel:p.responsavel,concluido:false});
+  document.getElementById('formNovoContato').reset();
+  closeModal('novoContato');
+  render();
+  return false;
+}
+
+function submitNovoAcomp(ev){
+  ev.preventDefault();
+  const pessoaId = parseInt(document.getElementById('na-pessoa').value);
+  const p = pessoaById(pessoaId);
+  const data = document.getElementById('na-data').value || iso(today);
+  const cuidadoData = document.getElementById('na-cuidado-data').value;
+  const cuidado = document.getElementById('na-cuidado').value;
+  const resp = document.getElementById('na-resp').value;
+
+  acompanhamentos.push({
+    id: ++uid, pessoaId, data,
+    tipo: document.getElementById('na-tipo').value,
+    resumo: document.getElementById('na-resumo').value,
+    necessidade: document.getElementById('na-necessidade').value,
+    proximoCuidado: cuidado, proximaData: cuidadoData, responsavel: resp
+  });
+  if(p){ p.proximoCuidado = cuidado || p.proximoCuidado; p.proximaData = cuidadoData || p.proximaData; if(document.getElementById('na-necessidade').value) p.necessidades = document.getElementById('na-necessidade').value; }
+  if(cuidadoData) agenda.push({pessoaId,data:cuidadoData,hora:"",tipo:cuidado||"Retorno",resumo:cuidado,responsavel:resp,concluido:false});
+
+  document.getElementById('formNovoAcomp').reset();
+  closeModal('novoAcomp');
+  render();
+  return false;
+}
+
+function submitAgendar(ev){
+  ev.preventDefault();
+  const pessoaId = parseInt(document.getElementById('ag-pessoa').value);
+  const data = document.getElementById('ag-data').value;
+  const hora = document.getElementById('ag-hora').value;
+  const tipo = document.getElementById('ag-tipo').value;
+  const lembrete = document.getElementById('ag-lembrete').value;
+  const resp = document.getElementById('ag-resp').value;
+  const cuidado = document.getElementById('ag-cuidado').value;
+
+  agenda.push({pessoaId,data,hora,tipo,resumo:lembrete||tipo,responsavel:resp,concluido:false});
+  const p = pessoaById(pessoaId);
+  if(p){ p.proximaData = data; p.proximoCuidado = cuidado || lembrete || p.proximoCuidado; }
+
+  document.getElementById('formAgendar').reset();
+  closeModal('agendarRetorno');
+  render();
+  return false;
+}
+
+/* Fechar modal clicando fora */
+document.querySelectorAll('.overlay').forEach(ov=>{
+  ov.addEventListener('click',e=>{ if(e.target===ov) ov.classList.remove('open'); });
+});
+
+/* ================= INIT ================= */
+render();
+</script>
 </body>
 </html>
