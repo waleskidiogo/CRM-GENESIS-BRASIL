@@ -189,7 +189,6 @@ input,select,textarea{font-family:inherit;}
 .tl-item.tl-move::before{background:var(--warn);}
 .tl-item .tl-date{font-size:11px;color:var(--muted);}
 .tl-item .tl-text{font-size:13px;margin-top:2px;}
-.tl-item.highlight{background:var(--accent-soft);border-radius:8px;padding:6px 8px;margin-left:-8px;}
 .empty{text-align:center;padding:40px 20px;color:var(--muted);}
 .empty .ic{font-size:34px;margin-bottom:8px;}
 .loading{text-align:center;padding:40px;color:var(--muted);}
@@ -198,7 +197,6 @@ input,select,textarea{font-family:inherit;}
 .toast.show{display:block;}
 .toast.erro{background:var(--danger);}
 .toast.sucesso{background:var(--accent);}
-.mask-cpf{font-family:monospace;letter-spacing:.03em;color:var(--muted);}
 .hide-desktop{display:none;}
 .admin-only{display:none;}
 body.is-admin .admin-only{display:block;}
@@ -388,33 +386,30 @@ body.is-admin .nav-item.admin-only{display:flex;}
 <div class="toast" id="toast"></div>
 
 <script>
+/* ================== CONFIGURAÇÃO ================== */
 const API_URL = "https://script.google.com/macros/s/AKfycbyVbYAzt8ch8EzSE0M6M3VbNy0QV3zArhzAXz5RX4aqPsERm4JaEmmOmrJOWPIbi9PYnw/exec";
 const SESSION_KEY = 'crm_token';
-const SESSION_USER_KEY = 'crm_usuario';
 
-// Flag global: true enquanto estamos fazendo a checagem SILENCIOSA de sessão no carregamento da página
+// Flag global: true enquanto fazemos a checagem SILENCIOSA de sessão no carregamento
 let checagemSilenciosa = false;
 
-function salvarSessao(token, usuario){
+/* ================== SESSÃO (somente token no localStorage) ================== */
+function salvarToken(token){
   localStorage.setItem(SESSION_KEY, token);
-  localStorage.setItem(SESSION_USER_KEY, JSON.stringify(usuario));
 }
 function obterToken(){ return localStorage.getItem(SESSION_KEY); }
-function obterUsuarioLocal(){
-  try{ return JSON.parse(localStorage.getItem(SESSION_USER_KEY) || 'null'); }catch(e){ return null; }
-}
 function limparSessao(){
   localStorage.removeItem(SESSION_KEY);
-  localStorage.removeItem(SESSION_USER_KEY);
 }
 
 function ehErroDeSessao(msg){
   return /sess[aã]o expirada|sess[aã]o inv[aá]lida|token inv[aá]lido|n[ãa]o autenticado/i.test(msg || "");
 }
 
+/* ================== FUNÇÃO CENTRAL DE API ================== */
 async function api(acao, dados){
   dados = dados || {};
-  // Ações públicas não precisam (e não devem) enviar token
+  // Ações públicas não enviam token
   const acoesPublicas = ['verificar_cpf', 'login', 'concluir_primeiro_acesso'];
   const payload = acoesPublicas.includes(acao)
     ? Object.assign({ acao: acao }, dados)
@@ -439,14 +434,10 @@ async function api(acao, dados){
   }
 
   if(!json.sucesso){
-    const msg = json.mensagem || 'Erro desconhecido.';
+    const msg = json.mensagem || 'Algo não saiu como esperado. Tente novamente.';
 
-    // Só forçamos logout/redirect automático se a ação NÃO for pública
-    // e o erro for realmente de sessão.
     if(!acoesPublicas.includes(acao) && ehErroDeSessao(msg)){
       limparSessao();
-      // Durante a checagem silenciosa do carregamento da página,
-      // NÃO exibimos mensagem de erro — apenas voltamos pro login limpo.
       if(!checagemSilenciosa){
         mostrarLogin();
         mostrarMsgLogin('Sua sessão expirou. Faça login novamente.', 'info');
@@ -474,11 +465,6 @@ function mascaraCPF(input){
   input.value = v;
 }
 function cpfSomenteNumeros(v){ return (v||'').replace(/\D/g,''); }
-function mascararCpfExibicao(cpf){
-  cpf = cpfSomenteNumeros(cpf);
-  if(cpf.length !== 11) return '***.***.***-**';
-  return '***.***.***-' + cpf.slice(9);
-}
 
 const ETAPAS = ["Primeiro contato","Escuta e entendimento","Construção de caminho","Acompanhamento","Decisão","Relacionamento contínuo"];
 let usuarioAtual = null;
@@ -488,10 +474,17 @@ let searchTerm = "";
 let cacheConsultores = [];
 
 const today = new Date(); today.setHours(0,0,0,0);
-const iso = d => Utilities_toISO(d);
-function Utilities_toISO(d){ return d.toISOString().slice(0,10); }
+const iso = d => d.toISOString().slice(0,10);
 const addDays = (d,n) => { const x=new Date(d); x.setDate(x.getDate()+n); return x; };
-const fmtDate = (dstr) => { if(!dstr) return "—"; const d=new Date((dstr||'').slice(0,10)+"T00:00:00"); if(isNaN(d)) return "—"; return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}); };
+// Trata AAAA-MM-DD sempre como data LOCAL (evita "dia anterior")
+function parseLocalDate(dstr){
+  if(!dstr) return null;
+  const partes = (dstr||'').slice(0,10).split('-');
+  if(partes.length!==3) return null;
+  const d = new Date(Number(partes[0]), Number(partes[1])-1, Number(partes[2]));
+  return isNaN(d) ? null : d;
+}
+const fmtDate = (dstr) => { const d = parseLocalDate(dstr); if(!d) return "—"; return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}); };
 
 function mostrarMsgLogin(msg, tipo){
   const el = document.getElementById('loginMsg');
@@ -515,6 +508,7 @@ function voltarEtapaCpf(){
   document.getElementById('etapaLogin').style.display = 'none';
   document.getElementById('etapaCadastro').style.display = 'none';
   document.getElementById('inputCpf').value = '';
+  cpfAtualLogin = '';
   limparMsgLogin();
 }
 
@@ -568,8 +562,7 @@ async function fazerLoginEtapa(){
 
   try{
     const dados = await api('login', { cpf: cpfAtualLogin, senha: senha });
-    salvarSessao(dados.token, dados.consultor);
-    usuarioAtual = dados.consultor;
+    salvarToken(dados.token);
     await iniciarApp();
   }catch(erro){
     mostrarMsgLogin(erro.message || 'CPF ou senha inválidos.');
@@ -601,8 +594,7 @@ async function concluirCadastroEtapa(){
       senha: senha,
       confirmar_senha: confirmar
     });
-    salvarSessao(dados.token, dados.consultor);
-    usuarioAtual = dados.consultor;
+    salvarToken(dados.token);
     await iniciarApp();
   }catch(erro){
     mostrarMsgLogin(erro.message);
@@ -619,7 +611,7 @@ async function fazerLogout(){
   mostrarLogin();
 }
 
-// ===== CHECAGEM DE SESSÃO NO CARREGAMENTO (SILENCIOSA) =====
+/* ===== CHECAGEM DE SESSÃO NO CARREGAMENTO (SILENCIOSA) ===== */
 async function verificarSessaoExistente(){
   const token = obterToken();
   if(!token){ mostrarLogin(); return; }
@@ -628,8 +620,6 @@ async function verificarSessaoExistente(){
   try{
     await iniciarApp();
   }catch(erro){
-    // Qualquer erro aqui (sessão expirada, sem internet, etc.) apenas
-    // limpa a sessão local e mostra a tela de login limpa, sem susto.
     limparSessao();
     mostrarLogin();
   }finally{
@@ -715,7 +705,7 @@ function onSearch(v){
       const resultados = await api('busca_global', { termo: searchTerm });
       renderSearchResults(resultados);
     }catch(erro){
-      box.innerHTML = `<div class="sr-empty">Erro na busca: ${erro.message}</div>`;
+      box.innerHTML = `<div class="sr-empty">${erro.message}</div>`;
     }
   }, 350);
 }
@@ -838,7 +828,7 @@ async function renderVisaoDoDia(c){
 
   const calHtml = days.map(d=>{
     const count = (d===iso(today)) ? agendaDoDia.length : 0;
-    const dt = new Date(d+"T00:00:00");
+    const dt = parseLocalDate(d);
     const isToday = d===iso(today);
     const isSel = d===selectedCalDate;
     return `<div class="cal-day ${isToday?'today':''} ${isSel?'selected':''} ${count>0?'has-events':''}" onclick="selectCalDay('${d}')">
@@ -876,7 +866,7 @@ function renderAgendaItem(a){
   return `<div class="agenda-item">
     <div class="agenda-time">${a.hora||'—'}</div>
     <div class="agenda-body">
-      <div class="name">Pessoa • ${atrasado?'<span class="tag tag-danger">Atrasado</span>':''}</div>
+      <div class="name">${a.nomePessoa || 'Pessoa'} ${atrasado?'<span class="tag tag-danger">Atrasado</span>':''}</div>
       <div class="meta">${a.tipo} • ${a.resumo||'—'} • ${a.responsavel||''}</div>
       <div class="agenda-actions">
         <button class="btn btn-secondary" onclick="abrirConcluir('${a.pessoaId}','${a.id}')">Concluir</button>
@@ -1109,10 +1099,10 @@ async function moverEtapaSelect(id, etapa){
 function attachTouchHandlers(){
   const cards = document.querySelectorAll('.kcard');
   cards.forEach(card=>{
-    let holdTimer=null, startX, startY, dragging=false, ghost=null;
+    let holdTimer=null, dragging=false, ghost=null;
 
     card.addEventListener('touchstart', (e)=>{
-      const t = e.touches[0]; startX=t.clientX; startY=t.clientY; dragging=false;
+      const t = e.touches[0]; dragging=false;
       holdTimer = setTimeout(()=>{
         dragging=true; card.classList.add('dragging');
         ghost = card.cloneNode(true); ghost.classList.add('drag-clone');
@@ -1187,7 +1177,6 @@ async function renderAcompanhamentosPage(c){
 async function renderOrganizacoes(c){
   c = c || document.getElementById('content');
   const orgs = await api('listar_organizacoes');
-  const isAdmin = usuarioAtual.perfil === 'administrador';
 
   c.innerHTML = `
     <div class="page-header"><div><h1>Organizações</h1><p>${orgs.length} organizações vinculadas</p></div></div>
@@ -1195,7 +1184,7 @@ async function renderOrganizacoes(c){
       ${orgs.length ? orgs.map(o=>`
         <div class="card org-card">
           <h3>${o.nome}</h3>
-          <div class="meta">${o.segmento||''} ${o.cidade?'• '+o.cidade:''} ${isAdmin?'• Resp. próprio':''}</div>
+          <div class="meta">${o.segmento||''} ${o.cidade?'• '+o.cidade:''}</div>
           <div style="font-size:13px;">${o.observacoes||''}</div>
         </div>`).join('') : `<div class="empty"><div class="ic">🏢</div>Nenhuma organização cadastrada.</div>`}
     </div>
@@ -1339,55 +1328,4 @@ async function submitNovoAcomp(ev){
       data: document.getElementById('na-data').value || iso(today),
       tipo_contato: document.getElementById('na-tipo').value,
       resumo: document.getElementById('na-resumo').value,
-      necessidade_percebida: document.getElementById('na-necessidade').value,
-      proximo_cuidado: document.getElementById('na-cuidado').value,
-      proxima_data: document.getElementById('na-cuidado-data').value
-    });
-    toast('Acompanhamento registrado.', 'sucesso');
-    document.getElementById('formNovoAcomp').reset();
-    closeModal('novoAcomp');
-    await render();
-  }catch(erro){
-    toast(erro.message, 'erro');
-  }finally{
-    btn.disabled = false; btn.textContent = 'Registrar';
-  }
-  return false;
-}
-
-async function submitAgendar(ev){
-  ev.preventDefault();
-  const btn = document.getElementById('btnAgendar');
-  btn.disabled = true; btn.textContent = 'Agendando...';
-  try{
-    await api('criar_retorno', {
-      id_pessoa: document.getElementById('ag-pessoa').value,
-      data: document.getElementById('ag-data').value,
-      hora: document.getElementById('ag-hora').value,
-      tipo: document.getElementById('ag-tipo').value,
-      resumo: document.getElementById('ag-cuidado').value
-    });
-    toast('Retorno agendado.', 'sucesso');
-    document.getElementById('formAgendar').reset();
-    closeModal('agendarRetorno');
-    await render();
-  }catch(erro){
-    toast(erro.message, 'erro');
-  }finally{
-    btn.disabled = false; btn.textContent = 'Agendar';
-  }
-  return false;
-}
-
-document.querySelectorAll('.overlay').forEach(ov=>{
-  ov.addEventListener('click', e=>{
-    if(e.target === ov){
-      ov.classList.remove('open');
-    }
-  });
-});
-
-verificarSessaoExistente();
-</script>
-</body>
-</html>
+      necessidade_percebida: document.getElementById('na-necessid
