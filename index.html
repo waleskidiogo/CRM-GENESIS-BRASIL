@@ -3,386 +3,368 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Grupo Gênesis Brasil - CRM</title>
-<link rel="icon" type="image/svg+xml" href="assets/brand/grupo-genesis-icone-g.svg">
+<title>CRM Genesis Brasil</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --cor-primaria: #E8590C;
-    --cor-primaria-hover: #D14E0A;
-    --cor-fundo: #F5F6F8;
-    --cor-sidebar: #1A1D23;
-    --cor-sidebar-hover: #2A2E37;
-    --cor-texto-claro: #FFFFFF;
-    --cor-texto-secundario: #9CA3AF;
-    --largura-sidebar: 240px;
-    --largura-sidebar-colapsada: 72px;
+:root{
+  --orange:#E86A1F; --orange-light:#F2955A;
+  --graphite:#1B2431; --graphite-2:#24304A;
+  --white:#fff; --gray:#9CA3AF; --font:'Montserrat',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:var(--font);}
+body{display:flex;min-height:100vh;background:#F5F6F8;color:var(--graphite);}
+a{text-decoration:none;color:inherit;}
+ul{list-style:none;}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+  width:280px; background:var(--graphite); height:100vh; position:fixed; top:0; left:0;
+  display:flex; flex-direction:column; transition:width .25s; overflow-y:auto; z-index:20;
+}
+.sidebar.collapsed{ width:76px; }
+.sidebar::-webkit-scrollbar{width:5px;}
+.sidebar::-webkit-scrollbar-thumb{background:var(--orange);border-radius:10px;}
+
+/* BRANDING — preparado para logo oficial */
+.sidebar-header{padding:20px 20px; border-bottom:1px solid rgba(255,255,255,.08); display:flex; align-items:center; gap:12px;}
+.brand-logo-slot{
+  width:38px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.brand-logo-slot img{max-width:100%;max-height:100%;object-fit:contain;}
+/* Placeholder neutro até a logo oficial ser inserida (sem redesenho de marca) */
+.brand-logo-slot .logo-placeholder{
+  width:100%;height:100%;border:1px dashed rgba(255,255,255,.35);border-radius:8px;
+}
+.brand-text{color:#fff;font-size:13.5px;line-height:1.25;white-space:nowrap;}
+.brand-text span{display:block;color:var(--orange);font-size:10px;font-weight:700;letter-spacing:1.4px;}
+.sidebar.collapsed .brand-text{display:none;}
+
+/* Botão + NOVO RELACIONAMENTO */
+.btn-novo-wrap{padding:16px;}
+.btn-novo{
+  width:100%; background:var(--orange); color:#fff; border:none; border-radius:10px;
+  padding:12px; font-weight:700; font-size:13.5px; display:flex; align-items:center;
+  justify-content:center; gap:8px; cursor:pointer; box-shadow:0 4px 14px rgba(232,106,31,.35);
+  white-space:nowrap;
+}
+.btn-novo:hover{background:var(--orange-light);}
+.sidebar.collapsed .btn-novo .label{display:none;}
+.sidebar.collapsed .btn-novo{padding:12px 0;}
+
+/* Seções */
+.nav-section-title{font-size:10.5px;font-weight:700;letter-spacing:1.4px;color:var(--gray);padding:14px 20px 6px;text-transform:uppercase;white-space:nowrap;}
+.sidebar.collapsed .nav-section-title{display:none;}
+
+.nav-item{
+  display:flex; align-items:center; gap:12px; padding:10px 20px; font-size:14px;
+  font-weight:500; color:#E5E7EB; cursor:pointer; margin:1px 8px; border-radius:9px;
+  transition:background .2s,color .2s; white-space:nowrap; overflow:hidden;
+}
+.nav-item:hover{background:rgba(232,106,31,.12); color:#fff;}
+.nav-item.active{background:var(--orange); color:#fff;}
+.ic{width:18px;text-align:center;flex-shrink:0;color:var(--orange-light);font-size:14px;}
+.nav-item.active .ic{color:#fff;}
+.sidebar.collapsed .nav-item span:not(.ic){display:none;}
+.sidebar.collapsed .nav-item{justify-content:center;padding:12px 0;margin:1px 12px;}
+
+.sidebar-divider{height:1px;background:rgba(255,255,255,.08);margin:8px 16px;}
+
+.sidebar-footer{margin-top:auto;padding:14px 16px;}
+.toggle-btn{
+  width:100%;background:var(--graphite-2);border:none;color:var(--gray);padding:10px;
+  border-radius:8px;cursor:pointer;font-size:12px;
+}
+
+/* ===== TOPBAR ===== */
+.topbar{
+  height:64px; background:#fff; border-bottom:1px solid #eee; display:flex; align-items:center;
+  gap:20px; padding:0 28px; position:sticky; top:0; z-index:10;
+}
+.page-title{font-size:17px;font-weight:700;color:var(--graphite);white-space:nowrap;}
+
+/* Campo de busca real (input) — sem mecanismo de pesquisa ainda */
+.search-box{
+  flex:1; max-width:520px; display:flex; align-items:center; gap:10px; background:#F3F4F6;
+  border-radius:999px; padding:0 16px;
+}
+.search-box .ic-search{color:#9CA3AF;font-size:14px;}
+.search-input{
+  flex:1; border:none; background:transparent; outline:none; font-size:13.5px;
+  color:var(--graphite); padding:10px 0; font-family:var(--font);
+}
+.search-input::placeholder{color:#9CA3AF;}
+
+.top-actions{display:flex;align-items:center;gap:14px;margin-left:auto;}
+.btn-top-novo{
+  background:var(--orange); color:#fff; border:none; padding:9px 18px; border-radius:999px;
+  font-weight:700; font-size:13px; cursor:pointer; white-space:nowrap;
+}
+.icon-btn{
+  width:38px;height:38px;border-radius:50%;background:#F3F4F6;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;color:var(--graphite);font-size:15px;position:relative;
+}
+.badge{position:absolute;top:-2px;right:-2px;width:9px;height:9px;background:var(--orange);border-radius:50%;border:2px solid #fff;}
+.user-mini{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--orange);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;}
+.user-mini .name{font-size:13px;font-weight:700;}
+.user-mini .role{font-size:11px;color:var(--gray);}
+
+/* ===== CONTEÚDO / PLACEHOLDER ===== */
+.main{margin-left:280px;flex:1;transition:margin-left .25s;}
+.sidebar.collapsed ~ .main{margin-left:76px;}
+.content{padding:32px 5%;}
+.placeholder{
+  background:#fff; border:1px dashed #D1D5DB; border-radius:14px; padding:60px 30px;
+  text-align:center; color:var(--gray);
+}
+.placeholder h2{color:var(--graphite); font-size:18px; margin-bottom:8px;}
+.placeholder p{font-size:13.5px;}
+
+/* ===== MODAL "NOVO RELACIONAMENTO" ===== */
+/* Modal central: funciona independente do estado da sidebar (colapsada ou não) */
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(15,20,30,.55); display:none;
+  align-items:center; justify-content:center; z-index:100; padding:20px;
+}
+.modal-overlay.open{display:flex;}
+.modal-box{
+  background:#fff; border-radius:16px; width:100%; max-width:440px; padding:26px;
+  box-shadow:0 20px 60px rgba(0,0,0,.3); max-height:90vh; overflow-y:auto;
+}
+.modal-title{font-size:16px;font-weight:700;color:var(--graphite);margin-bottom:4px;}
+.modal-subtitle{font-size:12.5px;color:var(--gray);margin-bottom:18px;}
+.modal-group-label{font-size:10.5px;font-weight:700;letter-spacing:1px;color:var(--gray);text-transform:uppercase;margin:14px 0 8px;}
+.modal-item{
+  display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:9px;
+  font-size:13.5px;font-weight:500;color:var(--graphite);cursor:pointer;border:1px solid transparent;
+}
+.modal-item:hover{background:#FBEAE0;color:var(--orange);border-color:#F6D3BC;}
+.modal-divider{height:1px;background:#eee;margin:14px 0;}
+.modal-close{
+  position:absolute; top:18px; right:20px; cursor:pointer; color:var(--gray); font-size:18px;
+}
+.modal-box{position:relative;}
+
+/* ===== RESPONSIVIDADE (não altera layout desktop) ===== */
+@media (max-width: 1024px){
+  .sidebar{ width:76px; }
+  .sidebar .brand-text, .sidebar .btn-novo .label,
+  .sidebar .nav-section-title, .sidebar .nav-item span:not(.ic){ display:none; }
+  .sidebar .nav-item{ justify-content:center; padding:12px 0; margin:1px 12px; }
+  .sidebar .btn-novo{ padding:12px 0; }
+  .main{ margin-left:76px; }
+  .sidebar.collapsed{ width:76px; } /* já colapsada por padrão neste breakpoint */
+  .sidebar:not(.collapsed) ~ .main{ margin-left:76px; }
+}
+
+@media (max-width: 768px){
+  .sidebar{
+    width:240px; left:-240px; transition:left .25s;
   }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background: var(--cor-fundo);
-    display: flex;
-    min-height: 100vh;
-  }
-
-  /* ===== SIDEBAR ===== */
-  .sidebar {
-    width: var(--largura-sidebar);
-    background: var(--cor-sidebar);
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    transition: width 0.3s ease;
-    z-index: 100;
-  }
-
-  .sidebar.colapsada {
-    width: var(--largura-sidebar-colapsada);
-  }
-
-  .sidebar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 16px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    min-height: 72px;
-  }
-
-  .logo-completa, .logo-icone {
-    height: 32px;
-    object-fit: contain;
-  }
-
-  .logo-completa { display: block; }
-  .logo-icone { display: none; }
-
-  .sidebar.colapsada .logo-completa { display: none; }
-  .sidebar.colapsada .logo-icone { display: block; margin: 0 auto; }
-
-  .btn-toggle {
-    background: transparent;
-    border: none;
-    color: var(--cor-texto-secundario);
-    cursor: pointer;
-    padding: 6px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s;
-  }
-
-  .btn-toggle:hover {
-    background: var(--cor-sidebar-hover);
-    color: var(--cor-texto-claro);
-  }
-
-  .sidebar.colapsada .btn-toggle { display: none; }
-
-  .btn-toggle svg { width: 20px; height: 20px; }
-
-  /* Botão Novo */
-  .btn-novo {
-    margin: 16px;
-    background: var(--cor-primaria);
-    color: var(--cor-texto-claro);
-    border: none;
-    border-radius: 8px;
-    padding: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: background 0.2s;
-  }
-
-  .btn-novo:hover { background: var(--cor-primaria-hover); }
-  .btn-novo svg { width: 18px; height: 18px; flex-shrink: 0; }
-  .sidebar.colapsada .btn-novo span { display: none; }
-
-  /* Navegação */
-  .sidebar-nav {
-    flex: 1;
-    overflow-y: auto;
-    padding: 8px 12px;
-  }
-
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 11px 12px;
-    border-radius: 8px;
-    color: var(--cor-texto-secundario);
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 2px;
-    transition: background 0.2s, color 0.2s;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-
-  .nav-item svg { width: 20px; height: 20px; flex-shrink: 0; }
-
-  .nav-item:hover {
-    background: var(--cor-sidebar-hover);
-    color: var(--cor-texto-claro);
-  }
-
-  .nav-item.ativo {
-    background: rgba(232, 89, 12, 0.15);
-    color: var(--cor-primaria);
-  }
-
-  .sidebar.colapsada .nav-item span { display: none; }
-  .sidebar.colapsada .nav-item { justify-content: center; }
-
-  /* Rodapé usuário */
-  .sidebar-footer {
-    padding: 16px;
-    border-top: 1px solid rgba(255,255,255,0.08);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .avatar-usuario {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: var(--cor-primaria);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    font-size: 14px;
-    flex-shrink: 0;
-  }
-
-  .info-usuario {
-    overflow: hidden;
-  }
-
-  .info-usuario .nome {
-    color: var(--cor-texto-claro);
-    font-size: 13px;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .info-usuario .cargo {
-    color: var(--cor-texto-secundario);
-    font-size: 12px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .sidebar.colapsada .info-usuario { display: none; }
-
-  /* ===== BOTÃO MOBILE ===== */
-  .btn-mobile-menu {
-    display: none;
-    position: fixed;
-    top: 16px;
-    left: 16px;
-    z-index: 200;
-    background: var(--cor-sidebar);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 10px;
-    cursor: pointer;
-  }
-
-  .overlay-mobile {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 90;
-  }
-
-  .overlay-mobile.ativo { display: block; }
-
-  /* ===== CONTEÚDO PRINCIPAL ===== */
-  .conteudo-principal {
-    flex: 1;
-    margin-left: var(--largura-sidebar);
-    transition: margin-left 0.3s ease;
-    padding: 32px;
-  }
-
-  .sidebar.colapsada ~ .conteudo-principal {
-    margin-left: var(--largura-sidebar-colapsada);
-  }
-
-  .conteudo-principal h1 {
-    color: #1A1D23;
-    margin-bottom: 8px;
-  }
-
-  .conteudo-principal p {
-    color: #6B7280;
-  }
-
-  /* ===== RESPONSIVO MOBILE ===== */
-  @media (max-width: 768px) {
-    .btn-mobile-menu { display: block; }
-
-    .sidebar {
-      left: -240px;
-      width: 240px !important;
-    }
-
-    .sidebar.mobile-ativa {
-      left: 0;
-    }
-
-    .sidebar.colapsada .logo-completa { display: block; }
-    .sidebar.colapsada .logo-icone { display: none; }
-    .sidebar.colapsada .nav-item span { display: inline; }
-    .sidebar.colapsada .nav-item { justify-content: flex-start; }
-    .sidebar.colapsada .btn-novo span { display: inline; }
-    .sidebar.colapsada .info-usuario { display: block; }
-
-    .conteudo-principal {
-      margin-left: 0 !important;
-      padding: 80px 20px 20px;
-    }
-  }
+  .sidebar.mobile-open{ left:0; }
+  .sidebar .brand-text, .sidebar .btn-novo .label,
+  .sidebar .nav-section-title, .sidebar .nav-item span:not(.ic){ display:flex; }
+  .sidebar .nav-item{ justify-content:flex-start; padding:10px 20px; margin:1px 8px; }
+  .sidebar .btn-novo{ padding:12px; }
+  .main{ margin-left:0 !important; }
+  .topbar{ padding:0 14px; gap:10px; }
+  .page-title{ display:none; }
+  .search-box{ max-width:none; }
+  .btn-top-novo span.full-label{ display:none; }
+  .mobile-toggle{ display:flex !important; }
+}
+.mobile-toggle{
+  display:none; width:38px;height:38px;border-radius:8px;background:#F3F4F6;
+  align-items:center;justify-content:center;cursor:pointer;font-size:16px;
+}
 </style>
 </head>
 <body>
 
-<button class="btn-mobile-menu" id="btnMobileMenu">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
-    <line x1="3" y1="12" x2="21" y2="12"/>
-    <line x1="3" y1="6" x2="21" y2="6"/>
-    <line x1="3" y1="18" x2="21" y2="18"/>
-  </svg>
-</button>
-
-<div class="overlay-mobile" id="overlayMobile"></div>
-
+<!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-header">
-    <img src="grupo-genesis-logo-completa.svg" alt="Grupo Gênesis Brasil" class="logo-completa">
-  <img src="grupo-genesis-icone-g.svg" alt="G" class="logo-icone">
-    <button class="btn-toggle" id="btnToggle">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="19" y1="12" x2="5" y2="12"/>
-        <polyline points="12 19 5 12 12 5"/>
-      </svg>
+    <!-- Slot de branding: substituir por <img src="logo-oficial.svg" alt="Grupo Gênesis Brasil"> quando disponível -->
+    <div class="brand-logo-slot">
+      <div class="logo-placeholder"></div>
+    </div>
+    <div class="brand-text">GRUPO GÊNESIS BRASIL<span>CRM ECOSSISTEMA</span></div>
+  </div>
+
+  <div class="btn-novo-wrap">
+    <button class="btn-novo" onclick="openNovoModal()">
+      <span>＋</span><span class="label">NOVO RELACIONAMENTO</span>
     </button>
   </div>
 
-  <button class="btn-novo">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-      <line x1="12" y1="5" x2="12" y2="19"/>
-      <line x1="5" y1="12" x2="19" y2="12"/>
-    </svg>
-    <span>Novo</span>
-  </button>
+  <!-- VISÃO GERAL -->
+  <div class="nav-item active" data-route="visao-geral"><span class="ic">⌂</span><span>Visão Geral</span></div>
 
-  <nav class="sidebar-nav">
-    <a href="#" class="nav-item ativo">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <rect x="3" y="3" width="7" height="9"/>
-        <rect x="14" y="3" width="7" height="5"/>
-        <rect x="14" y="12" width="7" height="9"/>
-        <rect x="3" y="16" width="7" height="5"/>
-      </svg>
-      <span>Dashboard</span>
-    </a>
-    <a href="#" class="nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-        <circle cx="9" cy="7" r="4"/>
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-      </svg>
-      <span>Contatos</span>
-    </a>
-    <a href="#" class="nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="12" y1="1" x2="12" y2="23"/>
-        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-      </svg>
-      <span>Negociações</span>
-    </a>
-    <a href="#" class="nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <rect x="3" y="4" width="18" height="18" rx="2"/>
-        <line x1="16" y1="2" x2="16" y2="6"/>
-        <line x1="8" y1="2" x2="8" y2="6"/>
-        <line x1="3" y1="10" x2="21" y2="10"/>
-      </svg>
-      <span>Agenda</span>
-    </a>
-    <a href="#" class="nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="18" y1="20" x2="18" y2="10"/>
-        <line x1="12" y1="20" x2="12" y2="4"/>
-        <line x1="6" y1="20" x2="6" y2="14"/>
-      </svg>
-      <span>Relatórios</span>
-    </a>
-  </nav>
+  <!-- MEU TRABALHO -->
+  <div class="nav-section-title">Meu Trabalho</div>
+  <div class="nav-item" data-route="minha-carteira"><span class="ic">▣</span><span>Minha Carteira</span></div>
+  <div class="nav-item" data-route="agenda-tarefas"><span class="ic">✓</span><span>Agenda &amp; Tarefas</span></div>
+  <div class="nav-item" data-route="atendimentos"><span class="ic">↻</span><span>Atendimentos</span></div>
+
+  <!-- RELACIONAMENTOS -->
+  <div class="nav-section-title">Relacionamentos</div>
+  <div class="nav-item" data-route="profissionais"><span class="ic">♙</span><span>Profissionais / Filiados</span></div>
+  <div class="nav-item" data-route="organizacoes"><span class="ic">▦</span><span>Organizações</span></div>
+  <div class="nav-item" data-route="oportunidades"><span class="ic">◎</span><span>Oportunidades</span></div>
+  <div class="nav-item" data-route="funis"><span class="ic">▽</span><span>Funis</span></div>
+
+  <!-- ECOSSISTEMA -->
+  <div class="nav-section-title">Ecossistema</div>
+  <div class="nav-item" data-route="necessidades-solucoes"><span class="ic">⌘</span><span>Necessidades &amp; Soluções</span></div>
+  <div class="nav-item" data-route="parceiros-beneficios"><span class="ic">◇</span><span>Parceiros &amp; Benefícios</span></div>
+  <div class="nav-item" data-route="mapa-ecossistema"><span class="ic">◉</span><span>Mapa do Ecossistema</span></div>
+
+  <!-- GESTÃO -->
+  <div class="nav-section-title" data-permission="lider,admin">Gestão</div>
+  <div class="nav-item" data-route="minha-equipe" data-permission="lider,admin"><span class="ic">▥</span><span>Minha Equipe</span></div>
+  <div class="nav-item" data-route="inteligencia-indicadores" data-permission="admin"><span class="ic">▤</span><span>Inteligência &amp; Indicadores</span></div>
+  <div class="nav-item" data-route="relatorios" data-permission="admin"><span class="ic">▧</span><span>Relatórios</span></div>
+
+  <div class="sidebar-divider"></div>
+
+  <!-- SISTEMA -->
+  <div class="nav-section-title">Sistema</div>
+  <div class="nav-item" data-route="administracao" data-permission="admin"><span class="ic">⚙</span><span>Administração</span></div>
+  <div class="nav-item" data-route="ajuda-treinamento"><span class="ic">?</span><span>Ajuda / Treinamento</span></div>
 
   <div class="sidebar-footer">
-    <div class="avatar-usuario">DG</div>
-    <div class="info-usuario">
-      <div class="nome">Diogo</div>
-      <div class="cargo">Administrador</div>
-    </div>
+    <button class="toggle-btn" onclick="document.getElementById('sidebar').classList.toggle('collapsed')">⇆ Recolher</button>
   </div>
 </aside>
 
-<main class="conteudo-principal">
-  <h1>Bem-vindo ao CRM Gênesis Brasil</h1>
-  <p>Selecione uma opção no menu lateral para começar.</p>
-</main>
+<!-- MAIN -->
+<div class="main">
+  <header class="topbar">
+    <div class="mobile-toggle" onclick="document.getElementById('sidebar').classList.toggle('mobile-open')">☰</div>
+    <div class="page-title" id="pageTitle">Visão Geral</div>
+
+    <div class="search-box">
+      <span class="ic-search">🔎</span>
+      <input type="text" class="search-input" placeholder="Buscar profissional, empresa, organização, telefone, CPF, CNPJ..." disabled>
+    </div>
+
+    <div class="top-actions">
+      <button class="btn-top-novo" onclick="openNovoModal()"><span class="full-label">＋ Novo Relacionamento</span></button>
+      <div class="icon-btn">🔔<span class="badge"></span></div>
+      <div class="icon-btn">?</div>
+      <div class="user-mini">
+        <div class="avatar">DW</div>
+        <div>
+          <div class="name">Diogo Waleski</div>
+          <div class="role">Administrador</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="content" id="content">
+    <div class="placeholder">
+      <h2>Visão Geral</h2>
+      <p>Módulo em desenvolvimento. O conteúdo desta tela será implementado em etapa posterior.</p>
+    </div>
+  </main>
+</div>
+
+<!-- MODAL: + NOVO RELACIONAMENTO -->
+<div class="modal-overlay" id="novoModal">
+  <div class="modal-box">
+    <span class="modal-close" onclick="closeNovoModal()">✕</span>
+    <div class="modal-title">Quem você está adicionando ao ecossistema?</div>
+    <div class="modal-subtitle">Selecione o tipo de relacionamento</div>
+
+    <div class="modal-item" data-route="novo-profissional">👤 Profissional / Filiado</div>
+    <div class="modal-item" data-route="nova-empresa">🏢 Empresa</div>
+    <div class="modal-item" data-route="nova-associacao">🤝 Associação / ONG / Entidade</div>
+    <div class="modal-item" data-route="nova-instituicao">🎓 Faculdade / Instituição de Ensino</div>
+    <div class="modal-item" data-route="novo-parceiro">🔗 Parceiro Estratégico</div>
+
+    <div class="modal-divider"></div>
+
+    <div class="modal-item" data-route="nova-oportunidade">◎ Nova Oportunidade</div>
+    <div class="modal-item" data-route="nova-atividade">✓ Nova Atividade</div>
+  </div>
+</div>
 
 <script>
-  const sidebar = document.getElementById('sidebar');
-  const btnToggle = document.getElementById('btnToggle');
-  const btnMobileMenu = document.getElementById('btnMobileMenu');
-  const overlayMobile = document.getElementById('overlayMobile');
+const routeTitles = {
+  "visao-geral":"Visão Geral",
+  "minha-carteira":"Minha Carteira",
+  "agenda-tarefas":"Agenda & Tarefas",
+  "atendimentos":"Atendimentos",
+  "profissionais":"Profissionais / Filiados",
+  "organizacoes":"Organizações",
+  "oportunidades":"Oportunidades",
+  "funis":"Funis",
+  "necessidades-solucoes":"Necessidades & Soluções",
+  "parceiros-beneficios":"Parceiros & Benefícios",
+  "mapa-ecossistema":"Mapa do Ecossistema",
+  "minha-equipe":"Minha Equipe",
+  "inteligencia-indicadores":"Inteligência & Indicadores",
+  "relatorios":"Relatórios",
+  "administracao":"Administração",
+  "ajuda-treinamento":"Ajuda / Treinamento",
+  "novo-profissional":"Novo Profissional",
+  "nova-empresa":"Nova Empresa",
+  "nova-associacao":"Nova Associação/ONG/Entidade",
+  "nova-instituicao":"Nova Instituição de Ensino",
+  "novo-parceiro":"Novo Parceiro Estratégico",
+  "nova-oportunidade":"Nova Oportunidade",
+  "nova-atividade":"Nova Atividade"
+};
 
-  // Restaura estado salvo (desktop)
-  if (localStorage.getItem('sidebarColapsada') === 'true') {
-    sidebar.classList.add('colapsada');
-  }
-
-  btnToggle.addEventListener('click', () => {
-    sidebar.classList.toggle('colapsada');
-    localStorage.setItem('sidebarColapsada', sidebar.classList.contains('colapsada'));
+document.querySelectorAll('.nav-item[data-route]').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    navigateTo(el.getAttribute('data-route'));
+    document.getElementById('sidebar').classList.remove('mobile-open');
   });
+});
 
-  btnMobileMenu.addEventListener('click', () => {
-    sidebar.classList.add('mobile-ativa');
-    overlayMobile.classList.add('ativo');
+document.querySelectorAll('.modal-item[data-route]').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    navigateTo(el.getAttribute('data-route'));
+    closeNovoModal();
   });
+});
 
-  overlayMobile.addEventListener('click', () => {
-    sidebar.classList.remove('mobile-ativa');
-    overlayMobile.classList.remove('ativo');
+function navigateTo(route){
+  document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
+  const clicked = document.querySelector(`.nav-item[data-route="${route}"]`);
+  if(clicked) clicked.classList.add('active');
+
+  const title = routeTitles[route] || route;
+  document.getElementById('pageTitle').textContent = title;
+  document.getElementById('content').innerHTML = `
+    <div class="placeholder">
+      <h2>${title}</h2>
+      <p>Módulo em desenvolvimento. O conteúdo desta tela será implementado em etapa posterior.</p>
+    </div>`;
+}
+
+function openNovoModal(){ document.getElementById('novoModal').classList.add('open'); }
+function closeNovoModal(){ document.getElementById('novoModal').classList.remove('open'); }
+document.getElementById('novoModal').addEventListener('click', (e)=>{
+  if(e.target.id === 'novoModal') closeNovoModal();
+});
+
+/* ===== CONTROLE DE PERMISSÕES (protótipo) =====
+   currentUserRole deve ser substituído pela sessão real de autenticação.
+   Ex.: const currentUserRole = auth.getUser().role;
+*/
+const currentUserRole = 'admin'; // MOCK — origem futura: módulo de autenticação
+
+function applyPermissions(role){
+  document.querySelectorAll('[data-permission]').forEach(el=>{
+    const allowed = el.getAttribute('data-permission').split(',');
+    el.style.display = allowed.includes(role) ? '' : 'none';
   });
+}
+applyPermissions(currentUserRole);
 </script>
-
 </body>
 </html>
