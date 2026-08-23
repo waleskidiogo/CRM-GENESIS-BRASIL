@@ -630,8 +630,6 @@ async function verificarSessaoExistente(){
   if(!token){ mostrarLogin(); return; }
 
   try{
-    const consultor = await api('obter_usuario_atual');
-    usuarioAtual = consultor;
     await iniciarApp();
   }catch(erro){
     // Só derruba a sessão se for erro real de autenticação
@@ -647,6 +645,12 @@ async function verificarSessaoExistente(){
 }
 
 async function iniciarApp(){
+  usuarioAtual = await api('obter_usuario_atual'); // primeiro, garante sessão OK
+  const resumo = await api('obter_resumo_do_dia');
+  const agenda = await api('listar_agenda_do_dia');
+  const notificacoes = await api('obter_notificacoes');
+
+  // ---- renderizar UI base ----
   document.getElementById('loginScreen').classList.add('hidden');
   document.getElementById('app').classList.add('visible');
   document.body.classList.toggle('is-admin', usuarioAtual.perfil === 'administrador');
@@ -655,6 +659,10 @@ async function iniciarApp(){
   document.getElementById('avatarBtn').textContent = iniciais || '?';
   document.getElementById('umNome').textContent = usuarioAtual.nome;
   document.getElementById('umPerfil').textContent = usuarioAtual.perfil === 'administrador' ? 'Administrador' : 'Consultor';
+
+  // ---- usar dados já carregados para evitar nova chamada dentro do render ----
+  notifCache = notificacoes;
+  atualizarNotifDot();
 
   selectedCalDate = iso(today);
   currentPage = 'visaoDoDia';
@@ -1421,13 +1429,4 @@ async function submitAgendar(ev){
 }
 
 document.querySelectorAll('.overlay').forEach(ov=>{
-  ov.addEventListener('click',e=>{ if(e.target===ov) ov.classList.remove('open'); });
-});
-
-/* =========================================================
- * INIT
- * ========================================================= */
-verificarSessaoExistente();
-</script>
-</body>
-</html>
+  ov.addEventListener('click',e=>{ if(e.target===
