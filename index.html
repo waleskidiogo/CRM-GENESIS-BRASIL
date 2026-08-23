@@ -3,687 +3,882 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CRM Genesis Brasil</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<title>CRM Gênesis Brasil</title>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
-  :root{
-    --laranja:#E86A1F;
-    --laranja-escuro:#C95518;
-    --laranja-claro:#FDECD9;
-    --grafite:#2C2C2C;
-    --cinza:#6A6A6A;
-    --cinza-claro:#E5E5E5;
-    --branco:#FFFFFF;
-  }
-  *{box-sizing:border-box;}
-  body{
-    margin:0;
-    font-family:'Montserrat',sans-serif;
-    background:#F7F7F7;
-    color:var(--grafite);
-  }
-  h1,h2,h3,.brand-font{
-    font-family: Georgia, 'Cooper Black', serif;
-    font-weight:700;
-  }
+:root {
+  --bg: #0a1628;
+  --bg2: #0d1f3c;
+  --border: #1a3a5c;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --dim: #64748b;
+  --accent: #f07b26;
+}
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Inter','Segoe UI',sans-serif; }
+body { background:var(--bg); color:var(--text); min-height:100vh; }
 
-  /* ---------- TOPBAR ---------- */
-  .topbar{
-    background:var(--grafite);
-    color:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:12px 24px;
-    position:sticky;
-    top:0;
-    z-index:100;
-  }
-  .brand{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-size:20px;
-  }
-  .brand .logo-g{
-    width:36px;height:36px;
-    border:4px solid var(--laranja);
-    border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
-    color:var(--laranja);font-weight:700;
-  }
-  .brand span.small{
-    font-size:11px;
-    display:block;
-    color:var(--cinza-claro);
-    letter-spacing:1px;
-    font-weight:400;
-  }
-  nav.menu{
-    display:flex;
-    gap:24px;
-  }
-  nav.menu a{
-    color:#ddd;
-    text-decoration:none;
-    font-size:14px;
-    font-weight:600;
-    padding:6px 4px;
-    border-bottom:2px solid transparent;
-    cursor:pointer;
-    transition:.2s;
-  }
-  nav.menu a:hover, nav.menu a.active{
-    color:var(--laranja);
-    border-bottom:2px solid var(--laranja);
-  }
-  .topbar-actions{
-    display:flex;
-    gap:10px;
-  }
-  .btn{
-    padding:8px 16px;
-    border-radius:20px;
-    font-size:13px;
-    font-weight:700;
-    cursor:pointer;
-    border:none;
-    transition:.2s;
-  }
-  .btn-outline{
-    background:transparent;
-    color:#fff;
-    border:1px solid #fff;
-  }
-  .btn-outline:hover{ background:#fff; color:var(--grafite); }
-  .btn-primary{
-    background:var(--laranja);
-    color:#fff;
-  }
-  .btn-primary:hover{ background:var(--laranja-escuro); }
+/* ===== Botões ===== */
+.btn { display:inline-flex; align-items:center; gap:8px; padding:10px 16px; border-radius:10px; border:1px solid transparent; cursor:pointer; font-size:14px; font-weight:600; font-family:'Inter',sans-serif; transition:all .2s; background:none; color:var(--text); }
+.btn:disabled { opacity:.6; cursor:not-allowed; }
+.btn-primary { background:var(--accent); color:#fff; }
+.btn-primary:hover { background:#d96a1c; }
+.btn-outline { background:rgba(255,255,255,.04); border-color:var(--border); color:var(--muted); }
+.btn-outline:hover { border-color:var(--accent); color:var(--accent); }
+.btn-outline.active-nav { background:rgba(240,123,38,.12); border-color:var(--accent); color:var(--accent); }
+.btn-lg { padding:14px 20px; font-size:16px; }
+.btn-danger { background:rgba(239,68,68,.15); color:#f87171; border:1px solid rgba(239,68,68,.3); }
+.btn-danger:hover { background:#ef4444; color:#fff; }
+.btn-info { background:rgba(96,165,250,.15); color:#60a5fa; border:1px solid rgba(96,165,250,.3); }
+.btn-info:hover { background:#60a5fa; color:#fff; }
+.btn-secondary { background:rgba(26,58,92,.5); color:var(--text); border:1px solid var(--border); }
+.btn-secondary:hover { background:var(--border); }
+.btn-logout { background:none; border:1px solid rgba(248,113,113,.4); color:#f87171; padding:6px 12px; font-size:12px; border-radius:8px; cursor:pointer; }
+.btn-logout:hover { background:#ef4444; color:#fff; }
 
-  /* ---------- LAYOUT ---------- */
-  .container{
-    max-width:1300px;
-    margin:0 auto;
-    padding:32px 24px;
-  }
-  .page-title{
-    font-size:26px;
-    margin-bottom:4px;
-  }
-  .page-sub{
-    color:var(--cinza);
-    margin-bottom:24px;
-    font-size:14px;
-  }
+/* ===== Login ===== */
+.login-overlay { position:fixed; inset:0; z-index:1000; background:linear-gradient(135deg,#0f2027,#203a43,#2c5364); display:none; align-items:center; justify-content:center; }
+.login-overlay.active { display:flex; }
+.login-box { background:rgba(10,22,40,.96); padding:40px; border-radius:20px; width:380px; max-width:92vw; text-align:center; border:1px solid var(--border); box-shadow:0 20px 60px rgba(0,0,0,.5); }
+.login-box h2 { color:var(--accent); font-family:Georgia,serif; font-style:italic; margin:12px 0 6px; font-size:24px; }
+.login-box p { color:var(--muted); font-size:14px; margin-bottom:24px; }
+.login-box input { margin-bottom:10px; }
+#btnGoogle { display:flex; justify-content:center; margin-bottom:4px; }
+.divider { display:flex; align-items:center; margin:20px 0; color:var(--dim); font-size:13px; }
+.divider::before, .divider::after { content:''; flex:1; height:1px; background:var(--border); }
+.divider span { padding:0 12px; }
+#loginError { display:none; color:#f87171; font-size:13px; margin-top:12px; }
 
-  /* ---------- CARDS ---------- */
-  .cards-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
-    gap:20px;
-    margin-bottom:32px;
-  }
-  .card{
-    background:var(--branco);
-    border:1px solid var(--cinza-claro);
-    border-radius:12px;
-    padding:20px;
-    transition:.2s;
-  }
-  .card:hover{
-    box-shadow:0 6px 18px rgba(0,0,0,0.08);
-    transform:translateY(-2px);
-  }
-  .card-icon{
-    width:44px;height:44px;
-    background:var(--laranja-claro);
-    color:var(--laranja);
-    border-radius:10px;
-    display:flex;align-items:center;justify-content:center;
-    font-size:20px;
-    margin-bottom:12px;
-  }
-  .card h3{ font-size:16px; margin:0 0 6px; font-family:'Montserrat'; font-weight:700;}
-  .card p{ font-size:13px; color:var(--cinza); margin:0 0 12px; }
-  .card .card-number{ font-size:28px; font-weight:700; color:var(--grafite); }
-  .card a.link{
-    color:var(--laranja);
-    font-weight:700;
-    font-size:13px;
-    text-decoration:none;
-  }
+/* ===== Navbar ===== */
+.navbar { display:flex; align-items:center; justify-content:space-between; padding:14px 28px; background:rgba(10,22,40,.9); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:100; backdrop-filter:blur(10px); }
+.navbar-logo { text-decoration:none; display:inline-flex; }
+.navbar-buttons { display:flex; align-items:center; gap:8px; }
+.user-profile { display:flex; align-items:center; gap:10px; margin-left:12px; padding-left:16px; border-left:1px solid var(--border); }
+.avatar { width:38px; height:38px; border-radius:50%; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px; }
+.user-name { color:var(--text); font-weight:600; font-size:14px; }
 
-  /* ---------- SECTION / TABLE ---------- */
-  .section{
-    background:var(--branco);
-    border:1px solid var(--cinza-claro);
-    border-radius:12px;
-    padding:20px;
-    margin-bottom:24px;
-  }
-  .section-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:16px;
-  }
-  .section-header h2{ font-size:18px; margin:0;}
-  table{
-    width:100%;
-    border-collapse:collapse;
-    font-size:13px;
-  }
-  th{
-    text-align:left;
-    color:var(--cinza);
-    font-weight:700;
-    padding:10px;
-    border-bottom:2px solid var(--cinza-claro);
-    text-transform:uppercase;
-    font-size:11px;
-  }
-  td{
-    padding:10px;
-    border-bottom:1px solid var(--cinza-claro);
-  }
-  tr:hover td{ background:var(--laranja-claro); }
-  .tag{
-    padding:3px 10px;
-    border-radius:12px;
-    font-size:11px;
-    font-weight:700;
-    background:var(--laranja-claro);
-    color:var(--laranja-escuro);
-  }
-  .empty-state{
-    text-align:center;
-    padding:40px 0;
-    color:var(--cinza);
-    font-size:14px;
-  }
+/* ===== Layout principal ===== */
+.main { padding:32px; max-width:1200px; margin:0 auto; }
+.section { display:none; animation:fadeIn .3s; }
+.section.active { display:block; }
+.header { margin-bottom:24px; }
+.header h1 { font-size:34px; font-weight:700; }
+.header h1 em { font-family:Georgia,serif; color:var(--accent); font-style:italic; }
 
-  /* ---------- FORM / MODAL ---------- */
-  .modal-overlay{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.4);
-    align-items:center;
-    justify-content:center;
-    z-index:200;
-  }
-  .modal-overlay.active{ display:flex; }
-  .modal{
-    background:#fff;
-    border-radius:12px;
-    padding:28px;
-    width:420px;
-    max-width:90%;
-  }
-  .modal h2{ margin-top:0; font-size:20px;}
-  .form-group{ margin-bottom:14px; }
-  label{
-    display:block;
-    font-size:12px;
-    font-weight:700;
-    margin-bottom:6px;
-    color:var(--grafite);
-  }
-  input, select, textarea{
-    width:100%;
-    padding:10px 12px;
-    border:1px solid var(--cinza-claro);
-    border-radius:8px;
-    font-family:'Montserrat';
-    font-size:13px;
-    outline:none;
-  }
-  input:focus, select:focus, textarea:focus{ border-color:var(--laranja); }
-  .modal-actions{
-    display:flex;
-    justify-content:flex-end;
-    gap:10px;
-    margin-top:18px;
-  }
+/* ===== Cards (Dashboard) ===== */
+.cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; margin-bottom:28px; }
+.card { background:linear-gradient(145deg,var(--bg2),var(--bg)); border:1px solid var(--border); border-radius:16px; padding:22px; }
+.card-icon { font-size:26px; margin-bottom:10px; }
+.card h3 { font-size:14px; color:var(--muted); font-weight:600; margin-bottom:8px; }
+.card .value { font-size:32px; font-weight:700; color:var(--text); }
+.card-progress { height:6px; background:rgba(255,255,255,.06); border-radius:50px; margin-top:12px; overflow:hidden; }
+.card-progress-bar { height:100%; background:var(--accent); border-radius:50px; transition:width .4s; }
 
-  .view{ display:none; }
-  .view.active{ display:block; }
+/* ===== Tabelas ===== */
+.table-container { background:rgba(13,31,60,.6); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
+.table-header { padding:18px 22px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.table-header h3 { font-size:16px; color:var(--text); }
+table { width:100%; border-collapse:collapse; }
+thead th { text-align:left; padding:14px 22px; font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--dim); border-bottom:1px solid var(--border); font-weight:600; }
+tbody td { padding:14px 22px; font-size:14px; border-bottom:1px solid rgba(26,58,92,.4); color:var(--text); }
+tbody tr:hover { background:rgba(255,255,255,.02); }
+tbody tr:last-child td { border-bottom:none; }
 
-  @media(max-width:900px){
-    nav.menu{ display:none; }
-  }
+/* ===== Formulário ===== */
+.lead-form { background:rgba(13,31,60,.6); border:1px solid var(--border); border-radius:16px; padding:28px; }
+.form-main-title { font-size:20px; color:var(--text); margin-bottom:20px; }
+.form-section-title { font-size:12px; text-transform:uppercase; letter-spacing:1px; color:var(--accent); font-weight:700; margin:24px 0 14px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+.form-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; }
+.form-group { display:flex; flex-direction:column; gap:6px; }
+.form-group label { font-size:12px; color:var(--muted); font-weight:600; }
+input, select, textarea { background:rgba(10,22,40,.7); border:1px solid var(--border); border-radius:10px; padding:12px 14px; color:var(--text); font-size:14px; font-family:'Inter',sans-serif; width:100%; transition:border .2s; }
+input:focus, select:focus, textarea:focus { outline:none; border-color:var(--accent); }
+textarea { resize:vertical; min-height:100px; }
+.form-footer { margin-top:24px; display:flex; justify-content:flex-end; }
+
+/* ===== Consulta ===== */
+.consulta-box { margin-bottom:20px; }
+.search-big { position:relative; }
+.search-big svg { position:absolute; left:16px; top:50%; transform:translateY(-50%); width:20px; height:20px; color:var(--dim); }
+.search-big input { padding-left:48px; padding-top:16px; padding-bottom:16px; font-size:16px; }
+.search-hint { margin-top:10px; font-size:12px; color:var(--dim); }
+.search-hint strong { color:var(--muted); }
+.search-results-count { font-size:12px; color:var(--dim); }
+
+/* ===== Suporte ===== */
+.support-box { text-align:center; padding:60px 20px; }
+.support-icon { width:72px; height:72px; background:rgba(240,123,38,.1); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; color:var(--accent); font-size:32px; }
+.support-box h3 { color:var(--accent); font-size:24px; margin-bottom:16px; font-family:Georgia,serif; font-style:italic; }
+.support-box p { color:var(--muted); line-height:1.8; font-size:15px; }
+.support-box strong { color:var(--text); }
+
+/* ===== Badges ===== */
+.badge { display:inline-block; padding:4px 12px; border-radius:50px; font-size:12px; font-weight:600; }
+.etapa-novo_lead{background:rgba(96,165,250,.15);color:#60a5fa;border:1px solid rgba(96,165,250,.3);}
+.etapa-em_conversa{background:rgba(251,191,36,.15);color:#fbbf24;border:1px solid rgba(251,191,36,.3);}
+.etapa-proposta_enviada{background:rgba(240,123,38,.2);color:#f07b26;border:1px solid rgba(240,123,38,.4);}
+.etapa-convertido{background:rgba(52,211,153,.15);color:#34d399;border:1px solid rgba(52,211,153,.3);}
+.etapa-sem_avanco{background:rgba(100,116,139,.2);color:#94a3b8;border:1px solid rgba(100,116,139,.4);}
+.temp-quente{background:rgba(248,113,113,.15);color:#f87171;border:1px solid rgba(248,113,113,.3);}
+.temp-morno{background:rgba(251,191,36,.15);color:#fbbf24;border:1px solid rgba(251,191,36,.3);}
+.temp-frio{background:rgba(96,165,250,.15);color:#60a5fa;border:1px solid rgba(96,165,250,.3);}
+.temp-sem_perfil{background:rgba(100,116,139,.2);color:#94a3b8;border:1px solid rgba(100,116,139,.4);}
+
+/* ===== Modal ===== */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,22,40,.85);z-index:500;justify-content:center;align-items:center;backdrop-filter:blur(8px);}
+.modal-overlay.active{display:flex;}
+.modal{background:linear-gradient(145deg,#0d1f3c,#0a1628);padding:36px;border-radius:24px;width:90%;max-width:700px;border:1px solid rgba(240,123,38,.2);box-shadow:0 25px 60px rgba(0,0,0,.5);animation:fadeInUp .3s;max-height:90vh;overflow-y:auto;}
+.modal h2{font-family:Georgia,serif;margin-bottom:24px;color:#f07b26;font-size:24px;font-style:italic;}
+.modal-actions{display:flex;gap:12px;justify-content:flex-end;margin-top:24px;}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.detail-item{background:rgba(10,22,40,.5);padding:14px 18px;border-radius:10px;border:1px solid #1a3a5c;}
+.detail-item.full{grid-column:1/-1;}
+.detail-label{font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-weight:600;}
+.detail-value{color:#e2e8f0;font-size:14px;line-height:1.5;word-wrap:break-word;}
+.detail-value.empty{color:#475569;font-style:italic;}
+
+/* ===== Kanban ===== */
+.board-container{display:flex;gap:20px;align-items:flex-start;overflow-x:auto;padding-bottom:20px;min-height:400px;}
+.board-list{background:rgba(13,31,60,.7);border-radius:16px;min-width:290px;max-width:290px;max-height:70vh;display:flex;flex-direction:column;border:1px solid #1a3a5c;transition:all .2s;}
+.board-list.drag-over{border-color:#f07b26;box-shadow:0 0 0 3px rgba(240,123,38,.2);}
+.board-list-header{padding:16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a3a5c;}
+.board-list-title{font-size:15px;font-weight:700;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:8px;}
+.board-list-count{background:rgba(255,255,255,.1);color:#94a3b8;font-size:12px;padding:2px 10px;border-radius:50px;}
+.board-list-delete{background:none;border:none;cursor:pointer;font-size:16px;opacity:.4;color:#f87171;}
+.board-list-delete:hover{opacity:1;}
+.board-cards{padding:12px;display:flex;flex-direction:column;gap:10px;overflow-y:auto;flex:1;min-height:60px;}
+.board-card{background:linear-gradient(145deg,#0d1f3c,#0a1628);border:1px solid #1a3a5c;border-radius:12px;padding:14px;cursor:grab;transition:all .2s;position:relative;}
+.board-card:active{cursor:grabbing;}
+.board-card:hover{border-color:#f07b26;box-shadow:0 6px 16px rgba(0,0,0,.3);transform:translateY(-2px);}
+.board-card.dragging{opacity:.4;}
+.board-card-label{display:inline-block;width:44px;height:8px;border-radius:4px;margin-bottom:8px;}
+.board-card-title{font-size:14px;font-weight:600;color:#e2e8f0;margin-bottom:4px;padding-right:20px;}
+.board-card-desc{font-size:12px;color:#64748b;line-height:1.5;}
+.board-card-delete{position:absolute;top:10px;right:10px;background:rgba(239,68,68,.1);color:#f87171;border:none;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:11px;opacity:0;transition:opacity .2s;}
+.board-card:hover .board-card-delete{opacity:1;}
+.board-card-delete:hover{background:#ef4444;color:#fff;}
+.board-empty{text-align:center;color:#475569;font-size:12px;padding:20px 0;}
+.btn-add-card{margin:0 12px 12px;padding:10px;background:rgba(255,255,255,.03);border:1px dashed #1a3a5c;border-radius:10px;color:#94a3b8;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif;}
+.btn-add-card:hover{border-color:#f07b26;color:#f07b26;background:rgba(240,123,38,.05);}
+.btn-add-list{min-width:290px;max-width:290px;padding:16px;background:rgba(255,255,255,.02);border:1px dashed #1a3a5c;border-radius:16px;color:#94a3b8;cursor:pointer;font-size:14px;font-family:'Inter',sans-serif;height:fit-content;}
+.btn-add-list:hover{border-color:#f07b26;color:#f07b26;background:rgba(240,123,38,.05);}
+.label-colors{display:flex;gap:10px;flex-wrap:wrap;}
+.label-color{width:28px;height:28px;border-radius:50%;cursor:pointer;transition:all .2s;border:2px solid transparent;}
+.label-color:hover{transform:scale(1.15);}
+.label-color.selected{border:2px solid #fff;box-shadow:0 0 0 3px rgba(240,123,38,.4);}
+.label-none{background:#1a3a5c!important;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:13px;}
+
+/* ===== Toast ===== */
+.toast-container{position:fixed;top:90px;right:20px;z-index:2000;display:flex;flex-direction:column;gap:10px;}
+.toast{background:linear-gradient(145deg,#0d1f3c,#0a1628);border:1px solid rgba(240,123,38,.3);border-radius:12px;padding:14px 20px;display:flex;align-items:center;gap:12px;min-width:280px;box-shadow:0 10px 30px rgba(0,0,0,.4);animation:slideInRight .4s;color:#e2e8f0;font-size:14px;}
+.toast.toast-success{border-color:rgba(52,211,153,.5);}
+.toast.toast-error{border-color:rgba(248,113,113,.5);}
+.toast.toast-info{border-color:rgba(96,165,250,.5);}
+.toast-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;}
+.toast-success .toast-icon{background:rgba(52,211,153,.2);color:#34d399;}
+.toast-error .toast-icon{background:rgba(248,113,113,.2);color:#f87171;}
+.toast-info .toast-icon{background:rgba(96,165,250,.2);color:#60a5fa;}
+.toast.hiding{animation:slideOutRight .3s forwards;}
+
+/* ===== Estado vazio ===== */
+.empty-state{text-align:center;padding:40px 20px;}
+.empty-state-icon{font-size:40px;margin-bottom:12px;}
+.empty-state p{color:#94a3b8;font-weight:600;}
+.empty-state small{color:#64748b;font-size:12px;}
+
+/* ===== Animações ===== */
+.loading{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#f07b26;border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes slideInRight{from{opacity:0;transform:translateX(100px);}to{opacity:1;transform:translateX(0);}}
+@keyframes slideOutRight{to{opacity:0;transform:translateX(100px);}}
+
+@media(max-width:768px){.navbar{flex-wrap:wrap;height:auto;padding:16px;gap:12px;}.navbar-buttons{flex-wrap:wrap;}.user-profile{margin-left:0;padding-left:0;border-left:none;}.main{padding:20px;}.header h1{font-size:28px;}.form-grid{grid-template-columns:1fr;}.detail-grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 
-<!-- ===================== TOPBAR ===================== -->
-<div class="topbar">
-  <div class="brand">
-    <div class="logo-g">G</div>
-    <div>
-      Gênesis Brasil
-      <span class="small">CRM · GRUPO GÊNESIS</span>
-    </div>
-  </div>
-  <nav class="menu">
-    <a data-view="dashboard" class="active">Dashboard</a>
-    <a data-view="pessoas">Pessoas</a>
-    <a data-view="organizacoes">Organizações</a>
-    <a data-view="oportunidades">Oportunidades</a>
-    <a data-view="atividades">Atividades</a>
-  </nav>
-  <div class="topbar-actions">
-    <button class="btn btn-outline" onclick="exportData()">Exportar</button>
-    <button class="btn btn-primary" onclick="openModal('lead')">+ Novo Lead</button>
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="login-overlay active" id="loginOverlay">
+  <div class="login-box">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 52" fill="none" style="height:44px;margin-bottom:20px;">
+      <g transform="translate(2,2)">
+        <circle cx="22" cy="22" r="20" stroke="#f07b26" stroke-width="2.5" fill="none"/>
+        <circle cx="22" cy="22" r="14" stroke="#f07b26" stroke-width="2" fill="none"/>
+        <circle cx="22" cy="22" r="8" stroke="#f07b26" stroke-width="1.5" fill="none"/>
+        <path d="M 42 22 L 30 22" stroke="#10263e" stroke-width="4" stroke-linecap="round"/>
+        <path d="M 22 22 L 32 22" stroke="#f07b26" stroke-width="2.5" stroke-linecap="round"/>
+      </g>
+      <text x="54" y="14" font-family="Inter,Arial,sans-serif" font-size="7.5" font-weight="600" fill="#c0c8d0" letter-spacing="2.5">GRUPO</text>
+      <text x="54" y="32" font-family="Georgia,serif" font-size="22" font-weight="700" fill="#f07b26" font-style="italic">Gênesis</text>
+      <text x="54" y="46" font-family="Inter,Arial,sans-serif" font-size="7.5" font-weight="600" fill="#c0c8d0" letter-spacing="3">BRASIL</text>
+    </svg>
+    <h2>Área do Consultor</h2>
+    <p>Entre com sua conta Google ou use e-mail e senha</p>
+
+    <div id="btnGoogle"></div>
+    <div class="divider"><span>ou</span></div>
+
+    <input type="email" id="emailLogin" placeholder="E-mail" onkeydown="if(event.key==='Enter')document.getElementById('senhaLogin').focus()">
+    <input type="password" id="senhaLogin" placeholder="Senha" onkeydown="if(event.key==='Enter')fazerLogin()">
+    <button class="btn btn-primary btn-lg" id="btnLogin" onclick="fazerLogin()" style="width:100%;justify-content:center;">Entrar</button>
+    <div id="loginError">❌ E-mail ou senha incorretos.</div>
   </div>
 </div>
 
-<!-- ===================== CONTAINER ===================== -->
-<div class="container">
-
-  <!-- DASHBOARD -->
-  <div class="view active" id="view-dashboard">
-    <h1 class="page-title">Dashboard</h1>
-    <p class="page-sub">Visão geral do Grupo Gênesis Brasil</p>
-
-    <div class="cards-grid">
-      <div class="card">
-        <div class="card-icon">👤</div>
-        <div class="card-number" id="count-pessoas">0</div>
-        <h3>Pessoas</h3>
-        <p>Contatos cadastrados</p>
-        <a class="link" onclick="switchView('pessoas')">Ver todos →</a>
-      </div>
-      <div class="card">
-        <div class="card-icon">🏢</div>
-        <div class="card-number" id="count-organizacoes">0</div>
-        <h3>Organizações</h3>
-        <p>Empresas parceiras</p>
-        <a class="link" onclick="switchView('organizacoes')">Ver todos →</a>
-      </div>
-      <div class="card">
-        <div class="card-icon">💰</div>
-        <div class="card-number" id="count-oportunidades">0</div>
-        <h3>Oportunidades</h3>
-        <p>Negócios em andamento</p>
-        <a class="link" onclick="switchView('oportunidades')">Ver todos →</a>
-      </div>
-      <div class="card">
-        <div class="card-icon">📅</div>
-        <div class="card-number" id="count-atividades">0</div>
-        <h3>Atividades</h3>
-        <p>Tarefas pendentes</p>
-        <a class="link" onclick="switchView('atividades')">Ver todos →</a>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-header"><h2>Últimas Oportunidades</h2></div>
-      <div id="dash-oport-table"></div>
-    </div>
-  </div>
-
-  <!-- PESSOAS -->
-  <div class="view" id="view-pessoas">
-    <div class="section-header" style="margin-bottom:20px;">
+<nav class="navbar">
+  <a href="#" class="navbar-logo" onclick="showSection('home');return false;">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 52" fill="none">
+      <g transform="translate(2,2)">
+        <circle cx="22" cy="22" r="20" stroke="#f07b26" stroke-width="2.5" fill="none"/>
+        <circle cx="22" cy="22" r="14" stroke="#f07b26" stroke-width="2" fill="none"/>
+        <circle cx="22" cy="22" r="8" stroke="#f07b26" stroke-width="1.5" fill="none"/>
+        <path d="M 42 22 L 30 22" stroke="#0d1b2a" stroke-width="4" stroke-linecap="round"/>
+        <path d="M 22 22 L 32 22" stroke="#f07b26" stroke-width="2.5" stroke-linecap="round"/>
+      </g>
+      <text x="54" y="14" font-family="Inter,Arial,sans-serif" font-size="7.5" font-weight="600" fill="#c0c8d0" letter-spacing="2.5">GRUPO</text>
+      <text x="54" y="32" font-family="Georgia,serif" font-size="22" font-weight="700" fill="#f07b26" font-style="italic">Gênesis</text>
+      <text x="54" y="46" font-family="Inter,Arial,sans-serif" font-size="7.5" font-weight="600" fill="#c0c8d0" letter-spacing="3">BRASIL</text>
+    </svg>
+  </a>
+  <div class="navbar-buttons">
+    <button class="btn btn-outline active-nav" onclick="showSection('home')"> Home</button>
+    <button class="btn btn-outline" onclick="showSection('novolead')">📝 Novo Lead</button>
+    <button class="btn btn-outline" onclick="showSection('consulta')">🔍 Consulta</button>
+    <button class="btn btn-outline" onclick="showSection('quadro')">📋 Quadro</button>
+    <button class="btn btn-primary" onclick="showSection('suporte')">🎧 Suporte</button>
+    <div class="user-profile" id="userProfile" style="display:none;">
+      <div class="avatar" id="avatarLetra">D</div>
       <div>
-        <h1 class="page-title">Pessoas</h1>
-        <p class="page-sub">Gerencie seus contatos</p>
+        <div class="user-name" id="userName">—</div>
+        <div style="font-size:11px;color:#94a3b8;" id="userPapel">—</div>
       </div>
-      <button class="btn btn-primary" onclick="openModal('pessoa')">+ Nova Pessoa</button>
+      <button class="btn btn-logout" onclick="logout()">Sair</button>
     </div>
-    <div class="section">
-      <table>
-        <thead><tr><th>Nome</th><th>Email</th><th>Telefone</th><th>Organização</th><th>Ações</th></tr></thead>
-        <tbody id="table-pessoas"></tbody>
-      </table>
-      <div id="empty-pessoas" class="empty-state" style="display:none;">Nenhuma pessoa cadastrada ainda.</div>
+  </div>
+</nav>
+
+<div class="main">
+  <div id="home" class="section active">
+    <div class="header"><h1>Olá, <em id="homeUserName">Consultor</em> 👋</h1></div>
+    <div class="cards">
+      <div class="card"><div class="card-icon">📊</div><h3>Total de Leads</h3><div class="value" id="totalLeads">0</div><div class="card-progress"><div class="card-progress-bar" id="progressLeads" style="width:0%"></div></div></div>
+      <div class="card"><div class="card-icon">🎉</div><h3>Leads Convertidos</h3><div class="value" id="totalConvertidos">0</div><div class="card-progress"><div class="card-progress-bar" id="progressConvertidos" style="width:0%"></div></div></div>
+      <div class="card"><div class="card-icon">🔥</div><h3>Leads Quentes</h3><div class="value" id="totalQuentes">0</div><div class="card-progress"><div class="card-progress-bar" id="progressQuentes" style="width:0%"></div></div></div>
+      <div class="card"><div class="card-icon">📅</div><h3>Retornos Hoje</h3><div class="value" id="totalRetornos">0</div><div class="card-progress"><div class="card-progress-bar" id="progressRetornos" style="width:0%"></div></div></div>
+    </div>
+    <div class="table-container">
+      <div class="table-header"><h3>📝 Últimos Leads Registrados</h3></div>
+      <table><thead><tr><th>Nome</th><th>Instituição</th><th>Etapa</th><th>Temperatura</th></tr></thead><tbody id="homeLeads"></tbody></table>
     </div>
   </div>
 
-  <!-- ORGANIZAÇÕES -->
-  <div class="view" id="view-organizacoes">
-    <div class="section-header" style="margin-bottom:20px;">
-      <div>
-        <h1 class="page-title">Organizações</h1>
-        <p class="page-sub">Empresas e parceiros</p>
+  <div id="novolead" class="section">
+    <div class="header"><h1>Área dos <em>Vendedores</em></h1></div>
+    <div class="lead-form">
+      <h2 class="form-main-title">📝 Registrar Cliente</h2>
+      <div class="form-section-title">📇 Inscrição de Contato</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Nome *</label><input type="text" id="leadNome" placeholder="Nome do contato"></div>
+        <div class="form-group"><label>CPF / CNPJ</label><input type="text" id="leadCpfCnpj" placeholder="Opcional"></div>
+        <div class="form-group"><label>Instituição / Empresa</label>
+          <select id="leadInstituicao">
+            <option value="">Selecione...</option>
+            <option value="faculdade">Faculdade</option>
+            <option value="instituicao_ensino">Instituição de Ensino</option>
+            <option value="empresa">Empresa</option>
+            <option value="prefeitura">Prefeitura</option>
+            <option value="orgao_publico">Órgão Público</option>
+            <option value="outro">Outro</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Cidade / UF</label><input type="text" id="leadCidade" placeholder="Ex: Curitiba/PR"></div>
       </div>
-      <button class="btn btn-primary" onclick="openModal('organizacao')">+ Nova Organização</button>
-    </div>
-    <div class="section">
-      <table>
-        <thead><tr><th>Nome</th><th>Segmento</th><th>Cidade</th><th>Ações</th></tr></thead>
-        <tbody id="table-organizacoes"></tbody>
-      </table>
-      <div id="empty-organizacoes" class="empty-state" style="display:none;">Nenhuma organização cadastrada ainda.</div>
+      <div class="form-section-title">👤 Pessoa com quem falou</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Nome</label><input type="text" id="leadPessoa" placeholder="Nome da pessoa"></div>
+        <div class="form-group"><label>Cargo</label>
+          <select id="leadCargo">
+            <option value="">Selecione...</option>
+            <option value="diretora">Diretora</option>
+            <option value="rh">RH</option>
+            <option value="professor">Professor</option>
+            <option value="mestre">Mestre</option>
+            <option value="coordenador">Coordenador</option>
+            <option value="proprietario">Proprietário</option>
+            <option value="outro">Outro</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Responsável (Consultor)</label><select id="leadResponsavel"></select></div>
+      </div>
+      <div class="form-section-title">📊 Resultado do Contato</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Etapa do Lead</label>
+          <select id="leadEtapa">
+            <option value="novo_lead">Novo Lead</option>
+            <option value="em_conversa">Em Conversa</option>
+            <option value="proposta_enviada">Proposta Enviada</option>
+            <option value="convertido">Convertido</option>
+            <option value="sem_avanco">Sem Avanço</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Temperatura</label>
+          <select id="leadTemperatura">
+            <option value="quente">Quente</option>
+            <option value="morno">Morno</option>
+            <option value="frio">Frio</option>
+            <option value="sem_perfil">Sem Perfil</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Canal</label>
+          <select id="leadCanal">
+            <option value="ligacao">Ligação</option>
+            <option value="whatsapp">WhatsApp</option>
+            <option value="email">Email</option>
+            <option value="reuniao_presencial">Reunião Presencial</option>
+            <option value="reuniao_online">Reunião Online</option>
+            <option value="evento">Evento</option>
+            <option value="outro">Outro</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-section-title">🔁 Continuidade</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Próximo passo combinado</label><input type="text" id="leadProximoPasso" placeholder="O que ficou combinado?"></div>
+        <div class="form-group"><label>Data de retorno</label><input type="date" id="leadDataRetorno"></div>
+      </div>
+      <div class="form-section-title">📝 Resumo da Conversa</div>
+      <div class="form-group"><textarea id="leadResumo" placeholder="Descreva aqui o resumo da conversa..."></textarea></div>
+      <div class="form-footer"><button class="btn btn-primary btn-lg" id="btnSalvarLead" onclick="concluirRegistro()">✅ Concluir Registro</button></div>
     </div>
   </div>
 
-  <!-- OPORTUNIDADES -->
-  <div class="view" id="view-oportunidades">
-    <div class="section-header" style="margin-bottom:20px;">
-      <div>
-        <h1 class="page-title">Oportunidades</h1>
-        <p class="page-sub">Funil de vendas</p>
+  <div id="consulta" class="section">
+    <div class="header"><h1>Consulta de <em>Leads</em></h1></div>
+    <div class="consulta-box">
+      <div class="search-big">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input type="text" id="consultaInput" placeholder="Digite o nome, CPF, CNPJ ou nome da empresa..." oninput="buscarLeads()">
       </div>
-      <button class="btn btn-primary" onclick="openModal('oportunidade')">+ Nova Oportunidade</button>
+      <div class="search-hint">💡 <span>Dica: você pode buscar por <strong>nome</strong>, <strong>CPF/CNPJ</strong>, <strong>cidade</strong>, <strong>instituição</strong>, <strong>pessoa</strong> ou <strong>responsável</strong>.</span></div>
     </div>
-    <div class="section">
-      <table>
-        <thead><tr><th>Título</th><th>Valor</th><th>Status</th><th>Contato</th><th>Ações</th></tr></thead>
-        <tbody id="table-oportunidades"></tbody>
-      </table>
-      <div id="empty-oportunidades" class="empty-state" style="display:none;">Nenhuma oportunidade cadastrada ainda.</div>
+    <div class="table-container">
+      <div class="table-header"><h3>📋 Resultados</h3><div class="search-results-count" id="resultadosCount"></div></div>
+      <table><thead><tr><th>Nome</th><th>CPF/CNPJ</th><th>Cidade/UF</th><th>Etapa</th><th>Temperatura</th><th>Ações</th></tr></thead><tbody id="tableConsulta"></tbody></table>
     </div>
   </div>
 
-  <!-- ATIVIDADES -->
-  <div class="view" id="view-atividades">
-    <div class="section-header" style="margin-bottom:20px;">
-      <div>
-        <h1 class="page-title">Atividades</h1>
-        <p class="page-sub">Tarefas e follow-ups</p>
-      </div>
-      <button class="btn btn-primary" onclick="openModal('atividade')">+ Nova Atividade</button>
-    </div>
-    <div class="section">
-      <table>
-        <thead><tr><th>Tarefa</th><th>Data</th><th>Tipo</th><th>Status</th><th>Ações</th></tr></thead>
-        <tbody id="table-atividades"></tbody>
-      </table>
-      <div id="empty-atividades" class="empty-state" style="display:none;">Nenhuma atividade cadastrada ainda.</div>
-    </div>
+  <div id="quadro" class="section">
+    <div class="header"><h1>Quadro <em>Kanban</em> 📋</h1></div>
+    <div class="board-container" id="boardContainer"></div>
   </div>
 
+  <div id="suporte" class="section">
+    <div class="header"><h1>Suporte</h1></div>
+    <div class="support-box">
+      <div class="support-icon">🎧</div>
+      <h3>Como podemos ajudar?</h3>
+      <p>Entre em contato com nossa equipe de suporte.<br><br>
+      📧 Email: <strong>suporte@genesibrasil.com.br</strong><br>
+      📱 WhatsApp: <strong>(41) 99999-9999</strong><br>
+      🕐 Horário: <strong>Seg a Sex, 9h às 18h</strong></p>
+    </div>
+  </div>
 </div>
 
-<!-- ===================== MODAIS ===================== -->
-
-<div class="modal-overlay" id="modal-pessoa">
+<div class="modal-overlay" id="modalDetalhes">
   <div class="modal">
-    <h2>Nova Pessoa</h2>
-    <div class="form-group"><label>Nome</label><input id="p-nome" placeholder="Nome completo"></div>
-    <div class="form-group"><label>Email</label><input id="p-email" placeholder="email@exemplo.com"></div>
-    <div class="form-group"><label>Telefone</label><input id="p-telefone" placeholder="(41) 90000-0000"></div>
-    <div class="form-group"><label>Organização</label><input id="p-org" placeholder="Empresa (opcional)"></div>
+    <h2>📋 Detalhes do Lead</h2>
+    <div id="detalhesConteudo"></div>
     <div class="modal-actions">
-      <button class="btn btn-outline" style="color:var(--grafite);border-color:var(--cinza-claro);" onclick="closeModal('pessoa')">Cancelar</button>
-      <button class="btn btn-primary" onclick="savePessoa()">Salvar</button>
+      <button class="btn btn-danger" id="btnExcluirDetalhes">🗑 Excluir Lead</button>
+      <button class="btn btn-secondary" onclick="closeModal('detalhes')">Fechar</button>
     </div>
   </div>
 </div>
 
-<div class="modal-overlay" id="modal-organizacao">
-  <div class="modal">
-    <h2>Nova Organização</h2>
-    <div class="form-group"><label>Nome</label><input id="o-nome" placeholder="Nome da empresa"></div>
-    <div class="form-group"><label>Segmento</label><input id="o-segmento" placeholder="Ex: Varejo, Saúde..."></div>
-    <div class="form-group"><label>Cidade</label><input id="o-cidade" placeholder="Cidade / UF"></div>
+<div class="modal-overlay" id="modalCartao">
+  <div class="modal" style="max-width:500px;">
+    <h2>Novo Cartão</h2>
+    <div class="form-group"><label>Título</label><input type="text" id="cardTitulo"></div>
+    <div class="form-group"><label>Descrição</label><textarea id="cardDescricao" placeholder="Detalhes do cartão..." style="min-height:80px;"></textarea></div>
+    <div class="form-group"><label>Etiqueta</label>
+      <div class="label-colors">
+        <span class="label-color" style="background:#f87171" onclick="selectLabel('#f87171',this)"></span>
+        <span class="label-color" style="background:#fbbf24" onclick="selectLabel('#fbbf24',this)"></span>
+        <span class="label-color" style="background:#34d399" onclick="selectLabel('#34d399',this)"></span>
+        <span class="label-color" style="background:#60a5fa" onclick="selectLabel('#60a5fa',this)"></span>
+        <span class="label-color" style="background:#a78bfa" onclick="selectLabel('#a78bfa',this)"></span>
+        <span class="label-color" style="background:#f07b26" onclick="selectLabel('#f07b26',this)"></span>
+        <span class="label-color label-none" onclick="selectLabel('',this)">✕</span>
+      </div>
+    </div>
     <div class="modal-actions">
-      <button class="btn btn-outline" style="color:var(--grafite);border-color:var(--cinza-claro);" onclick="closeModal('organizacao')">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveOrganizacao()">Salvar</button>
+      <button class="btn btn-secondary" onclick="closeModal('cartao')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarCartao()">Salvar</button>
     </div>
   </div>
 </div>
 
-<div class="modal-overlay" id="modal-oportunidade">
-  <div class="modal">
-    <h2>Nova Oportunidade</h2>
-    <div class="form-group"><label>Título</label><input id="op-titulo" placeholder="Ex: Contrato Anual"></div>
-    <div class="form-group"><label>Valor (R$)</label><input id="op-valor" type="number" placeholder="0,00"></div>
-    <div class="form-group"><label>Status</label>
-      <select id="op-status">
-        <option>Prospecção</option>
-        <option>Proposta Enviada</option>
-        <option>Negociação</option>
-        <option>Ganho</option>
-        <option>Perdido</option>
-      </select>
-    </div>
-    <div class="form-group"><label>Contato</label><input id="op-contato" placeholder="Nome do contato"></div>
+<div class="modal-overlay" id="modalLista">
+  <div class="modal" style="max-width:500px;">
+    <h2>Nova Lista</h2>
+    <div class="form-group"><label>Nome da lista</label><input type="text" id="listTitulo" placeholder="Ex: Em negociação"></div>
     <div class="modal-actions">
-      <button class="btn btn-outline" style="color:var(--grafite);border-color:var(--cinza-claro);" onclick="closeModal('oportunidade')">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveOportunidade()">Salvar</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="modal-atividade">
-  <div class="modal">
-    <h2>Nova Atividade</h2>
-    <div class="form-group"><label>Tarefa</label><input id="a-tarefa" placeholder="Ex: Ligar para cliente"></div>
-    <div class="form-group"><label>Data</label><input id="a-data" type="date"></div>
-    <div class="form-group"><label>Tipo</label>
-      <select id="a-tipo">
-        <option>Ligação</option>
-        <option>Reunião</option>
-        <option>Email</option>
-        <option>Follow-up</option>
-      </select>
-    </div>
-    <div class="form-group"><label>Status</label>
-      <select id="a-status">
-        <option>Pendente</option>
-        <option>Concluída</option>
-      </select>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-outline" style="color:var(--grafite);border-color:var(--cinza-claro);" onclick="closeModal('atividade')">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveAtividade()">Salvar</button>
+      <button class="btn btn-secondary" onclick="closeModal('lista')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarLista()">Criar Lista</button>
     </div>
   </div>
 </div>
 
 <script>
-/* ================= STORAGE ================= */
-const DB = {
-  get(key){ return JSON.parse(localStorage.getItem(key) || '[]'); },
-  set(key, data){ localStorage.setItem(key, JSON.stringify(data)); }
-};
-['pessoas','organizacoes','oportunidades','atividades'].forEach(k=>{
-  if(!localStorage.getItem(k)) DB.set(k, []);
-});
+// ✅ URL do Apps Script (mantenha a que já funciona)
+const API_URL = 'https://script.google.com/macros/s/AKfycbyygjwXK1lJY3yYos5S8T4wHncYqbkHCpqFy0yEzWM6q0-pxfOcRw0C9HTHvMMDp8dX/exec';
 
-/* ================= NAVIGATION ================= */
-document.querySelectorAll('nav.menu a').forEach(a=>{
-  a.addEventListener('click', ()=> switchView(a.dataset.view));
-});
-function switchView(view){
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  document.getElementById('view-'+view).classList.add('active');
-  document.querySelectorAll('nav.menu a').forEach(a=>{
-    a.classList.toggle('active', a.dataset.view===view);
+// ✅ SEU Client ID do Google
+const GOOGLE_CLIENT_ID = '900723936751-0u7g08iap78gn7j9em1emnc74kqlfe48.apps.googleusercontent.com';
+
+let currentUser = null;
+let leads = [];
+let usuarios = [];
+let quadro = { listas: [] };
+let draggedCard = null, draggedFromList = null;
+let currentListId = null, selectedLabel = '';
+
+async function api(action, data) {
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(Object.assign({ action: action }, data || {}))
   });
+  return await res.json();
 }
 
-/* ================= MODAL HELPERS ================= */
-function openModal(type){ document.getElementById('modal-'+type).classList.add('active'); }
-function closeModal(type){ document.getElementById('modal-'+type).classList.remove('active'); }
-
-/* ================= PESSOAS ================= */
-function savePessoa(){
-  const nome = document.getElementById('p-nome').value.trim();
-  if(!nome) return alert('Informe o nome.');
-  const data = DB.get('pessoas');
-  data.push({
-    id: Date.now(),
-    nome,
-    email: document.getElementById('p-email').value,
-    telefone: document.getElementById('p-telefone').value,
-    organizacao: document.getElementById('p-org').value
-  });
-  DB.set('pessoas', data);
-  ['p-nome','p-email','p-telefone','p-org'].forEach(id=>document.getElementById(id).value='');
-  closeModal('pessoa');
-  renderAll();
-}
-function deletePessoa(id){
-  DB.set('pessoas', DB.get('pessoas').filter(p=>p.id!==id));
-  renderAll();
+function showToast(message, type='success'){
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = 'toast toast-' + type;
+  const icons = {success:'✓', error:'✕', info:'ℹ'};
+  t.innerHTML = '<div class="toast-icon">'+icons[type]+'</div><div>'+message+'</div>';
+  c.appendChild(t);
+  setTimeout(()=>{t.classList.add('hiding');setTimeout(()=>t.remove(),300);},3000);
 }
 
-/* ================= ORGANIZAÇÕES ================= */
-function saveOrganizacao(){
-  const nome = document.getElementById('o-nome').value.trim();
-  if(!nome) return alert('Informe o nome.');
-  const data = DB.get('organizacoes');
-  data.push({
-    id: Date.now(),
-    nome,
-    segmento: document.getElementById('o-segmento').value,
-    cidade: document.getElementById('o-cidade').value
-  });
-  DB.set('organizacoes', data);
-  ['o-nome','o-segmento','o-cidade'].forEach(id=>document.getElementById(id).value='');
-  closeModal('organizacao');
-  renderAll();
-}
-function deleteOrganizacao(id){
-  DB.set('organizacoes', DB.get('organizacoes').filter(o=>o.id!==id));
-  renderAll();
-}
-
-/* ================= OPORTUNIDADES ================= */
-function saveOportunidade(){
-  const titulo = document.getElementById('op-titulo').value.trim();
-  if(!titulo) return alert('Informe o título.');
-  const data = DB.get('oportunidades');
-  data.push({
-    id: Date.now(),
-    titulo,
-    valor: parseFloat(document.getElementById('op-valor').value) || 0,
-    status: document.getElementById('op-status').value,
-    contato: document.getElementById('op-contato').value
-  });
-  DB.set('oportunidades', data);
-  ['op-titulo','op-valor','op-contato'].forEach(id=>document.getElementById(id).value='');
-  closeModal('oportunidade');
-  renderAll();
-}
-function deleteOportunidade(id){
-  DB.set('oportunidades', DB.get('oportunidades').filter(o=>o.id!==id));
-  renderAll();
-}
-
-/* ================= ATIVIDADES ================= */
-function saveAtividade(){
-  const tarefa = document.getElementById('a-tarefa').value.trim();
-  if(!tarefa) return alert('Informe a tarefa.');
-  const data = DB.get('atividades');
-  data.push({
-    id: Date.now(),
-    tarefa,
-    data: document.getElementById('a-data').value,
-    tipo: document.getElementById('a-tipo').value,
-    status: document.getElementById('a-status').value
-  });
-  DB.set('atividades', data);
-  ['a-tarefa','a-data'].forEach(id=>document.getElementById(id).value='');
-  closeModal('atividade');
-  renderAll();
-}
-function deleteAtividade(id){
-  DB.set('atividades', DB.get('atividades').filter(a=>a.id!==id));
-  renderAll();
-}
-
-/* ================= RENDER ================= */
-function statusColor(status){
-  const map = {
-    'Ganho':'#2e7d32', 'Perdido':'#c62828', 'Concluída':'#2e7d32', 'Pendente':'#C95518'
-  };
-  return map[status] || '#E86A1F';
-}
-
-function renderAll(){
-  const pessoas = DB.get('pessoas');
-  const orgs = DB.get('organizacoes');
-  const oport = DB.get('oportunidades');
-  const ativ = DB.get('atividades');
-
-  document.getElementById('count-pessoas').textContent = pessoas.length;
-  document.getElementById('count-organizacoes').textContent = orgs.length;
-  document.getElementById('count-oportunidades').textContent = oport.length;
-  document.getElementById('count-atividades').textContent = ativ.length;
-
-  // Pessoas
-  const tbP = document.getElementById('table-pessoas');
-  tbP.innerHTML = pessoas.map(p=>`
-    <tr>
-      <td>${p.nome}</td><td>${p.email||'-'}</td><td>${p.telefone||'-'}</td><td>${p.organizacao||'-'}</td>
-      <td><a class="link" style="color:#c62828;cursor:pointer;font-weight:700;font-size:12px;" onclick="deletePessoa(${p.id})">Excluir</a></td>
-    </tr>`).join('');
-  document.getElementById('empty-pessoas').style.display = pessoas.length ? 'none':'block';
-
-  // Organizações
-  const tbO = document.getElementById('table-organizacoes');
-  tbO.innerHTML = orgs.map(o=>`
-    <tr>
-      <td>${o.nome}</td><td>${o.segmento||'-'}</td><td>${o.cidade||'-'}</td>
-      <td><a style="color:#c62828;cursor:pointer;font-weight:700;font-size:12px;" onclick="deleteOrganizacao(${o.id})">Excluir</a></td>
-    </tr>`).join('');
-  document.getElementById('empty-organizacoes').style.display = orgs.length ? 'none':'block';
-
-  // Oportunidades
-  const tbOp = document.getElementById('table-oportunidades');
-  tbOp.innerHTML = oport.map(o=>`
-    <tr>
-      <td>${o.titulo}</td>
-      <td>R$ ${o.valor.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
-      <td><span class="tag" style="background:${statusColor(o.status)}22;color:${statusColor(o.status)};">${o.status}</span></td>
-      <td>${o.contato||'-'}</td>
-      <td><a style="color:#c62828;cursor:pointer;font-weight:700;font-size:12px;" onclick="deleteOportunidade(${o.id})">Excluir</a></td>
-    </tr>`).join('');
-  document.getElementById('empty-oportunidades').style.display = oport.length ? 'none':'block';
-
-  // Dashboard mini table (últimas 5)
-  const dashTable = document.getElementById('dash-oport-table');
-  if(oport.length===0){
-    dashTable.innerHTML = '<div class="empty-state">Nenhuma oportunidade cadastrada ainda.</div>';
-  } else {
-    const last = oport.slice(-5).reverse();
-    dashTable.innerHTML = `<table>
-      <thead><tr><th>Título</th><th>Valor</th><th>Status</th></tr></thead>
-      <tbody>${last.map(o=>`
-        <tr>
-          <td>${o.titulo}</td>
-          <td>R$ ${o.valor.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
-          <td><span class="tag" style="background:${statusColor(o.status)}22;color:${statusColor(o.status)};">${o.status}</span></td>
-        </tr>`).join('')}</tbody>
-    </table>`;
+async function fazerLogin(){
+  const email = document.getElementById('emailLogin').value.trim();
+  const senha = document.getElementById('senhaLogin').value;
+  const erro = document.getElementById('loginError');
+  const btn = document.getElementById('btnLogin');
+  if(!email || !senha){ erro.textContent='Digite e-mail e senha'; erro.style.display='block'; return; }
+  btn.disabled = true; btn.innerHTML = '<span class="loading"></span> Entrando...'; erro.style.display='none';
+  try {
+    const r = await api('login', {email, senha});
+    btn.disabled = false; btn.innerHTML = 'Entrar';
+    if(r.success){
+      currentUser = r.user;
+      localStorage.setItem('crm_session', JSON.stringify(currentUser));
+      entrar();
+    } else {
+      erro.textContent = ' ' + (r.message || 'E-mail ou senha incorretos.');
+      erro.style.display = 'block';
+    }
+  } catch(e) {
+    btn.disabled = false; btn.innerHTML = 'Entrar';
+    erro.textContent = '❌ Erro de conexão. Verifique a URL do Apps Script.';
+    erro.style.display = 'block';
   }
-
-  // Atividades
-  const tbA = document.getElementById('table-atividades');
-  tbA.innerHTML = ativ.map(a=>`
-    <tr>
-      <td>${a.tarefa}</td><td>${a.data||'-'}</td><td>${a.tipo}</td>
-      <td><span class="tag" style="background:${statusColor(a.status)}22;color:${statusColor(a.status)};">${a.status}</span></td>
-      <td><a style="color:#c62828;cursor:pointer;font-weight:700;font-size:12px;" onclick="deleteAtividade(${a.id})">Excluir</a></td>
-    </tr>`).join('');
-  document.getElementById('empty-atividades').style.display = ativ.length ? 'none':'block';
 }
 
-/* ================= EXPORT ================= */
-function exportData(){
-  const all = {
-    pessoas: DB.get('pessoas'),
-    organizacoes: DB.get('organizacoes'),
-    oportunidades: DB.get('oportunidades'),
-    atividades: DB.get('atividades')
+function initGoogleLogin(){
+  if (typeof google === 'undefined' || !google.accounts) return;
+  if (!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID === 'SEU_CLIENT_ID_AQUI') {
+    document.getElementById('btnGoogle').innerHTML = '<div style="color:#64748b;font-size:12px;padding:8px;">⚠️ Configure o Client ID para ativar o login Google</div>';
+    return;
+  }
+  google.accounts.id.initialize({
+    client_id: GOOGLE_CLIENT_ID,
+    callback: handleGoogleCredential,
+    cancel_on_tap_outside: false
+  });
+  google.accounts.id.renderButton(
+    document.getElementById('btnGoogle'),
+    { theme: 'outline', size: 'large', text: 'continue_with', width: 320 }
+  );
+}
+
+async function handleGoogleCredential(response){
+  try {
+    const r = await api('loginGoogle', { idToken: response.credential });
+    if(r.success){
+      currentUser = r.user;
+      if(r.chaveAcesso){
+        localStorage.setItem('crm_chave', r.chaveAcesso);
+        localStorage.setItem('crm_email', r.user.email);
+      }
+      localStorage.setItem('crm_session', JSON.stringify(currentUser));
+      entrar();
+      showToast(r.novoUsuario ? 'Conta Google vinculada! Bem-vindo, ' + r.user.nome + '! 🎉' : 'Bem-vindo de volta, ' + r.user.nome + '! 👋', 'success');
+    } else {
+      showToast(r.message || 'Erro ao entrar com Google', 'error');
+    }
+  } catch(e) {
+    showToast('Erro de conexão com o servidor', 'error');
+  }
+}
+
+async function tentarLoginAutomatico(){
+  const chave = localStorage.getItem('crm_chave');
+  if(!chave) return false;
+  try {
+    const r = await api('loginChave', { chave: chave });
+    if(r.success){
+      currentUser = r.user;
+      localStorage.setItem('crm_session', JSON.stringify(currentUser));
+      entrar();
+      return true;
+    }
+  } catch(e) {}
+  return false;
+}
+
+function entrar(){
+  document.getElementById('loginOverlay').classList.remove('active');
+  document.getElementById('userProfile').style.display = 'flex';
+  document.getElementById('userName').textContent = currentUser.nome;
+  document.getElementById('userPapel').textContent = currentUser.admin ? 'Administrador' : 'Vendedor';
+  document.getElementById('avatarLetra').textContent = currentUser.nome[0].toUpperCase();
+  document.getElementById('homeUserName').textContent = currentUser.nome;
+  carregarDados();
+  carregarUsuarios();
+  showSection('home');
+  showToast('Bem-vindo, ' + currentUser.nome + '! 👋', 'success');
+}
+
+function logout(){
+  localStorage.removeItem('crm_session');
+  localStorage.removeItem('crm_chave');
+  localStorage.removeItem('crm_email');
+  currentUser = null; leads = []; quadro = { listas: [] };
+  document.getElementById('userProfile').style.display = 'none';
+  document.getElementById('loginOverlay').classList.add('active');
+  document.getElementById('emailLogin').value = '';
+  document.getElementById('senhaLogin').value = '';
+  document.getElementById('loginError').style.display = 'none';
+  showToast('Você saiu da sua conta', 'info');
+}
+
+async function carregarDados(){
+  try {
+    const r = await api('getLeads', {email: currentUser.email});
+    if(r.success){ leads = r.leads; updateAll(); }
+    else showToast(r.message||'Erro ao carregar leads','error');
+  } catch(e) { showToast('Erro de conexão','error'); }
+  try {
+    const r = await api('getKanban', {email: currentUser.email});
+    if(r.success){ quadro = r.dados; if(document.getElementById('quadro').classList.contains('active')) renderQuadro(); }
+  } catch(e) {}
+}
+
+async function carregarUsuarios(){
+  try {
+    const r = await api('getAllUsers', {email: currentUser.email});
+    if(r.success){
+      usuarios = r.users;
+      const sel = document.getElementById('leadResponsavel');
+      if(sel){
+        sel.innerHTML = usuarios.map(u => '<option value="'+escapeHtml(u.email)+'">'+escapeHtml(u.nome)+'</option>').join('');
+        sel.value = currentUser.email;
+        if(!currentUser.admin) sel.disabled = true;
+      }
+    }
+  } catch(e) {}
+}
+
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.navbar-buttons .btn').forEach(b=>b.classList.remove('active-nav'));
+  const map = {home:0, novolead:1, consulta:2, quadro:3, suporte:4};
+  const btns = document.querySelectorAll('.navbar-buttons .btn');
+  if(map[id]!==undefined) btns[map[id]].classList.add('active-nav');
+  if(id==='quadro') renderQuadro();
+  if(id==='consulta') buscarLeads();
+}
+
+async function concluirRegistro(){
+  const nome = document.getElementById('leadNome').value.trim();
+  if(!nome){ showToast('Preencha ao menos o Nome!','error'); document.getElementById('leadNome').focus(); return; }
+  const btn = document.getElementById('btnSalvarLead');
+  btn.disabled = true; btn.innerHTML = '<span class="loading"></span> Salvando...';
+  const lead = {
+    nome: nome,
+    cpfCnpj: document.getElementById('leadCpfCnpj').value.trim(),
+    instituicao: document.getElementById('leadInstituicao').value,
+    cidade: document.getElementById('leadCidade').value.trim(),
+    pessoa: document.getElementById('leadPessoa').value.trim(),
+    cargo: document.getElementById('leadCargo').value,
+    responsavel: document.getElementById('leadResponsavel').value || currentUser.email,
+    etapa: document.getElementById('leadEtapa').value,
+    temperatura: document.getElementById('leadTemperatura').value,
+    canal: document.getElementById('leadCanal').value,
+    proximoPasso: document.getElementById('leadProximoPasso').value.trim(),
+    dataRetorno: document.getElementById('leadDataRetorno').value,
+    resumo: document.getElementById('leadResumo').value.trim()
   };
-  const blob = new Blob([JSON.stringify(all, null, 2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'crm-genesis-brasil.json';
-  a.click();
-  URL.revokeObjectURL(url);
+  try {
+    const r = await api('addLead', {email: currentUser.email, lead: lead});
+    btn.disabled = false; btn.innerHTML = '✅ Concluir Registro';
+    if(r.success){
+      limparFormulario();
+      carregarDados();
+      showToast('Lead registrado com sucesso! 🎉','success');
+    } else {
+      showToast(r.message||'Erro ao salvar','error');
+    }
+  } catch(e) {
+    btn.disabled = false; btn.innerHTML = '✅ Concluir Registro';
+    showToast('Erro de conexão','error');
+  }
 }
 
-/* ================= INIT ================= */
-renderAll();
+function limparFormulario(){
+  ['leadNome','leadCpfCnpj','leadCidade','leadPessoa','leadProximoPasso','leadDataRetorno','leadResumo'].forEach(i=>document.getElementById(i).value='');
+  ['leadInstituicao','leadCargo'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('leadEtapa').value='novo_lead';
+  document.getElementById('leadTemperatura').value='quente';
+  document.getElementById('leadCanal').value='ligacao';
+  if(currentUser) document.getElementById('leadResponsavel').value = currentUser.email;
+}
+
+async function removerLead(id){
+  if(!confirm('Deseja realmente excluir este lead?')) return;
+  try {
+    const r = await api('deleteLead', {id: id, email: currentUser.email});
+    if(r.success){ carregarDados(); buscarLeads(); showToast('Lead removido','info'); }
+    else showToast(r.message,'error');
+  } catch(e) { showToast('Erro de conexão','error'); }
+}
+
+function buscarLeads(){
+  const termo = (document.getElementById('consultaInput')?.value||'').toLowerCase().trim();
+  const tbody = document.getElementById('tableConsulta');
+  const countEl = document.getElementById('resultadosCount');
+  if(!tbody) return;
+  let filtrados = leads;
+  if(termo){
+    filtrados = leads.filter(l=>{
+      const campos = [l.nome,l.cpfCnpj,l.cidade,l.pessoa,labelInstituicao(l.instituicao),labelEtapa(l.etapa),labelTemperatura(l.temperatura),labelCanal(l.canal),labelCargo(l.cargo),nomeDe(l.responsavel)].map(c=>(c||'').toLowerCase());
+      return campos.some(c=>c.includes(termo));
+    });
+  }
+  countEl.innerHTML = termo ? 'Encontrados: <strong>'+filtrados.length+'</strong> lead(s)' : 'Total: <strong>'+leads.length+'</strong> lead(s)';
+  if(filtrados.length===0){
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">'+(termo?'🔍':'📭')+'</div><p>'+(termo?'Nenhum lead encontrado':'Nenhum lead cadastrado ainda')+'</p><small>'+(termo?'Tente outro termo':'Registre um novo lead na aba "Novo Lead"')+'</small></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = filtrados.map(l=>`
+    <tr>
+      <td><strong>${escapeHtml(l.nome)}</strong></td>
+      <td>${escapeHtml(l.cpfCnpj)||'<span style="color:#475569">-</span>'}</td>
+      <td>${escapeHtml(l.cidade)||'<span style="color:#475569">-</span>'}</td>
+      <td><span class="badge etapa-${l.etapa}">${labelEtapa(l.etapa)}</span></td>
+      <td><span class="badge temp-${l.temperatura}">${labelTemperatura(l.temperatura)}</span></td>
+      <td><button class="btn btn-info" onclick="verDetalhes('${l.id}')">👁 Ver</button><button class="btn btn-danger" onclick="removerLead('${l.id}')">🗑</button></td>
+    </tr>`).join('');
+}
+
+function escapeHtml(str){
+  if(!str) return '';
+  return String(str).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+function verDetalhes(id){
+  const lead = leads.find(l=>String(l.id)===String(id));
+  if(!lead) return;
+  const d = (label,value)=>`<div class="detail-item"><div class="detail-label">${label}</div><div class="detail-value ${!value?'empty':''}">${value?escapeHtml(value):'Não informado'}</div></div>`;
+  const df = (label,value)=>`<div class="detail-item full"><div class="detail-label">${label}</div><div class="detail-value ${!value?'empty':''}" style="white-space:pre-wrap;">${value?escapeHtml(value):'Não informado'}</div></div>`;
+  document.getElementById('detalhesConteudo').innerHTML = `
+    <div class="form-section-title">📇 Contato</div>
+    <div class="detail-grid">
+      ${d('Nome',lead.nome)}
+      ${d('CPF / CNPJ',lead.cpfCnpj)}
+      ${d('Instituição / Empresa',labelInstituicao(lead.instituicao))}
+      ${d('Cidade / UF',lead.cidade)}
+    </div>
+    <div class="form-section-title">👤 Pessoa com quem falou</div>
+    <div class="detail-grid">
+      ${d('Nome',lead.pessoa)}
+      ${d('Cargo',labelCargo(lead.cargo))}
+      ${d('Responsável',nomeDe(lead.responsavel))}
+    </div>
+    <div class="form-section-title">📊 Resultado do Contato</div>
+    <div class="detail-grid">
+      <div class="detail-item"><div class="detail-label">Etapa</div><div class="detail-value"><span class="badge etapa-${lead.etapa}">${labelEtapa(lead.etapa)}</span></div></div>
+      <div class="detail-item"><div class="detail-label">Temperatura</div><div class="detail-value"><span class="badge temp-${lead.temperatura}">${labelTemperatura(lead.temperatura)}</span></div></div>
+      ${d('Canal',labelCanal(lead.canal))}
+    </div>
+    <div class="form-section-title">🔁 Continuidade</div>
+    <div class="detail-grid">
+      ${d('Próximo passo',lead.proximoPasso)}
+      ${d('Data de retorno',lead.dataRetorno?fmtDate(lead.dataRetorno):'')}
+    </div>
+    <div class="form-section-title">📝 Resumo da Conversa</div>
+    ${df('Resumo',lead.resumo)}
+    <div style="margin-top:16px;font-size:12px;color:#64748b;">📅 Registrado em: ${fmtDateTime(lead.criadoEm)}</div>
+  `;
+  document.getElementById('btnExcluirDetalhes').onclick = ()=>{
+    if(!confirm('Deseja realmente excluir este lead?')) return;
+    removerLead(lead.id);
+    closeModal('detalhes');
+  };
+  openModal('detalhes');
+}
+
+function genId(){ return 'id_'+Date.now()+'_'+Math.random().toString(36).substr(2,5); }
+function defaultKanban(){ return { listas:[{id:genId(),titulo:'A Fazer',cartoes:[]},{id:genId(),titulo:'Em Andamento',cartoes:[]},{id:genId(),titulo:'Concluído',cartoes:[]}]}; }
+function openCardModal(listId){ currentListId=listId; selectedLabel=''; document.getElementById('cardTitulo').value=''; document.getElementById('cardDescricao').value=''; document.querySelectorAll('.label-color').forEach(c=>c.classList.remove('selected')); openModal('cartao'); }
+function openListModal(){ document.getElementById('listTitulo').value=''; openModal('lista'); }
+function openModal(t){ document.getElementById('modal'+t.charAt(0).toUpperCase()+t.slice(1)).classList.add('active'); }
+function closeModal(t){ document.getElementById('modal'+t.charAt(0).toUpperCase()+t.slice(1)).classList.remove('active'); }
+function selectLabel(color,el){ selectedLabel=color; document.querySelectorAll('.label-color').forEach(c=>c.classList.remove('selected')); el.classList.add('selected'); }
+
+function salvarCartao(){
+  const titulo = document.getElementById('cardTitulo').value.trim();
+  if(!titulo){ showToast('Preencha o título!','error'); return; }
+  const lista = quadro.listas.find(l=>l.id===currentListId);
+  if(!lista) return;
+  lista.cartoes.push({id:genId(),titulo,descricao:document.getElementById('cardDescricao').value,etiqueta:selectedLabel});
+  closeModal('cartao');
+  salvarQuadro();
+  showToast('Cartão adicionado! 📋','success');
+}
+function salvarLista(){
+  const titulo = document.getElementById('listTitulo').value.trim();
+  if(!titulo){ showToast('Digite o nome da lista!','error'); return; }
+  quadro.listas.push({id:genId(),titulo,cartoes:[]});
+  closeModal('lista');
+  salvarQuadro();
+  showToast('Lista criada! 📋','success');
+}
+function renomearLista(listId){
+  const lista = quadro.listas.find(l=>l.id===listId);
+  if(!lista) return;
+  const novo = prompt('Renomear lista:',lista.titulo);
+  if(novo&&novo.trim()){ lista.titulo=novo.trim(); salvarQuadro(); renderQuadro(); showToast('Lista renomeada!','success'); }
+}
+function removerLista(listId){
+  const lista = quadro.listas.find(l=>l.id===listId);
+  if(!lista) return;
+  if(!confirm('Excluir a lista "'+lista.titulo+'" e todos os cartões?')) return;
+  quadro.listas = quadro.listas.filter(l=>l.id!==listId);
+  salvarQuadro(); renderQuadro(); showToast('Lista removida','info');
+}
+function removerCartao(listId,cardId){
+  const lista = quadro.listas.find(l=>l.id===listId);
+  if(!lista) return;
+  lista.cartoes = lista.cartoes.filter(c=>c.id!==cardId);
+  salvarQuadro(); renderQuadro(); showToast('Cartão removido','info');
+}
+async function salvarQuadro(){
+  try {
+    const r = await api('saveKanban', {email: currentUser.email, dados: quadro});
+    if(!r.success) showToast(r.message||'Erro','error');
+  } catch(e) { showToast('Erro de conexão','error'); }
+}
+
+function onDragStart(e,cardId,listId){ draggedCard=cardId; draggedFromList=listId; e.dataTransfer.effectAllowed='move'; setTimeout(()=>{document.querySelectorAll('.board-card').forEach(c=>{if(c.dataset.cardId===cardId)c.classList.add('dragging');});},0); }
+function onDragEnd(){ document.querySelectorAll('.board-card').forEach(c=>c.classList.remove('dragging')); document.querySelectorAll('.board-list').forEach(l=>l.classList.remove('drag-over')); }
+function onDragOver(e,listId){ e.preventDefault(); e.dataTransfer.dropEffect='move'; document.querySelectorAll('.board-list').forEach(l=>l.classList.remove('drag-over')); const list=document.querySelector('.board-list[data-list-id="'+listId+'"]'); if(list) list.classList.add('drag-over'); }
+function onDragLeave(e,listId){ const list=document.querySelector('.board-list[data-list-id="'+listId+'"]'); if(list&&!list.contains(e.relatedTarget)) list.classList.remove('drag-over'); }
+function onDrop(e,listId){
+  e.preventDefault();
+  document.querySelectorAll('.board-list').forEach(l=>l.classList.remove('drag-over'));
+  if(!draggedCard||!draggedFromList) return;
+  const source = quadro.listas.find(l=>l.id===draggedFromList);
+  const target = quadro.listas.find(l=>l.id===listId);
+  if(!source||!target) return;
+  const idx = source.cartoes.findIndex(c=>c.id===draggedCard);
+  if(idx===-1) return;
+  const [card] = source.cartoes.splice(idx,1);
+  target.cartoes.push(card);
+  draggedCard=null; draggedFromList=null;
+  salvarQuadro(); renderQuadro();
+  showToast('Cartão movido! 📋','success');
+}
+
+function renderQuadro(){
+  const board = document.getElementById('boardContainer');
+  if(!board) return;
+  if(!quadro||!quadro.listas||quadro.listas.length===0) quadro = defaultKanban();
+  board.innerHTML = quadro.listas.map(lista=>{
+    const cards = lista.cartoes.map(cartao=>`
+      <div class="board-card" draggable="true" data-card-id="${cartao.id}" ondragstart="onDragStart(event,'${cartao.id}','${lista.id}')" ondragend="onDragEnd()">
+        ${cartao.etiqueta?'<span class="board-card-label" style="background:'+cartao.etiqueta+'"></span>':''}
+        <div class="board-card-title">${escapeHtml(cartao.titulo)}</div>
+        ${cartao.descricao?'<div class="board-card-desc">'+escapeHtml(cartao.descricao)+'</div>':''}
+        <button class="board-card-delete" onclick="removerCartao(\''+lista.id+'\',\''+cartao.id+'\')">✕</button>
+      </div>`).join('');
+    return `
+      <div class="board-list" data-list-id="${lista.id}" ondragover="onDragOver(event,'${lista.id}')" ondragleave="onDragLeave(event,'${lista.id}')" ondrop="onDrop(event,'${lista.id}')">
+        <div class="board-list-header">
+          <span class="board-list-title" ondblclick="renomearLista('${lista.id}')" title="Clique duplo para renomear">${escapeHtml(lista.titulo)} <span class="board-list-count">${lista.cartoes.length}</span></span>
+          <button class="board-list-delete" onclick="removerLista('${lista.id}')">🗑</button>
+        </div>
+        <div class="board-cards">${cards||'<div class="board-empty">Arraste cartões aqui</div>'}</div>
+        <button class="btn-add-card" onclick="openCardModal('${lista.id}')">+ Adicionar cartão</button>
+      </div>`;
+  }).join('') + '<button class="btn-add-list" onclick="openListModal()">+ Adicionar lista</button>';
+}
+
+function labelInstituicao(v){ const m={faculdade:'Faculdade',instituicao_ensino:'Inst. de Ensino',empresa:'Empresa',prefeitura:'Prefeitura',orgao_publico:'Órgão Público',outro:'Outro'}; return m[v]||v||'-'; }
+function labelCargo(v){ const m={diretora:'Diretora',rh:'RH',professor:'Professor',mestre:'Mestre',coordenador:'Coordenador',proprietario:'Proprietário',outro:'Outro'}; return m[v]||v||'-'; }
+function labelCanal(v){ const m={ligacao:'Ligação',whatsapp:'WhatsApp',email:'Email',reuniao_presencial:'Reun. Presencial',reuniao_online:'Reun. Online',evento:'Evento',outro:'Outro'}; return m[v]||v||'-'; }
+function labelEtapa(v){ const m={novo_lead:'Novo Lead',em_conversa:'Em Conversa',proposta_enviada:'Proposta Enviada',convertido:'Convertido',sem_avanco:'Sem Avanço'}; return m[v]||v; }
+function labelTemperatura(v){ const m={quente:'Quente',morno:'Morno',frio:'Frio',sem_perfil:'Sem Perfil'}; return m[v]||v; }
+function nomeDe(email){ const u = usuarios.find(u=>String(u.email).toLowerCase()===String(email||'').toLowerCase()); return u ? u.nome : (email||'-'); }
+function fmtDate(d){ if(!d) return ''; try{const p=d.split('T')[0].split('-');return p[2]+'/'+p[1]+'/'+p[0];}catch(e){return d;} }
+function fmtDateTime(t){ if(!t) return ''; try{return new Date(t).toLocaleString('pt-BR');}catch(e){return t;} }
+
+function renderLeads(){
+  document.getElementById('homeLeads').innerHTML = leads.length ? leads.slice(0,5).map(l=>`
+    <tr>
+      <td><strong>${escapeHtml(l.nome)}</strong></td>
+      <td>${labelInstituicao(l.instituicao)}</td>
+      <td><span class="badge etapa-${l.etapa}">${labelEtapa(l.etapa)}</span></td>
+      <td><span class="badge temp-${l.temperatura}">${labelTemperatura(l.temperatura)}</span></td>
+    </tr>`).join('') : '<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">📭</div><p>Nenhum lead ainda</p></div></td></tr>';
+}
+
+function updateDashboard(){
+  const total = leads.length;
+  const convertidos = leads.filter(l=>l.etapa==='convertido').length;
+  const quentes = leads.filter(l=>l.temperatura==='quente').length;
+  const hoje = new Date().toISOString().split('T')[0];
+  const retornos = leads.filter(l=>String(l.dataRetorno||'').startsWith(hoje)).length;
+  document.getElementById('totalLeads').textContent = total;
+  document.getElementById('totalConvertidos').textContent = convertidos;
+  document.getElementById('totalQuentes').textContent = quentes;
+  document.getElementById('totalRetornos').textContent = retornos;
+  document.getElementById('progressLeads').style.width = Math.min(100,(total/50)*100)+'%';
+  document.getElementById('progressConvertidos').style.width = Math.min(100,(convertidos/Math.max(1,total))*100)+'%';
+  document.getElementById('progressQuentes').style.width = Math.min(100,(quentes/Math.max(1,total))*100)+'%';
+  document.getElementById('progressRetornos').style.width = Math.min(100,(retornos/Math.max(1,total))*100)+'%';
+}
+
+function updateAll(){ renderLeads(); updateDashboard(); }
+
+window.onload = async function(){
+  const logado = await tentarLoginAutomatico();
+  if(!logado){
+    const session = JSON.parse(localStorage.getItem('crm_session')||'null');
+    if(session){ currentUser = session; entrar(); }
+  }
+  initGoogleLogin();
+};
+
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('active');}));
 </script>
 </body>
 </html>
