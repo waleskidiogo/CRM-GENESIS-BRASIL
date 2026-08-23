@@ -392,6 +392,9 @@ const API_URL = "https://script.google.com/macros/s/AKfycbyVbYAzt8ch8EzSE0M6M3Vb
 const SESSION_KEY = 'crm_token';
 const SESSION_USER_KEY = 'crm_usuario';
 
+// Flag global: true enquanto estamos fazendo a checagem SILENCIOSA de sessão no carregamento da página
+let checagemSilenciosa = false;
+
 function salvarSessao(token, usuario){
   localStorage.setItem(SESSION_KEY, token);
   localStorage.setItem(SESSION_USER_KEY, JSON.stringify(usuario));
@@ -405,32 +408,53 @@ function limparSessao(){
   localStorage.removeItem(SESSION_USER_KEY);
 }
 
+function ehErroDeSessao(msg){
+  return /sess[aã]o expirada|sess[aã]o inv[aá]lida|token inv[aá]lido|n[ãa]o autenticado/i.test(msg || "");
+}
+
 async function api(acao, dados){
   dados = dados || {};
-  const payload = Object.assign({ acao: acao, token: obterToken() }, dados);
+  // Ações públicas não precisam (e não devem) enviar token
+  const acoesPublicas = ['verificar_cpf', 'login', 'concluir_primeiro_acesso'];
+  const payload = acoesPublicas.includes(acao)
+    ? Object.assign({ acao: acao }, dados)
+    : Object.assign({ acao: acao, token: obterToken() }, dados);
+
+  let resposta;
   try{
-    const resposta = await fetch(API_URL, {
+    resposta = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(payload)
     });
-    const json = await resposta.json();
-    if(!json.sucesso){
-      const msg = json.mensagem || 'Erro desconhecido.';
-      if(/sess[aã]o expirada|token inv[aá]lido|n[ãa]o autenticado/i.test(msg)){
-        limparSessao();
-        mostrarLogin();
-        mostrarMsgLogin(msg, 'info');
-      }
-      throw new Error(msg);
-    }
-    return json.dados;
-  }catch(erro){
-    if(erro.message === 'Failed to fetch'){
-      throw new Error('Não foi possível conectar. Verifique sua internet.');
-    }
-    throw erro;
+  }catch(erroRede){
+    throw new Error('Não foi possível conectar. Verifique sua internet.');
   }
+
+  let json;
+  try{
+    json = await resposta.json();
+  }catch(erroParse){
+    throw new Error('Resposta inválida do servidor. Tente novamente.');
+  }
+
+  if(!json.sucesso){
+    const msg = json.mensagem || 'Erro desconhecido.';
+
+    // Só forçamos logout/redirect automático se a ação NÃO for pública
+    // e o erro for realmente de sessão.
+    if(!acoesPublicas.includes(acao) && ehErroDeSessao(msg)){
+      limparSessao();
+      // Durante a checagem silenciosa do carregamento da página,
+      // NÃO exibimos mensagem de erro — apenas voltamos pro login limpo.
+      if(!checagemSilenciosa){
+        mostrarLogin();
+        mostrarMsgLogin('Sua sessão expirou. Faça login novamente.', 'info');
+      }
+    }
+    throw new Error(msg);
+  }
+  return json.dados;
 }
 
 let toastTimer=null;
@@ -595,27 +619,26 @@ async function fazerLogout(){
   mostrarLogin();
 }
 
+// ===== CHECAGEM DE SESSÃO NO CARREGAMENTO (SILENCIOSA) =====
 async function verificarSessaoExistente(){
   const token = obterToken();
   if(!token){ mostrarLogin(); return; }
 
+  checagemSilenciosa = true;
   try{
     await iniciarApp();
   }catch(erro){
-    if(/sess[aã]o expirada|token inv[aá]lido|n[ãa]o autenticado/i.test(erro.message)){
-      limparSessao();
-      mostrarLogin();
-    } else {
-      toast('Erro ao conectar: ' + erro.message, 'erro');
-      mostrarLogin();
-    }
+    // Qualquer erro aqui (sessão expirada, sem internet, etc.) apenas
+    // limpa a sessão local e mostra a tela de login limpa, sem susto.
+    limparSessao();
+    mostrarLogin();
+  }finally{
+    checagemSilenciosa = false;
   }
 }
 
 async function iniciarApp(){
   usuarioAtual = await api('obter_usuario_atual');
-  const resumo = await api('obter_resumo_do_dia');
-  const agenda = await api('listar_agenda_do_dia');
   const notificacoes = await api('obter_notificacoes');
 
   document.getElementById('loginScreen').classList.add('hidden');
