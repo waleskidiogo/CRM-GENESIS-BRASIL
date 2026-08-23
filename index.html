@@ -6,13 +6,13 @@
 <title>CRM Gênesis Brasil</title>
 <style>
 :root {
-  --bg: #0a1628;
-  --bg2: #0d1f3c;
-  --border: #1a3a5c;
-  --text: #e2e8f0;
-  --muted: #94a3b8;
-  --dim: #64748b;
-  --accent: #f07b26;
+--bg: #0a1628;
+--bg2: #0d1f3c;
+--border: #1a3a5c;
+--text: #e2e8f0;
+--muted: #94a3b8;
+--dim: #64748b;
+--accent: #f07b26;
 }
 * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter','Segoe UI',sans-serif; }
 body { background:var(--bg); color:var(--text); min-height:100vh; }
@@ -202,256 +202,258 @@ textarea { resize:vertical; min-height:100px; }
 
 <!-- ===== TELA DE LOGIN (CPF) ===== -->
 <div class="login-overlay active" id="loginOverlay">
-  <div class="login-box">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 52" fill="none" style="height:44px;margin-bottom:20px;">
-      <g transform="translate(2,2)">
-        <circle cx="22" cy="22" r="20" stroke="#f07b26" stroke-width="2.5" fill="none"/>
-        <circle cx="22" cy="22" r="14" stroke="#f07b26" stroke-width="2" fill="none"/>
-        <circle cx="22" cy="22" r="8" stroke="#f07b26" stroke-width="1.5" fill="none"/>
-        <path d="M 42 22 L 30 22" stroke="#10263e" stroke-width="4" stroke-linecap="round"/>
-        <path d="M 22 22 L 32 22" stroke="#f07b26" stroke-width="2.5" stroke-linecap="round"/>
-      </g>
-      <text x="54" y="14" font-family="Inter,Arial,sans-serif" font-size="7.5" font-weight="600" fill="#c0c8d0" letter-spacing="2.5">GRUPO</text>
-      <text x="54" y="32" font-family="Georgia,serif" font-size="22" font-weight="700" fill="#f07b26" font-style="italic">Gênesis</text>
-      <text x="54" y="46" font-family="Inter,Arial,sans-serif" font-size="7.5" font-weight="600" fill="#c0c8d0" letter-spacing="3">BRASIL</text>
-    </svg>
-    <h2>Área do Consultor</h2>
-    <p>Informe seu CPF para acessar</p>
+<div class="login-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 52" fill="none" style="height:44px;margin-bottom:20px;">
+<g transform="translate(2,2)">
+<circle cx="22" cy="22" r="20" stroke="#f07b26" stroke-width="2.5" fill="none"/>
+<circle cx="22" cy="22" r="14" stroke="#f07b26" stroke-width="2" fill="none"/>
+<circle cx="22" cy="22" r="8" stroke="#f07b26" stroke-width="1.5" fill="none"/>
+<path d="M 42 22 L 30 22" stroke="#10263e" stroke-width="4" stroke-linecap="round"/>
+<path d="M 22 22 L 32 22" stroke="#f07b26" stroke-width="2.5" stroke-linecap="round"/>
+</g>
+<text x="54" y="14" font-family="Inter,Arial,sans-serif" font-size="7.5" font-weight="600" fill="#c0c8d0" letter-spacing="2.5">GRUPO</text>
+<text x="54" y="32" font-family="Georgia,serif" font-size="22" font-weight="700" fill="#f07b26" font-style="italic">Gênesis</text>
+<text x="54" y="46" font-family="Inter,Arial,sans-serif" font-size="7.5" font-weight="600" fill="#c0c8d0" letter-spacing="3">BRASIL</text>
+</svg>
+<h2>Área do Consultor</h2>
+<p>Informe seu CPF para acessar</p>
 
-    <input type="text" id="cpfLogin" placeholder="CPF" maxlength="14" oninput="this.value=mascaraCpf(this.value)" onkeydown="if(event.key==='Enter')fazerLogin()">
-    <button class="btn btn-primary btn-lg" id="btnLogin" onclick="fazerLogin()" style="width:100%;justify-content:center;">Entrar</button>
-    <div id="loginError"></div>
-    <p style="margin-top:16px;font-size:12px;color:#64748b;">Primeiro acesso? Informe apenas o CPF.</p>
-  </div>
+<input type="text" id="cpfLogin" placeholder="CPF" maxlength="14" oninput="this.value=mascaraCpf(this.value)" onkeydown="if(event.key==='Enter')fazerLogin()">
+<button class="btn btn-primary btn-lg" id="btnLogin" onclick="fazerLogin()" style="width:100%;justify-content:center;">Entrar</button>
+<div id="loginError"></div>
+<p style="margin-top:16px;font-size:12px;color:#64748b;">Primeiro acesso? Informe apenas o CPF.</p>
+</div>
 </div>
 
 <!-- ===== TELA DE CADASTRO ===== -->
 <div class="login-overlay" id="cadastroOverlay">
-  <div class="login-box cadastro-box">
-    <h2>Complete seu Cadastro</h2>
-    <p>Preencha todos os campos obrigatórios (*) para acessar o CRM</p>
+<div class="login-box cadastro-box">
+<h2>Complete seu Cadastro</h2>
+<p>Preencha todos os campos obrigatórios (*) para acessar o CRM</p>
 
-    <input type="text" id="cadNome" placeholder="Nome Completo *">
-    <input type="text" id="cadCpf" placeholder="CPF" readonly>
-    <input type="email" id="cadEmailGrupo" placeholder="E-mail Grupo Gênesis Brasil *">
-    <input type="email" id="cadEmailGmail" placeholder="E-mail do Gmail *">
-    <input type="text" id="cadCidade" placeholder="Cidade / Estado *">
-    <input type="text" id="cadEndereco" placeholder="Endereço *">
-    <input type="password" id="cadSenha" placeholder="Nova Senha (mín. 4 caracteres) *">
-    <input type="password" id="cadConfirmarSenha" placeholder="Confirmar Senha *">
+<input type="text" id="cadNome" placeholder="Nome Completo *">
+<input type="text" id="cadCpf" placeholder="CPF" readonly>
+<input type="email" id="cadEmailGrupo" placeholder="E-mail Grupo Gênesis Brasil *">
+<input type="email" id="cadEmailGmail" placeholder="E-mail do Gmail *">
+<input type="text" id="cadCidade" placeholder="Cidade / Estado *">
+<input type="text" id="cadEndereco" placeholder="Endereço *">
+<input type="password" id="cadSenha" placeholder="Nova Senha (mín. 4 caracteres) *">
+<input type="password" id="cadConfirmarSenha" placeholder="Confirmar Senha *">
 
-    <button class="btn btn-primary btn-lg" id="btnFinalizarCadastro" onclick="finalizarCadastro()" style="width:100%;justify-content:center;margin-top:10px;">Finalizar Cadastro</button>
-    <div id="cadastroError"></div>
-  </div>
+<button class="btn btn-primary btn-lg" id="btnFinalizarCadastro" onclick="finalizarCadastro()" style="width:100%;justify-content:center;margin-top:10px;">Finalizar Cadastro</button>
+<div id="cadastroError"></div>
+</div>
 </div>
 
 <nav class="navbar">
-  <a href="#" class="navbar-logo" onclick="showSection('home');return false;">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 52" fill="none">
-      <g transform="translate(2,2)">
-        <circle cx="22" cy="22" r="20" stroke="#f07b26" stroke-width="2.5" fill="none"/>
-        <circle cx="22" cy="22" r="14" stroke="#f07b26" stroke-width="2" fill="none"/>
-        <circle cx="22" cy="22" r="8" stroke="#f07b26" stroke-width="1.5" fill="none"/>
-        <path d="M 42 22 L 30 22" stroke="#0d1b2a" stroke-width="4" stroke-linecap="round"/>
-        <path d="M 22 22 L 32 22" stroke="#f07b26" stroke-width="2.5" stroke-linecap="round"/>
-      </g>
-      <text x="54" y="14" font-family="Inter,Arial,sans-serif" font-size="7.5" font-weight="600" fill="#c0c8d0" letter-spacing="2.5">GRUPO</text>
-      <text x="54" y="32" font-family="Georgia,serif" font-size="22" font-weight="700" fill="#f07b26" font-style="italic">Gênesis</text>
-      <text x="54" y="46" font-family="Inter,Arial,sans-serif" font-size="7.5" font-weight="600" fill="#c0c8d0" letter-spacing="3">BRASIL</text>
-    </svg>
-  </a>
-  <div class="navbar-buttons">
-    <button class="btn btn-outline active-nav" onclick="showSection('home')"> Home</button>
-    <button class="btn btn-outline" onclick="showSection('novolead')">📝 Novo Lead</button>
-    <button class="btn btn-outline" onclick="showSection('consulta')">🔍 Consulta</button>
-    <button class="btn btn-outline" onclick="showSection('quadro')">📋 Quadro</button>
-    <button class="btn btn-primary" onclick="showSection('suporte')">🎧 Suporte</button>
-    <div class="user-profile" id="userProfile" style="display:none;">
-      <div class="avatar" id="avatarLetra">D</div>
-      <div>
-        <div class="user-name" id="userName">—</div>
-        <div style="font-size:11px;color:#94a3b8;" id="userPapel">—</div>
-      </div>
-      <button class="btn btn-logout" onclick="logout()">Sair</button>
-    </div>
-  </div>
+<a href="#" class="navbar-logo" onclick="showSection('home');return false;">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 52" fill="none">
+<g transform="translate(2,2)">
+<circle cx="22" cy="22" r="20" stroke="#f07b26" stroke-width="2.5" fill="none"/>
+<circle cx="22" cy="22" r="14" stroke="#f07b26" stroke-width="2" fill="none"/>
+<circle cx="22" cy="22" r="8" stroke="#f07b26" stroke-width="1.5" fill="none"/>
+<path d="M 42 22 L 30 22" stroke="#0d1b2a" stroke-width="4" stroke-linecap="round"/>
+<path d="M 22 22 L 32 22" stroke="#f07b26" stroke-width="2.5" stroke-linecap="round"/>
+</g>
+<text x="54" y="14" font-family="Inter,Arial,sans-serif" font-size="7.5" font-weight="600" fill="#c0c8d0" letter-spacing="2.5">GRUPO</text>
+<text x="54" y="32" font-family="Georgia,serif" font-size="22" font-weight="700" fill="#f07b26" font-style="italic">Gênesis</text>
+<text x="54" y="46" font-family="Inter,Arial,sans-serif" font-size="7.5" font-weight="600" fill="#c0c8d0" letter-spacing="3">BRASIL</text>
+</svg>
+</a>
+<div class="navbar-buttons">
+<button class="btn btn-outline active-nav" onclick="showSection('home')"> Home</button>
+<button class="btn btn-outline" onclick="showSection('novolead')">📝 Novo Lead</button>
+<button class="btn btn-outline" onclick="showSection('consulta')">🔍 Consulta</button>
+<button class="btn btn-outline" onclick="showSection('quadro')">📋 Quadro</button>
+<button class="btn btn-primary" onclick="showSection('suporte')">🎧 Suporte</button>
+<div class="user-profile" id="userProfile" style="display:none;">
+<div class="avatar" id="avatarLetra">D</div>
+<div>
+<div class="user-name" id="userName">—</div>
+<div style="font-size:11px;color:#94a3b8;" id="userPapel">—</div>
+</div>
+<button class="btn btn-logout" onclick="logout()">Sair</button>
+</div>
+</div>
 </nav>
 
 <div class="main">
-  <div id="home" class="section active">
-    <div class="header"><h1>Olá, <em id="homeUserName">Consultor</em> 👋</h1></div>
-    <div class="cards">
-      <div class="card"><div class="card-icon">📊</div><h3>Total de Leads</h3><div class="value" id="totalLeads">0</div><div class="card-progress"><div class="card-progress-bar" id="progressLeads" style="width:0%"></div></div></div>
-      <div class="card"><div class="card-icon">🎉</div><h3>Leads Convertidos</h3><div class="value" id="totalConvertidos">0</div><div class="card-progress"><div class="card-progress-bar" id="progressConvertidos" style="width:0%"></div></div></div>
-      <div class="card"><div class="card-icon">🔥</div><h3>Leads Quentes</h3><div class="value" id="totalQuentes">0</div><div class="card-progress"><div class="card-progress-bar" id="progressQuentes" style="width:0%"></div></div></div>
-      <div class="card"><div class="card-icon">📅</div><h3>Retornos Hoje</h3><div class="value" id="totalRetornos">0</div><div class="card-progress"><div class="card-progress-bar" id="progressRetornos" style="width:0%"></div></div></div>
-    </div>
-    <div class="table-container">
-      <div class="table-header"><h3>📝 Últimos Leads Registrados</h3></div>
-      <table><thead><tr><th>Nome</th><th>Instituição</th><th>Etapa</th><th>Temperatura</th></tr></thead><tbody id="homeLeads"></tbody></table>
-    </div>
-  </div>
+<div id="home" class="section active">
+<div class="header"><h1>Olá, <em id="homeUserName">Consultor</em> 👋</h1></div>
+<div class="cards">
+<div class="card"><div class="card-icon">📊</div><h3>Total de Leads</h3><div class="value" id="totalLeads">0</div><div class="card-progress"><div class="card-progress-bar" id="progressLeads" style="width:0%"></div></div></div>
+<div class="card"><div class="card-icon">🎉</div><h3>Leads Convertidos</h3><div class="value" id="totalConvertidos">0</div><div class="card-progress"><div class="card-progress-bar" id="progressConvertidos" style="width:0%"></div></div></div>
+<div class="card"><div class="card-icon">🔥</div><h3>Leads Quentes</h3><div class="value" id="totalQuentes">0</div><div class="card-progress"><div class="card-progress-bar" id="progressQuentes" style="width:0%"></div></div></div>
+<div class="card"><div class="card-icon">📅</div><h3>Retornos Hoje</h3><div class="value" id="totalRetornos">0</div><div class="card-progress"><div class="card-progress-bar" id="progressRetornos" style="width:0%"></div></div></div>
+</div>
+<div class="table-container">
+<div class="table-header"><h3>📝 Últimos Leads Registrados</h3></div>
+<table><thead><tr><th>Nome</th><th>Instituição</th><th>Etapa</th><th>Temperatura</th></tr></thead><tbody id="homeLeads"></tbody></table>
+</div>
+</div>
 
-  <div id="novolead" class="section">
-    <div class="header"><h1>Área dos <em>Vendedores</em></h1></div>
-    <div class="lead-form">
-      <h2 class="form-main-title">📝 Registrar Cliente</h2>
-      <div class="form-section-title">📇 Inscrição de Contato</div>
-      <div class="form-grid">
-        <div class="form-group"><label>Nome *</label><input type="text" id="leadNome" placeholder="Nome do contato"></div>
-        <div class="form-group"><label>CPF / CNPJ</label><input type="text" id="leadCpfCnpj" placeholder="Opcional"></div>
-        <div class="form-group"><label>Instituição / Empresa</label>
-          <select id="leadInstituicao">
-            <option value="">Selecione...</option>
-            <option value="faculdade">Faculdade</option>
-            <option value="instituicao_ensino">Instituição de Ensino</option>
-            <option value="empresa">Empresa</option>
-            <option value="prefeitura">Prefeitura</option>
-            <option value="orgao_publico">Órgão Público</option>
-            <option value="outro">Outro</option>
-          </select>
-        </div>
-        <div class="form-group"><label>Cidade / UF</label><input type="text" id="leadCidade" placeholder="Ex: Curitiba/PR"></div>
-      </div>
-      <div class="form-section-title">👤 Pessoa com quem falou</div>
-      <div class="form-grid">
-        <div class="form-group"><label>Nome</label><input type="text" id="leadPessoa" placeholder="Nome da pessoa"></div>
-        <div class="form-group"><label>Cargo</label>
-          <select id="leadCargo">
-            <option value="">Selecione...</option>
-            <option value="diretora">Diretora</option>
-            <option value="rh">RH</option>
-            <option value="professor">Professor</option>
-            <option value="mestre">Mestre</option>
-            <option value="coordenador">Coordenador</option>
-            <option value="proprietario">Proprietário</option>
-            <option value="outro">Outro</option>
-          </select>
-        </div>
-        <div class="form-group"><label>Responsável (Consultor)</label><select id="leadResponsavel"></select></div>
-      </div>
-      <div class="form-section-title">📊 Resultado do Contato</div>
-      <div class="form-grid">
-        <div class="form-group"><label>Etapa do Lead</label>
-          <select id="leadEtapa">
-            <option value="novo_lead">Novo Lead</option>
-            <option value="em_conversa">Em Conversa</option>
-            <option value="proposta_enviada">Proposta Enviada</option>
-            <option value="convertido">Convertido</option>
-            <option value="sem_avanco">Sem Avanço</option>
-          </select>
-        </div>
-        <div class="form-group"><label>Temperatura</label>
-          <select id="leadTemperatura">
-            <option value="quente">Quente</option>
-            <option value="morno">Morno</option>
-            <option value="frio">Frio</option>
-            <option value="sem_perfil">Sem Perfil</option>
-          </select>
-        </div>
-        <div class="form-group"><label>Canal</label>
-          <select id="leadCanal">
-            <option value="ligacao">Ligação</option>
-            <option value="whatsapp">WhatsApp</option>
-            <option value="email">Email</option>
-            <option value="reuniao_presencial">Reunião Presencial</option>
-            <option value="reuniao_online">Reunião Online</option>
-            <option value="evento">Evento</option>
-            <option value="outro">Outro</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-section-title">🔁 Continuidade</div>
-      <div class="form-grid">
-        <div class="form-group"><label>Próximo passo combinado</label><input type="text" id="leadProximoPasso" placeholder="O que ficou combinado?"></div>
-        <div class="form-group"><label>Data de retorno</label><input type="date" id="leadDataRetorno"></div>
-      </div>
-      <div class="form-section-title">📝 Resumo da Conversa</div>
-      <div class="form-group"><textarea id="leadResumo" placeholder="Descreva aqui o resumo da conversa..."></textarea></div>
-      <div class="form-footer"><button class="btn btn-primary btn-lg" id="btnSalvarLead" onclick="concluirRegistro()">✅ Concluir Registro</button></div>
-    </div>
-  </div>
+<div id="novolead" class="section">
+<div class="header"><h1>Área dos <em>Vendedores</em></h1></div>
+<div class="lead-form">
+<h2 class="form-main-title">📝 Registrar Cliente</h2>
+<div class="form-section-title">📇 Inscrição de Contato</div>
+<div class="form-grid">
+<div class="form-group"><label>Nome *</label><input type="text" id="leadNome" placeholder="Nome do contato"></div>
+<div class="form-group"><label>CPF / CNPJ</label><input type="text" id="leadCpfCnpj" placeholder="Opcional"></div>
+<div class="form-group"><label>Instituição / Empresa</label>
+<select id="leadInstituicao">
+<option value="">Selecione...</option>
+<option value="faculdade">Faculdade</option>
+<option value="instituicao_ensino">Instituição de Ensino</option>
+<option value="empresa">Empresa</option>
+<option value="prefeitura">Prefeitura</option>
+<option value="orgao_publico">Órgão Público</option>
+<option value="outro">Outro</option>
+</select>
+</div>
+<div class="form-group"><label>Cidade / UF</label><input type="text" id="leadCidade" placeholder="Ex: Curitiba/PR"></div>
+</div>
+<div class="form-section-title">👤 Pessoa com quem falou</div>
+<div class="form-grid">
+<div class="form-group"><label>Nome</label><input type="text" id="leadPessoa" placeholder="Nome da pessoa"></div>
+<div class="form-group"><label>Cargo</label>
+<select id="leadCargo">
+<option value="">Selecione...</option>
+<option value="diretora">Diretora</option>
+<option value="rh">RH</option>
+<option value="professor">Professor</option>
+<option value="mestre">Mestre</option>
+<option value="coordenador">Coordenador</option>
+<option value="proprietario">Proprietário</option>
+<option value="outro">Outro</option>
+</select>
+</div>
+<div class="form-group"><label>Responsável (Consultor)</label><select id="leadResponsavel"></select></div>
+</div>
+<div class="form-section-title">📊 Resultado do Contato</div>
+<div class="form-grid">
+<div class="form-group"><label>Etapa do Lead</label>
+<select id="leadEtapa">
+<option value="novo_lead">Novo Lead</option>
+<option value="em_conversa">Em Conversa</option>
+<option value="proposta_enviada">Proposta Enviada</option>
+<option value="convertido">Convertido</option>
+<option value="sem_avanco">Sem Avanço</option>
+</select>
+</div>
+<div class="form-group"><label>Temperatura</label>
+<select id="leadTemperatura">
+<option value="quente">Quente</option>
+<option value="morno">Morno</option>
+<option value="frio">Frio</option>
+<option value="sem_perfil">Sem Perfil</option>
+</select>
+</div>
+<div class="form-group"><label>Canal</label>
+<select id="leadCanal">
+<option value="ligacao">Ligação</option>
+<option value="whatsapp">WhatsApp</option>
+<option value="email">Email</option>
+<option value="reuniao_presencial">Reunião Presencial</option>
+<option value="reuniao_online">Reunião Online</option>
+<option value="evento">Evento</option>
+<option value="outro">Outro</option>
+</select>
+</div>
+</div>
+<div class="form-section-title">🔁 Continuidade</div>
+<div class="form-grid">
+<div class="form-group"><label>Próximo passo combinado</label><input type="text" id="leadProximoPasso" placeholder="O que ficou combinado?"></div>
+<div class="form-group"><label>Data de retorno</label><input type="date" id="leadDataRetorno"></div>
+</div>
+<div class="form-section-title">📝 Resumo da Conversa</div>
+<div class="form-group"><textarea id="leadResumo" placeholder="Descreva aqui o resumo da conversa..."></textarea></div>
+<div class="form-footer"><button class="btn btn-primary btn-lg" id="btnSalvarLead" onclick="concluirRegistro()">✅ Concluir Registro</button></div>
+</div>
+</div>
 
-  <div id="consulta" class="section">
-    <div class="header"><h1>Consulta de <em>Leads</em></h1></div>
-    <div class="consulta-box">
-      <div class="search-big">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-        <input type="text" id="consultaInput" placeholder="Digite o nome, CPF, CNPJ ou nome da empresa..." oninput="buscarLeads()">
-      </div>
-      <div class="search-hint">💡 <span>Dica: você pode buscar por <strong>nome</strong>, <strong>CPF/CNPJ</strong>, <strong>cidade</strong>, <strong>instituição</strong>, <strong>pessoa</strong> ou <strong>responsável</strong>.</span></div>
-    </div>
-    <div class="table-container">
-      <div class="table-header"><h3>📋 Resultados</h3><div class="search-results-count" id="resultadosCount"></div></div>
-      <table><thead><tr><th>Nome</th><th>CPF/CNPJ</th><th>Cidade/UF</th><th>Etapa</th><th>Temperatura</th><th>Ações</th></tr></thead><tbody id="tableConsulta"></tbody></table>
-    </div>
-  </div>
+<div id="consulta" class="section">
+<div class="header"><h1>Consulta de <em>Leads</em></h1></div>
+<div class="consulta-box">
+<div class="search-big">
+<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+<input type="text" id="consultaInput" placeholder="Digite o nome, CPF, CNPJ ou nome da empresa..." oninput="buscarLeads()">
+</div>
+<div class="search-hint">💡 <span>Dica: você pode buscar por <strong>nome</strong>, <strong>CPF/CNPJ</strong>, <strong>cidade</strong>, <strong>instituição</strong>, <strong>pessoa</strong> ou <strong>responsável</strong>.</span></div>
+</div>
+<div class="table-container">
+<div class="table-header"><h3>📋 Resultados</h3><div class="search-results-count" id="resultadosCount"></div></div>
+<table><thead><tr><th>Nome</th><th>CPF/CNPJ</th><th>Cidade/UF</th><th>Etapa</th><th>Temperatura</th><th>Ações</th></tr></thead><tbody id="tableConsulta"></tbody></table>
+</div>
+</div>
 
-  <div id="quadro" class="section">
-    <div class="header"><h1>Quadro <em>Kanban</em> 📋</h1></div>
-    <div class="board-container" id="boardContainer"></div>
-  </div>
+<div id="quadro" class="section">
+<div class="header"><h1>Quadro <em>Kanban</em> 📋</h1></div>
+<div class="board-container" id="boardContainer"></div>
+</div>
 
-  <div id="suporte" class="section">
-    <div class="header"><h1>Suporte</h1></div>
-    <div class="support-box">
-      <div class="support-icon">🎧</div>
-      <h3>Como podemos ajudar?</h3>
-      <p>Entre em contato com nossa equipe de suporte.<br><br>
-      📧 Email: <strong>suporte@genesibrasil.com.br</strong><br>
-      📱 WhatsApp: <strong>(41) 99999-9999</strong><br>
-      🕐 Horário: <strong>Seg a Sex, 9h às 18h</strong></p>
-    </div>
-  </div>
+<div id="suporte" class="section">
+<div class="header"><h1>Suporte</h1></div>
+<div class="support-box">
+<div class="support-icon">🎧</div>
+<h3>Como podemos ajudar?</h3>
+<p>Entre em contato com nossa equipe de suporte.<br><br>
+📧 Email: <strong>suporte@genesibrasil.com.br</strong><br>
+📱 WhatsApp: <strong>(41) 99999-9999</strong><br>
+🕐 Horário: <strong>Seg a Sex, 9h às 18h</strong></p>
+</div>
+</div>
 </div>
 
 <div class="modal-overlay" id="modalDetalhes">
-  <div class="modal">
-    <h2>📋 Detalhes do Lead</h2>
-    <div id="detalhesConteudo"></div>
-    <div class="modal-actions">
-      <button class="btn btn-danger" id="btnExcluirDetalhes">🗑 Excluir Lead</button>
-      <button class="btn btn-secondary" onclick="closeModal('detalhes')">Fechar</button>
-    </div>
-  </div>
+<div class="modal">
+<h2>📋 Detalhes do Lead</h2>
+<div id="detalhesConteudo"></div>
+<div class="modal-actions">
+<button class="btn btn-danger" id="btnExcluirDetalhes">🗑 Excluir Lead</button>
+<button class="btn btn-secondary" onclick="closeModal('detalhes')">Fechar</button>
+</div>
+</div>
 </div>
 
 <div class="modal-overlay" id="modalCartao">
-  <div class="modal" style="max-width:500px;">
-    <h2>Novo Cartão</h2>
-    <div class="form-group"><label>Título</label><input type="text" id="cardTitulo"></div>
-    <div class="form-group"><label>Descrição</label><textarea id="cardDescricao" placeholder="Detalhes do cartão..." style="min-height:80px;"></textarea></div>
-    <div class="form-group"><label>Etiqueta</label>
-      <div class="label-colors">
-        <span class="label-color" style="background:#f87171" onclick="selectLabel('#f87171',this)"></span>
-        <span class="label-color" style="background:#fbbf24" onclick="selectLabel('#fbbf24',this)"></span>
-        <span class="label-color" style="background:#34d399" onclick="selectLabel('#34d399',this)"></span>
-        <span class="label-color" style="background:#60a5fa" onclick="selectLabel('#60a5fa',this)"></span>
-        <span class="label-color" style="background:#a78bfa" onclick="selectLabel('#a78bfa',this)"></span>
-        <span class="label-color" style="background:#f07b26" onclick="selectLabel('#f07b26',this)"></span>
-        <span class="label-color label-none" onclick="selectLabel('',this)">✕</span>
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal('cartao')">Cancelar</button>
-      <button class="btn btn-primary" onclick="salvarCartao()">Salvar</button>
-    </div>
-  </div>
+<div class="modal" style="max-width:500px;">
+<h2>Novo Cartão</h2>
+<div class="form-group"><label>Título</label><input type="text" id="cardTitulo"></div>
+<div class="form-group"><label>Descrição</label><textarea id="cardDescricao" placeholder="Detalhes do cartão..." style="min-height:80px;"></textarea></div>
+<div class="form-group"><label>Etiqueta</label>
+<div class="label-colors">
+<span class="label-color" style="background:#f87171" onclick="selectLabel('#f87171',this)"></span>
+<span class="label-color" style="background:#fbbf24" onclick="selectLabel('#fbbf24',this)"></span>
+<span class="label-color" style="background:#34d399" onclick="selectLabel('#34d399',this)"></span>
+<span class="label-color" style="background:#60a5fa" onclick="selectLabel('#60a5fa',this)"></span>
+<span class="label-color" style="background:#a78bfa" onclick="selectLabel('#a78bfa',this)"></span>
+<span class="label-color" style="background:#f07b26" onclick="selectLabel('#f07b26',this)"></span>
+<span class="label-color label-none" onclick="selectLabel('',this)">✕</span>
+</div>
+</div>
+<div class="modal-actions">
+<button class="btn btn-secondary" onclick="closeModal('cartao')">Cancelar</button>
+<button class="btn btn-primary" onclick="salvarCartao()">Salvar</button>
+</div>
+</div>
 </div>
 
 <div class="modal-overlay" id="modalLista">
-  <div class="modal" style="max-width:500px;">
-    <h2>Nova Lista</h2>
-    <div class="form-group"><label>Nome da lista</label><input type="text" id="listTitulo" placeholder="Ex: Em negociação"></div>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal('lista')">Cancelar</button>
-      <button class="btn btn-primary" onclick="salvarLista()">Criar Lista</button>
-    </div>
-  </div>
+<div class="modal" style="max-width:500px;">
+<h2>Nova Lista</h2>
+<div class="form-group"><label>Nome da lista</label><input type="text" id="listTitulo" placeholder="Ex: Em negociação"></div>
+<div class="modal-actions">
+<button class="btn btn-secondary" onclick="closeModal('lista')">Cancelar</button>
+<button class="btn btn-primary" onclick="salvarLista()">Criar Lista</button>
+</div>
+</div>
 </div>
 
 <script>
 // ✅ URL do Apps Script (mantenha a que já funciona)
+const API_URL = 'https://script.google.com/macros/s/AKfycbyygjwXK1lJY3yYos5S8T4wHncYqbkHCpqFy0yEzWM6q0-pxfOcRw0C9HTHvMMDp8dX/exec';
+
 const API_URL = 'https://script.google.com/macros/s/AKfycbwkpaPwPwNjS0vydd1E-dg9sdETPe1KyvWRRDXR4mnCf5u1XAGF4DwxxB7IWFe_CIp1/exec';
 let currentUser = null;
 let leads = [];
@@ -461,327 +463,327 @@ let draggedCard = null, draggedFromList = null;
 let currentListId = null, selectedLabel = '';
 
 async function api(action, data) {
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify(Object.assign({ action: action }, data || {}))
-  });
-  return await res.json();
+const res = await fetch(API_URL, {
+method: 'POST',
+headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+body: JSON.stringify(Object.assign({ action: action }, data || {}))
+});
+return await res.json();
 }
 
 function showToast(message, type='success'){
-  const c = document.getElementById('toastContainer');
-  const t = document.createElement('div');
-  t.className = 'toast toast-' + type;
-  const icons = {success:'✓', error:'✕', info:'ℹ'};
-  t.innerHTML = '<div class="toast-icon">'+icons[type]+'</div><div>'+message+'</div>';
-  c.appendChild(t);
-  setTimeout(()=>{t.classList.add('hiding');setTimeout(()=>t.remove(),300);},3000);
+const c = document.getElementById('toastContainer');
+const t = document.createElement('div');
+t.className = 'toast toast-' + type;
+const icons = {success:'✓', error:'✕', info:'ℹ'};
+t.innerHTML = '<div class="toast-icon">'+icons[type]+'</div><div>'+message+'</div>';
+c.appendChild(t);
+setTimeout(()=>{t.classList.add('hiding');setTimeout(()=>t.remove(),300);},3000);
 }
 
 function mascaraCpf(v){
-  v = v.replace(/\D/g,'');
-  if (v.length > 11) v = v.slice(0,11);
-  v = v.replace(/(\d{3})(\d)/,'$1.$2');
-  v = v.replace(/(\d{3})(\d)/,'$1.$2');
-  v = v.replace(/(\d{3})(\d{1,2})$/,'$1-$2');
-  return v;
+v = v.replace(/\D/g,'');
+if (v.length > 11) v = v.slice(0,11);
+v = v.replace(/(\d{3})(\d)/,'$1.$2');
+v = v.replace(/(\d{3})(\d)/,'$1.$2');
+v = v.replace(/(\d{3})(\d{1,2})$/,'$1-$2');
+return v;
 }
 
 function somenteDigitos(v){ return String(v||'').replace(/\D/g,''); }
 
 // ============ LOGIN POR CPF ============
 async function fazerLogin(){
-  const cpf = somenteDigitos(document.getElementById('cpfLogin').value);
-  const erro = document.getElementById('loginError');
-  const btn = document.getElementById('btnLogin');
-  if(!cpf){ erro.textContent='Digite seu CPF'; erro.style.display='block'; return; }
-  btn.disabled = true; btn.innerHTML = '<span class="loading"></span> Verificando...'; erro.style.display='none';
-  try {
-    const r = await api('loginCpf', {cpf});
-    btn.disabled = false; btn.innerHTML = 'Entrar';
-    if(r.success && r.precisaCadastro){
-      abrirCadastro(r.cpf);
-    } else if(r.success){
-      currentUser = r.user;
-      if(r.chaveAcesso){
-        localStorage.setItem('crm_chave', r.chaveAcesso);
-        localStorage.setItem('crm_cpf', r.user.cpf);
-      }
-      localStorage.setItem('crm_session', JSON.stringify(currentUser));
-      entrar();
-    } else {
-      erro.textContent = '❌ ' + (r.message || 'CPF não encontrado');
-      erro.style.display = 'block';
-    }
-  } catch(e) {
-    btn.disabled = false; btn.innerHTML = 'Entrar';
-    erro.textContent = '❌ Erro de conexão. Verifique a URL do Apps Script.';
-    erro.style.display = 'block';
-  }
+const cpf = somenteDigitos(document.getElementById('cpfLogin').value);
+const erro = document.getElementById('loginError');
+const btn = document.getElementById('btnLogin');
+if(!cpf){ erro.textContent='Digite seu CPF'; erro.style.display='block'; return; }
+btn.disabled = true; btn.innerHTML = '<span class="loading"></span> Verificando...'; erro.style.display='none';
+try {
+const r = await api('loginCpf', {cpf});
+btn.disabled = false; btn.innerHTML = 'Entrar';
+if(r.success && r.precisaCadastro){
+abrirCadastro(r.cpf);
+} else if(r.success){
+currentUser = r.user;
+if(r.chaveAcesso){
+localStorage.setItem('crm_chave', r.chaveAcesso);
+localStorage.setItem('crm_cpf', r.user.cpf);
+}
+localStorage.setItem('crm_session', JSON.stringify(currentUser));
+entrar();
+} else {
+erro.textContent = '❌ ' + (r.message || 'CPF não encontrado');
+erro.style.display = 'block';
+}
+} catch(e) {
+btn.disabled = false; btn.innerHTML = 'Entrar';
+erro.textContent = '❌ Erro de conexão. Verifique a URL do Apps Script.';
+erro.style.display = 'block';
+}
 }
 
 function abrirCadastro(cpf){
-  document.getElementById('loginOverlay').classList.remove('active');
-  document.getElementById('cadastroOverlay').classList.add('active');
-  document.getElementById('cadCpf').value = mascaraCpf(cpf);
-  document.getElementById('cadastroError').style.display = 'none';
+document.getElementById('loginOverlay').classList.remove('active');
+document.getElementById('cadastroOverlay').classList.add('active');
+document.getElementById('cadCpf').value = mascaraCpf(cpf);
+document.getElementById('cadastroError').style.display = 'none';
 }
 
 async function finalizarCadastro(){
-  const erro = document.getElementById('cadastroError');
-  const btn = document.getElementById('btnFinalizarCadastro');
-  const dados = {
-    nome: document.getElementById('cadNome').value.trim(),
-    emailGrupo: document.getElementById('cadEmailGrupo').value.trim(),
-    emailGmail: document.getElementById('cadEmailGmail').value.trim(),
-    cidadeEstado: document.getElementById('cadCidade').value.trim(),
-    endereco: document.getElementById('cadEndereco').value.trim(),
-    senha: document.getElementById('cadSenha').value,
-    confirmarSenha: document.getElementById('cadConfirmarSenha').value
-  };
-  const cpf = somenteDigitos(document.getElementById('cadCpf').value);
+const erro = document.getElementById('cadastroError');
+const btn = document.getElementById('btnFinalizarCadastro');
+const dados = {
+nome: document.getElementById('cadNome').value.trim(),
+emailGrupo: document.getElementById('cadEmailGrupo').value.trim(),
+emailGmail: document.getElementById('cadEmailGmail').value.trim(),
+cidadeEstado: document.getElementById('cadCidade').value.trim(),
+endereco: document.getElementById('cadEndereco').value.trim(),
+senha: document.getElementById('cadSenha').value,
+confirmarSenha: document.getElementById('cadConfirmarSenha').value
+};
+const cpf = somenteDigitos(document.getElementById('cadCpf').value);
 
-  if(!dados.nome){ erro.textContent='❌ Preencha o Nome Completo'; erro.style.display='block'; return; }
-  if(!dados.emailGrupo){ erro.textContent='❌ Preencha o E-mail Grupo Gênesis Brasil'; erro.style.display='block'; return; }
-  if(!dados.emailGmail){ erro.textContent='❌ Preencha o E-mail do Gmail'; erro.style.display='block'; return; }
-  if(!dados.cidadeEstado){ erro.textContent='❌ Preencha Cidade/Estado'; erro.style.display='block'; return; }
-  if(!dados.endereco){ erro.textContent='❌ Preencha o Endereço'; erro.style.display='block'; return; }
-  if(!dados.senha || dados.senha.length < 4){ erro.textContent='❌ A senha deve ter no mínimo 4 caracteres'; erro.style.display='block'; return; }
-  if(dados.senha !== dados.confirmarSenha){ erro.textContent='❌ As senhas não coincidem'; erro.style.display='block'; return; }
+if(!dados.nome){ erro.textContent='❌ Preencha o Nome Completo'; erro.style.display='block'; return; }
+if(!dados.emailGrupo){ erro.textContent='❌ Preencha o E-mail Grupo Gênesis Brasil'; erro.style.display='block'; return; }
+if(!dados.emailGmail){ erro.textContent='❌ Preencha o E-mail do Gmail'; erro.style.display='block'; return; }
+if(!dados.cidadeEstado){ erro.textContent='❌ Preencha Cidade/Estado'; erro.style.display='block'; return; }
+if(!dados.endereco){ erro.textContent='❌ Preencha o Endereço'; erro.style.display='block'; return; }
+if(!dados.senha || dados.senha.length < 4){ erro.textContent='❌ A senha deve ter no mínimo 4 caracteres'; erro.style.display='block'; return; }
+if(dados.senha !== dados.confirmarSenha){ erro.textContent='❌ As senhas não coincidem'; erro.style.display='block'; return; }
 
-  btn.disabled = true; btn.innerHTML = '<span class="loading"></span> Finalizando...'; erro.style.display='none';
-  try {
-    const r = await api('completarCadastro', {cpf, dados});
-    btn.disabled = false; btn.innerHTML = '✅ Finalizar Cadastro';
-    if(r.success){
-      currentUser = r.user;
-      localStorage.setItem('crm_chave', r.chaveAcesso);
-      localStorage.setItem('crm_cpf', r.user.cpf);
-      localStorage.setItem('crm_session', JSON.stringify(currentUser));
-      document.getElementById('cadastroOverlay').classList.remove('active');
-      entrar();
-      showToast('Cadastro concluído! Bem-vindo, ' + r.user.nome + '! 🎉','success');
-    } else {
-      erro.textContent = '❌ ' + (r.message || 'Erro ao finalizar cadastro');
-      erro.style.display = 'block';
-    }
-  } catch(e) {
-    btn.disabled = false; btn.innerHTML = '✅ Finalizar Cadastro';
-    erro.textContent = '❌ Erro de conexão com o servidor';
-    erro.style.display = 'block';
-  }
+btn.disabled = true; btn.innerHTML = '<span class="loading"></span> Finalizando...'; erro.style.display='none';
+try {
+const r = await api('completarCadastro', {cpf, dados});
+btn.disabled = false; btn.innerHTML = '✅ Finalizar Cadastro';
+if(r.success){
+currentUser = r.user;
+localStorage.setItem('crm_chave', r.chaveAcesso);
+localStorage.setItem('crm_cpf', r.user.cpf);
+localStorage.setItem('crm_session', JSON.stringify(currentUser));
+document.getElementById('cadastroOverlay').classList.remove('active');
+entrar();
+showToast('Cadastro concluído! Bem-vindo, ' + r.user.nome + '! 🎉','success');
+} else {
+erro.textContent = '❌ ' + (r.message || 'Erro ao finalizar cadastro');
+erro.style.display = 'block';
+}
+} catch(e) {
+btn.disabled = false; btn.innerHTML = '✅ Finalizar Cadastro';
+erro.textContent = '❌ Erro de conexão com o servidor';
+erro.style.display = 'block';
+}
 }
 
 // ============ LOGIN AUTOMÁTICO ============
 async function tentarLoginAutomatico(){
-  const chave = localStorage.getItem('crm_chave');
-  if(!chave) return false;
-  try {
-    const r = await api('loginChave', { chave: chave });
-    if(r.success){
-      currentUser = r.user;
-      localStorage.setItem('crm_session', JSON.stringify(currentUser));
-      entrar();
-      return true;
-    }
-  } catch(e) {}
-  return false;
+const chave = localStorage.getItem('crm_chave');
+if(!chave) return false;
+try {
+const r = await api('loginChave', { chave: chave });
+if(r.success){
+currentUser = r.user;
+localStorage.setItem('crm_session', JSON.stringify(currentUser));
+entrar();
+return true;
+}
+} catch(e) {}
+return false;
 }
 
 function entrar(){
-  document.getElementById('loginOverlay').classList.remove('active');
-  document.getElementById('cadastroOverlay').classList.remove('active');
-  document.getElementById('userProfile').style.display = 'flex';
-  document.getElementById('userName').textContent = currentUser.nome;
-  document.getElementById('userPapel').textContent = currentUser.admin ? 'Administrador' : 'Vendedor';
-  document.getElementById('avatarLetra').textContent = (currentUser.nome || '?')[0].toUpperCase();
-  document.getElementById('homeUserName').textContent = currentUser.nome;
-  carregarDados();
-  carregarUsuarios();
-  showSection('home');
-  showToast('Bem-vindo, ' + currentUser.nome + '! 👋', 'success');
+document.getElementById('loginOverlay').classList.remove('active');
+document.getElementById('cadastroOverlay').classList.remove('active');
+document.getElementById('userProfile').style.display = 'flex';
+document.getElementById('userName').textContent = currentUser.nome;
+document.getElementById('userPapel').textContent = currentUser.admin ? 'Administrador' : 'Vendedor';
+document.getElementById('avatarLetra').textContent = (currentUser.nome || '?')[0].toUpperCase();
+document.getElementById('homeUserName').textContent = currentUser.nome;
+carregarDados();
+carregarUsuarios();
+showSection('home');
+showToast('Bem-vindo, ' + currentUser.nome + '! 👋', 'success');
 }
 
 function logout(){
-  localStorage.removeItem('crm_session');
-  localStorage.removeItem('crm_chave');
-  localStorage.removeItem('crm_cpf');
-  currentUser = null; leads = []; quadro = { listas: [] };
-  document.getElementById('userProfile').style.display = 'none';
-  document.getElementById('loginOverlay').classList.add('active');
-  document.getElementById('cpfLogin').value = '';
-  document.getElementById('loginError').style.display = 'none';
-  showToast('Você saiu da sua conta', 'info');
+localStorage.removeItem('crm_session');
+localStorage.removeItem('crm_chave');
+localStorage.removeItem('crm_cpf');
+currentUser = null; leads = []; quadro = { listas: [] };
+document.getElementById('userProfile').style.display = 'none';
+document.getElementById('loginOverlay').classList.add('active');
+document.getElementById('cpfLogin').value = '';
+document.getElementById('loginError').style.display = 'none';
+showToast('Você saiu da sua conta', 'info');
 }
 
 // ============ DADOS ============
 async function carregarDados(){
-  try {
-    const r = await api('getLeads', {cpf: currentUser.cpf});
-    if(r.success){ leads = r.leads; updateAll(); }
-    else showToast(r.message||'Erro ao carregar leads','error');
-  } catch(e) { showToast('Erro de conexão','error'); }
-  try {
-    const r = await api('getKanban', {cpf: currentUser.cpf});
-    if(r.success){ quadro = r.dados; if(document.getElementById('quadro').classList.contains('active')) renderQuadro(); }
-  } catch(e) {}
+try {
+const r = await api('getLeads', {cpf: currentUser.cpf});
+if(r.success){ leads = r.leads; updateAll(); }
+else showToast(r.message||'Erro ao carregar leads','error');
+} catch(e) { showToast('Erro de conexão','error'); }
+try {
+const r = await api('getKanban', {cpf: currentUser.cpf});
+if(r.success){ quadro = r.dados; if(document.getElementById('quadro').classList.contains('active')) renderQuadro(); }
+} catch(e) {}
 }
 
 async function carregarUsuarios(){
-  try {
-    const r = await api('getAllUsers', {cpf: currentUser.cpf});
-    if(r.success){
-      usuarios = r.users;
-      const sel = document.getElementById('leadResponsavel');
-      if(sel){
-        sel.innerHTML = usuarios.map(u => '<option value="'+escapeHtml(u.cpf)+'">'+escapeHtml(u.nome)+'</option>').join('');
-        sel.value = currentUser.cpf;
-        if(!currentUser.admin) sel.disabled = true;
-      }
-    }
-  } catch(e) {}
+try {
+const r = await api('getAllUsers', {cpf: currentUser.cpf});
+if(r.success){
+usuarios = r.users;
+const sel = document.getElementById('leadResponsavel');
+if(sel){
+sel.innerHTML = usuarios.map(u => '<option value="'+escapeHtml(u.cpf)+'">'+escapeHtml(u.nome)+'</option>').join('');
+sel.value = currentUser.cpf;
+if(!currentUser.admin) sel.disabled = true;
+}
+}
+} catch(e) {}
 }
 
 function showSection(id){
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  document.querySelectorAll('.navbar-buttons .btn').forEach(b=>b.classList.remove('active-nav'));
-  const map = {home:0, novolead:1, consulta:2, quadro:3, suporte:4};
-  const btns = document.querySelectorAll('.navbar-buttons .btn');
-  if(map[id]!==undefined) btns[map[id]].classList.add('active-nav');
-  if(id==='quadro') renderQuadro();
-  if(id==='consulta') buscarLeads();
+document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+document.querySelectorAll('.navbar-buttons .btn').forEach(b=>b.classList.remove('active-nav'));
+const map = {home:0, novolead:1, consulta:2, quadro:3, suporte:4};
+const btns = document.querySelectorAll('.navbar-buttons .btn');
+if(map[id]!==undefined) btns[map[id]].classList.add('active-nav');
+if(id==='quadro') renderQuadro();
+if(id==='consulta') buscarLeads();
 }
 
 // ============ LEADS ============
 async function concluirRegistro(){
-  const nome = document.getElementById('leadNome').value.trim();
-  if(!nome){ showToast('Preencha ao menos o Nome!','error'); document.getElementById('leadNome').focus(); return; }
-  const btn = document.getElementById('btnSalvarLead');
-  btn.disabled = true; btn.innerHTML = '<span class="loading"></span> Salvando...';
-  const lead = {
-    nome: nome,
-    cpfCnpj: document.getElementById('leadCpfCnpj').value.trim(),
-    instituicao: document.getElementById('leadInstituicao').value,
-    cidade: document.getElementById('leadCidade').value.trim(),
-    pessoa: document.getElementById('leadPessoa').value.trim(),
-    cargo: document.getElementById('leadCargo').value,
-    responsavel: document.getElementById('leadResponsavel').value || currentUser.cpf,
-    etapa: document.getElementById('leadEtapa').value,
-    temperatura: document.getElementById('leadTemperatura').value,
-    canal: document.getElementById('leadCanal').value,
-    proximoPasso: document.getElementById('leadProximoPasso').value.trim(),
-    dataRetorno: document.getElementById('leadDataRetorno').value,
-    resumo: document.getElementById('leadResumo').value.trim()
-  };
-  try {
-    const r = await api('addLead', {cpf: currentUser.cpf, lead: lead});
-    btn.disabled = false; btn.innerHTML = '✅ Concluir Registro';
-    if(r.success){
-      limparFormulario();
-      carregarDados();
-      showToast('Lead registrado com sucesso! 🎉','success');
-    } else {
-      showToast(r.message||'Erro ao salvar','error');
-    }
-  } catch(e) {
-    btn.disabled = false; btn.innerHTML = '✅ Concluir Registro';
-    showToast('Erro de conexão','error');
-  }
+const nome = document.getElementById('leadNome').value.trim();
+if(!nome){ showToast('Preencha ao menos o Nome!','error'); document.getElementById('leadNome').focus(); return; }
+const btn = document.getElementById('btnSalvarLead');
+btn.disabled = true; btn.innerHTML = '<span class="loading"></span> Salvando...';
+const lead = {
+nome: nome,
+cpfCnpj: document.getElementById('leadCpfCnpj').value.trim(),
+instituicao: document.getElementById('leadInstituicao').value,
+cidade: document.getElementById('leadCidade').value.trim(),
+pessoa: document.getElementById('leadPessoa').value.trim(),
+cargo: document.getElementById('leadCargo').value,
+responsavel: document.getElementById('leadResponsavel').value || currentUser.cpf,
+etapa: document.getElementById('leadEtapa').value,
+temperatura: document.getElementById('leadTemperatura').value,
+canal: document.getElementById('leadCanal').value,
+proximoPasso: document.getElementById('leadProximoPasso').value.trim(),
+dataRetorno: document.getElementById('leadDataRetorno').value,
+resumo: document.getElementById('leadResumo').value.trim()
+};
+try {
+const r = await api('addLead', {cpf: currentUser.cpf, lead: lead});
+btn.disabled = false; btn.innerHTML = '✅ Concluir Registro';
+if(r.success){
+limparFormulario();
+carregarDados();
+showToast('Lead registrado com sucesso! 🎉','success');
+} else {
+showToast(r.message||'Erro ao salvar','error');
+}
+} catch(e) {
+btn.disabled = false; btn.innerHTML = '✅ Concluir Registro';
+showToast('Erro de conexão','error');
+}
 }
 
 function limparFormulario(){
-  ['leadNome','leadCpfCnpj','leadCidade','leadPessoa','leadProximoPasso','leadDataRetorno','leadResumo'].forEach(i=>document.getElementById(i).value='');
-  ['leadInstituicao','leadCargo'].forEach(i=>document.getElementById(i).value='');
-  document.getElementById('leadEtapa').value='novo_lead';
-  document.getElementById('leadTemperatura').value='quente';
-  document.getElementById('leadCanal').value='ligacao';
-  if(currentUser) document.getElementById('leadResponsavel').value = currentUser.cpf;
+['leadNome','leadCpfCnpj','leadCidade','leadPessoa','leadProximoPasso','leadDataRetorno','leadResumo'].forEach(i=>document.getElementById(i).value='');
+['leadInstituicao','leadCargo'].forEach(i=>document.getElementById(i).value='');
+document.getElementById('leadEtapa').value='novo_lead';
+document.getElementById('leadTemperatura').value='quente';
+document.getElementById('leadCanal').value='ligacao';
+if(currentUser) document.getElementById('leadResponsavel').value = currentUser.cpf;
 }
 
 async function removerLead(id){
-  if(!confirm('Deseja realmente excluir este lead?')) return;
-  try {
-    const r = await api('deleteLead', {id: id, cpf: currentUser.cpf});
-    if(r.success){ carregarDados(); buscarLeads(); showToast('Lead removido','info'); }
-    else showToast(r.message,'error');
-  } catch(e) { showToast('Erro de conexão','error'); }
+if(!confirm('Deseja realmente excluir este lead?')) return;
+try {
+const r = await api('deleteLead', {id: id, cpf: currentUser.cpf});
+if(r.success){ carregarDados(); buscarLeads(); showToast('Lead removido','info'); }
+else showToast(r.message,'error');
+} catch(e) { showToast('Erro de conexão','error'); }
 }
 
 function buscarLeads(){
-  const termo = (document.getElementById('consultaInput')?.value||'').toLowerCase().trim();
-  const tbody = document.getElementById('tableConsulta');
-  const countEl = document.getElementById('resultadosCount');
-  if(!tbody) return;
-  let filtrados = leads;
-  if(termo){
-    filtrados = leads.filter(l=>{
-      const campos = [l.nome,l.cpfCnpj,l.cidade,l.pessoa,labelInstituicao(l.instituicao),labelEtapa(l.etapa),labelTemperatura(l.temperatura),labelCanal(l.canal),labelCargo(l.cargo),nomeDe(l.responsavel)].map(c=>(c||'').toLowerCase());
-      return campos.some(c=>c.includes(termo));
-    });
-  }
-  countEl.innerHTML = termo ? 'Encontrados: <strong>'+filtrados.length+'</strong> lead(s)' : 'Total: <strong>'+leads.length+'</strong> lead(s)';
-  if(filtrados.length===0){
-    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">'+(termo?'🔍':'📭')+'</div><p>'+(termo?'Nenhum lead encontrado':'Nenhum lead cadastrado ainda')+'</p><small>'+(termo?'Tente outro termo':'Registre um novo lead na aba "Novo Lead"')+'</small></div></td></tr>';
-    return;
-  }
-  tbody.innerHTML = filtrados.map(l=>`
-    <tr>
-      <td><strong>${escapeHtml(l.nome)}</strong></td>
-      <td>${escapeHtml(l.cpfCnpj)||'<span style="color:#475569">-</span>'}</td>
-      <td>${escapeHtml(l.cidade)||'<span style="color:#475569">-</span>'}</td>
-      <td><span class="badge etapa-${l.etapa}">${labelEtapa(l.etapa)}</span></td>
-      <td><span class="badge temp-${l.temperatura}">${labelTemperatura(l.temperatura)}</span></td>
-      <td><button class="btn btn-info" onclick="verDetalhes('${l.id}')">👁 Ver</button><button class="btn btn-danger" onclick="removerLead('${l.id}')">🗑</button></td>
-    </tr>`).join('');
+const termo = (document.getElementById('consultaInput')?.value||'').toLowerCase().trim();
+const tbody = document.getElementById('tableConsulta');
+const countEl = document.getElementById('resultadosCount');
+if(!tbody) return;
+let filtrados = leads;
+if(termo){
+filtrados = leads.filter(l=>{
+const campos = [l.nome,l.cpfCnpj,l.cidade,l.pessoa,labelInstituicao(l.instituicao),labelEtapa(l.etapa),labelTemperatura(l.temperatura),labelCanal(l.canal),labelCargo(l.cargo),nomeDe(l.responsavel)].map(c=>(c||'').toLowerCase());
+return campos.some(c=>c.includes(termo));
+});
+}
+countEl.innerHTML = termo ? 'Encontrados: <strong>'+filtrados.length+'</strong> lead(s)' : 'Total: <strong>'+leads.length+'</strong> lead(s)';
+if(filtrados.length===0){
+tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">'+(termo?'🔍':'📭')+'</div><p>'+(termo?'Nenhum lead encontrado':'Nenhum lead cadastrado ainda')+'</p><small>'+(termo?'Tente outro termo':'Registre um novo lead na aba "Novo Lead"')+'</small></div></td></tr>';
+return;
+}
+tbody.innerHTML = filtrados.map(l=>`
+   <tr>
+     <td><strong>${escapeHtml(l.nome)}</strong></td>
+     <td>${escapeHtml(l.cpfCnpj)||'<span style="color:#475569">-</span>'}</td>
+     <td>${escapeHtml(l.cidade)||'<span style="color:#475569">-</span>'}</td>
+     <td><span class="badge etapa-${l.etapa}">${labelEtapa(l.etapa)}</span></td>
+     <td><span class="badge temp-${l.temperatura}">${labelTemperatura(l.temperatura)}</span></td>
+     <td><button class="btn btn-info" onclick="verDetalhes('${l.id}')">👁 Ver</button><button class="btn btn-danger" onclick="removerLead('${l.id}')">🗑</button></td>
+   </tr>`).join('');
 }
 
 function escapeHtml(str){
-  if(!str) return '';
-  return String(str).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+if(!str) return '';
+return String(str).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
 
 function verDetalhes(id){
-  const lead = leads.find(l=>String(l.id)===String(id));
-  if(!lead) return;
-  const d = (label,value)=>`<div class="detail-item"><div class="detail-label">${label}</div><div class="detail-value ${!value?'empty':''}">${value?escapeHtml(value):'Não informado'}</div></div>`;
-  const df = (label,value)=>`<div class="detail-item full"><div class="detail-label">${label}</div><div class="detail-value ${!value?'empty':''}" style="white-space:pre-wrap;">${value?escapeHtml(value):'Não informado'}</div></div>`;
-  document.getElementById('detalhesConteudo').innerHTML = `
-    <div class="form-section-title">📇 Contato</div>
-    <div class="detail-grid">
-      ${d('Nome',lead.nome)}
-      ${d('CPF / CNPJ',lead.cpfCnpj)}
-      ${d('Instituição / Empresa',labelInstituicao(lead.instituicao))}
-      ${d('Cidade / UF',lead.cidade)}
-    </div>
-    <div class="form-section-title">👤 Pessoa com quem falou</div>
-    <div class="detail-grid">
-      ${d('Nome',lead.pessoa)}
-      ${d('Cargo',labelCargo(lead.cargo))}
-      ${d('Responsável',nomeDe(lead.responsavel))}
-    </div>
-    <div class="form-section-title">📊 Resultado do Contato</div>
-    <div class="detail-grid">
-      <div class="detail-item"><div class="detail-label">Etapa</div><div class="detail-value"><span class="badge etapa-${lead.etapa}">${labelEtapa(lead.etapa)}</span></div></div>
-      <div class="detail-item"><div class="detail-label">Temperatura</div><div class="detail-value"><span class="badge temp-${lead.temperatura}">${labelTemperatura(lead.temperatura)}</span></div></div>
-      ${d('Canal',labelCanal(lead.canal))}
-    </div>
-    <div class="form-section-title">🔁 Continuidade</div>
-    <div class="detail-grid">
-      ${d('Próximo passo',lead.proximoPasso)}
-      ${d('Data de retorno',lead.dataRetorno?fmtDate(lead.dataRetorno):'')}
-    </div>
-    <div class="form-section-title">📝 Resumo da Conversa</div>
-    ${df('Resumo',lead.resumo)}
-    <div style="margin-top:16px;font-size:12px;color:#64748b;">📅 Registrado em: ${fmtDateTime(lead.criadoEm)}</div>
-  `;
-  document.getElementById('btnExcluirDetalhes').onclick = ()=>{
-    if(!confirm('Deseja realmente excluir este lead?')) return;
-    removerLead(lead.id);
-    closeModal('detalhes');
-  };
-  openModal('detalhes');
+const lead = leads.find(l=>String(l.id)===String(id));
+if(!lead) return;
+const d = (label,value)=>`<div class="detail-item"><div class="detail-label">${label}</div><div class="detail-value ${!value?'empty':''}">${value?escapeHtml(value):'Não informado'}</div></div>`;
+const df = (label,value)=>`<div class="detail-item full"><div class="detail-label">${label}</div><div class="detail-value ${!value?'empty':''}" style="white-space:pre-wrap;">${value?escapeHtml(value):'Não informado'}</div></div>`;
+document.getElementById('detalhesConteudo').innerHTML = `
+   <div class="form-section-title">📇 Contato</div>
+   <div class="detail-grid">
+     ${d('Nome',lead.nome)}
+     ${d('CPF / CNPJ',lead.cpfCnpj)}
+     ${d('Instituição / Empresa',labelInstituicao(lead.instituicao))}
+     ${d('Cidade / UF',lead.cidade)}
+   </div>
+   <div class="form-section-title">👤 Pessoa com quem falou</div>
+   <div class="detail-grid">
+     ${d('Nome',lead.pessoa)}
+     ${d('Cargo',labelCargo(lead.cargo))}
+     ${d('Responsável',nomeDe(lead.responsavel))}
+   </div>
+   <div class="form-section-title">📊 Resultado do Contato</div>
+   <div class="detail-grid">
+     <div class="detail-item"><div class="detail-label">Etapa</div><div class="detail-value"><span class="badge etapa-${lead.etapa}">${labelEtapa(lead.etapa)}</span></div></div>
+     <div class="detail-item"><div class="detail-label">Temperatura</div><div class="detail-value"><span class="badge temp-${lead.temperatura}">${labelTemperatura(lead.temperatura)}</span></div></div>
+     ${d('Canal',labelCanal(lead.canal))}
+   </div>
+   <div class="form-section-title">🔁 Continuidade</div>
+   <div class="detail-grid">
+     ${d('Próximo passo',lead.proximoPasso)}
+     ${d('Data de retorno',lead.dataRetorno?fmtDate(lead.dataRetorno):'')}
+   </div>
+   <div class="form-section-title">📝 Resumo da Conversa</div>
+   ${df('Resumo',lead.resumo)}
+   <div style="margin-top:16px;font-size:12px;color:#64748b;">📅 Registrado em: ${fmtDateTime(lead.criadoEm)}</div>
+ `;
+document.getElementById('btnExcluirDetalhes').onclick = ()=>{
+if(!confirm('Deseja realmente excluir este lead?')) return;
+removerLead(lead.id);
+closeModal('detalhes');
+};
+openModal('detalhes');
 }
 
 // ============ KANBAN ============
@@ -794,47 +796,47 @@ function closeModal(t){ document.getElementById('modal'+t.charAt(0).toUpperCase(
 function selectLabel(color,el){ selectedLabel=color; document.querySelectorAll('.label-color').forEach(c=>c.classList.remove('selected')); el.classList.add('selected'); }
 
 function salvarCartao(){
-  const titulo = document.getElementById('cardTitulo').value.trim();
-  if(!titulo){ showToast('Preencha o título!','error'); return; }
-  const lista = quadro.listas.find(l=>l.id===currentListId);
-  if(!lista) return;
-  lista.cartoes.push({id:genId(),titulo,descricao:document.getElementById('cardDescricao').value,etiqueta:selectedLabel});
-  closeModal('cartao');
-  salvarQuadro();
-  showToast('Cartão adicionado! 📋','success');
+const titulo = document.getElementById('cardTitulo').value.trim();
+if(!titulo){ showToast('Preencha o título!','error'); return; }
+const lista = quadro.listas.find(l=>l.id===currentListId);
+if(!lista) return;
+lista.cartoes.push({id:genId(),titulo,descricao:document.getElementById('cardDescricao').value,etiqueta:selectedLabel});
+closeModal('cartao');
+salvarQuadro();
+showToast('Cartão adicionado! 📋','success');
 }
 function salvarLista(){
-  const titulo = document.getElementById('listTitulo').value.trim();
-  if(!titulo){ showToast('Digite o nome da lista!','error'); return; }
-  quadro.listas.push({id:genId(),titulo,cartoes:[]});
-  closeModal('lista');
-  salvarQuadro();
-  showToast('Lista criada! 📋','success');
+const titulo = document.getElementById('listTitulo').value.trim();
+if(!titulo){ showToast('Digite o nome da lista!','error'); return; }
+quadro.listas.push({id:genId(),titulo,cartoes:[]});
+closeModal('lista');
+salvarQuadro();
+showToast('Lista criada! 📋','success');
 }
 function renomearLista(listId){
-  const lista = quadro.listas.find(l=>l.id===listId);
-  if(!lista) return;
-  const novo = prompt('Renomear lista:',lista.titulo);
-  if(novo&&novo.trim()){ lista.titulo=novo.trim(); salvarQuadro(); renderQuadro(); showToast('Lista renomeada!','success'); }
+const lista = quadro.listas.find(l=>l.id===listId);
+if(!lista) return;
+const novo = prompt('Renomear lista:',lista.titulo);
+if(novo&&novo.trim()){ lista.titulo=novo.trim(); salvarQuadro(); renderQuadro(); showToast('Lista renomeada!','success'); }
 }
 function removerLista(listId){
-  const lista = quadro.listas.find(l=>l.id===listId);
-  if(!lista) return;
-  if(!confirm('Excluir a lista "'+lista.titulo+'" e todos os cartões?')) return;
-  quadro.listas = quadro.listas.filter(l=>l.id!==listId);
-  salvarQuadro(); renderQuadro(); showToast('Lista removida','info');
+const lista = quadro.listas.find(l=>l.id===listId);
+if(!lista) return;
+if(!confirm('Excluir a lista "'+lista.titulo+'" e todos os cartões?')) return;
+quadro.listas = quadro.listas.filter(l=>l.id!==listId);
+salvarQuadro(); renderQuadro(); showToast('Lista removida','info');
 }
 function removerCartao(listId,cardId){
-  const lista = quadro.listas.find(l=>l.id===listId);
-  if(!lista) return;
-  lista.cartoes = lista.cartoes.filter(c=>c.id!==cardId);
-  salvarQuadro(); renderQuadro(); showToast('Cartão removido','info');
+const lista = quadro.listas.find(l=>l.id===listId);
+if(!lista) return;
+lista.cartoes = lista.cartoes.filter(c=>c.id!==cardId);
+salvarQuadro(); renderQuadro(); showToast('Cartão removido','info');
 }
 async function salvarQuadro(){
-  try {
-    const r = await api('saveKanban', {cpf: currentUser.cpf, dados: quadro});
-    if(!r.success) showToast(r.message||'Erro','error');
-  } catch(e) { showToast('Erro de conexão','error'); }
+try {
+const r = await api('saveKanban', {cpf: currentUser.cpf, dados: quadro});
+if(!r.success) showToast(r.message||'Erro','error');
+} catch(e) { showToast('Erro de conexão','error'); }
 }
 
 function onDragStart(e,cardId,listId){ draggedCard=cardId; draggedFromList=listId; e.dataTransfer.effectAllowed='move'; setTimeout(()=>{document.querySelectorAll('.board-card').forEach(c=>{if(c.dataset.cardId===cardId)c.classList.add('dragging');});},0); }
@@ -842,43 +844,43 @@ function onDragEnd(){ document.querySelectorAll('.board-card').forEach(c=>c.clas
 function onDragOver(e,listId){ e.preventDefault(); e.dataTransfer.dropEffect='move'; document.querySelectorAll('.board-list').forEach(l=>l.classList.remove('drag-over')); const list=document.querySelector('.board-list[data-list-id="'+listId+'"]'); if(list) list.classList.add('drag-over'); }
 function onDragLeave(e,listId){ const list=document.querySelector('.board-list[data-list-id="'+listId+'"]'); if(list&&!list.contains(e.relatedTarget)) list.classList.remove('drag-over'); }
 function onDrop(e,listId){
-  e.preventDefault();
-  document.querySelectorAll('.board-list').forEach(l=>l.classList.remove('drag-over'));
-  if(!draggedCard||!draggedFromList) return;
-  const source = quadro.listas.find(l=>l.id===draggedFromList);
-  const target = quadro.listas.find(l=>l.id===listId);
-  if(!source||!target) return;
-  const idx = source.cartoes.findIndex(c=>c.id===draggedCard);
-  if(idx===-1) return;
-  const [card] = source.cartoes.splice(idx,1);
-  target.cartoes.push(card);
-  draggedCard=null; draggedFromList=null;
-  salvarQuadro(); renderQuadro();
-  showToast('Cartão movido! 📋','success');
+e.preventDefault();
+document.querySelectorAll('.board-list').forEach(l=>l.classList.remove('drag-over'));
+if(!draggedCard||!draggedFromList) return;
+const source = quadro.listas.find(l=>l.id===draggedFromList);
+const target = quadro.listas.find(l=>l.id===listId);
+if(!source||!target) return;
+const idx = source.cartoes.findIndex(c=>c.id===draggedCard);
+if(idx===-1) return;
+const [card] = source.cartoes.splice(idx,1);
+target.cartoes.push(card);
+draggedCard=null; draggedFromList=null;
+salvarQuadro(); renderQuadro();
+showToast('Cartão movido! 📋','success');
 }
 
 function renderQuadro(){
-  const board = document.getElementById('boardContainer');
-  if(!board) return;
-  if(!quadro||!quadro.listas||quadro.listas.length===0) quadro = defaultKanban();
-  board.innerHTML = quadro.listas.map(lista=>{
-    const cards = lista.cartoes.map(cartao=>`
-      <div class="board-card" draggable="true" data-card-id="${cartao.id}" ondragstart="onDragStart(event,'${cartao.id}','${lista.id}')" ondragend="onDragEnd()">
-        ${cartao.etiqueta?'<span class="board-card-label" style="background:'+cartao.etiqueta+'"></span>':''}
-        <div class="board-card-title">${escapeHtml(cartao.titulo)}</div>
-        ${cartao.descricao?'<div class="board-card-desc">'+escapeHtml(cartao.descricao)+'</div>':''}
-        <button class="board-card-delete" onclick="removerCartao(\''+lista.id+'\',\''+cartao.id+'\')">✕</button>
-      </div>`).join('');
-    return `
-      <div class="board-list" data-list-id="${lista.id}" ondragover="onDragOver(event,'${lista.id}')" ondragleave="onDragLeave(event,'${lista.id}')" ondrop="onDrop(event,'${lista.id}')">
-        <div class="board-list-header">
-          <span class="board-list-title" ondblclick="renomearLista('${lista.id}')" title="Clique duplo para renomear">${escapeHtml(lista.titulo)} <span class="board-list-count">${lista.cartoes.length}</span></span>
-          <button class="board-list-delete" onclick="removerLista('${lista.id}')">🗑</button>
-        </div>
-        <div class="board-cards">${cards||'<div class="board-empty">Arraste cartões aqui</div>'}</div>
-        <button class="btn-add-card" onclick="openCardModal('${lista.id}')">+ Adicionar cartão</button>
-      </div>`;
-  }).join('') + '<button class="btn-add-list" onclick="openListModal()">+ Adicionar lista</button>';
+const board = document.getElementById('boardContainer');
+if(!board) return;
+if(!quadro||!quadro.listas||quadro.listas.length===0) quadro = defaultKanban();
+board.innerHTML = quadro.listas.map(lista=>{
+const cards = lista.cartoes.map(cartao=>`
+     <div class="board-card" draggable="true" data-card-id="${cartao.id}" ondragstart="onDragStart(event,'${cartao.id}','${lista.id}')" ondragend="onDragEnd()">
+       ${cartao.etiqueta?'<span class="board-card-label" style="background:'+cartao.etiqueta+'"></span>':''}
+       <div class="board-card-title">${escapeHtml(cartao.titulo)}</div>
+       ${cartao.descricao?'<div class="board-card-desc">'+escapeHtml(cartao.descricao)+'</div>':''}
+       <button class="board-card-delete" onclick="removerCartao(\''+lista.id+'\',\''+cartao.id+'\')">✕</button>
+     </div>`).join('');
+return `
+     <div class="board-list" data-list-id="${lista.id}" ondragover="onDragOver(event,'${lista.id}')" ondragleave="onDragLeave(event,'${lista.id}')" ondrop="onDrop(event,'${lista.id}')">
+       <div class="board-list-header">
+         <span class="board-list-title" ondblclick="renomearLista('${lista.id}')" title="Clique duplo para renomear">${escapeHtml(lista.titulo)} <span class="board-list-count">${lista.cartoes.length}</span></span>
+         <button class="board-list-delete" onclick="removerLista('${lista.id}')">🗑</button>
+       </div>
+       <div class="board-cards">${cards||'<div class="board-empty">Arraste cartões aqui</div>'}</div>
+       <button class="btn-add-card" onclick="openCardModal('${lista.id}')">+ Adicionar cartão</button>
+     </div>`;
+}).join('') + '<button class="btn-add-list" onclick="openListModal()">+ Adicionar lista</button>';
 }
 
 // ============ LABELS ============
@@ -892,39 +894,39 @@ function fmtDate(d){ if(!d) return ''; try{const p=d.split('T')[0].split('-');re
 function fmtDateTime(t){ if(!t) return ''; try{return new Date(t).toLocaleString('pt-BR');}catch(e){return t;} }
 
 function renderLeads(){
-  document.getElementById('homeLeads').innerHTML = leads.length ? leads.slice(0,5).map(l=>`
-    <tr>
-      <td><strong>${escapeHtml(l.nome)}</strong></td>
-      <td>${labelInstituicao(l.instituicao)}</td>
-      <td><span class="badge etapa-${l.etapa}">${labelEtapa(l.etapa)}</span></td>
-      <td><span class="badge temp-${l.temperatura}">${labelTemperatura(l.temperatura)}</span></td>
-    </tr>`).join('') : '<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">📭</div><p>Nenhum lead ainda</p></div></td></tr>';
+document.getElementById('homeLeads').innerHTML = leads.length ? leads.slice(0,5).map(l=>`
+   <tr>
+     <td><strong>${escapeHtml(l.nome)}</strong></td>
+     <td>${labelInstituicao(l.instituicao)}</td>
+     <td><span class="badge etapa-${l.etapa}">${labelEtapa(l.etapa)}</span></td>
+     <td><span class="badge temp-${l.temperatura}">${labelTemperatura(l.temperatura)}</span></td>
+   </tr>`).join('') : '<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">📭</div><p>Nenhum lead ainda</p></div></td></tr>';
 }
 
 function updateDashboard(){
-  const total = leads.length;
-  const convertidos = leads.filter(l=>l.etapa==='convertido').length;
-  const quentes = leads.filter(l=>l.temperatura==='quente').length;
-  const hoje = new Date().toISOString().split('T')[0];
-  const retornos = leads.filter(l=>String(l.dataRetorno||'').startsWith(hoje)).length;
-  document.getElementById('totalLeads').textContent = total;
-  document.getElementById('totalConvertidos').textContent = convertidos;
-  document.getElementById('totalQuentes').textContent = quentes;
-  document.getElementById('totalRetornos').textContent = retornos;
-  document.getElementById('progressLeads').style.width = Math.min(100,(total/50)*100)+'%';
-  document.getElementById('progressConvertidos').style.width = Math.min(100,(convertidos/Math.max(1,total))*100)+'%';
-  document.getElementById('progressQuentes').style.width = Math.min(100,(quentes/Math.max(1,total))*100)+'%';
-  document.getElementById('progressRetornos').style.width = Math.min(100,(retornos/Math.max(1,total))*100)+'%';
+const total = leads.length;
+const convertidos = leads.filter(l=>l.etapa==='convertido').length;
+const quentes = leads.filter(l=>l.temperatura==='quente').length;
+const hoje = new Date().toISOString().split('T')[0];
+const retornos = leads.filter(l=>String(l.dataRetorno||'').startsWith(hoje)).length;
+document.getElementById('totalLeads').textContent = total;
+document.getElementById('totalConvertidos').textContent = convertidos;
+document.getElementById('totalQuentes').textContent = quentes;
+document.getElementById('totalRetornos').textContent = retornos;
+document.getElementById('progressLeads').style.width = Math.min(100,(total/50)*100)+'%';
+document.getElementById('progressConvertidos').style.width = Math.min(100,(convertidos/Math.max(1,total))*100)+'%';
+document.getElementById('progressQuentes').style.width = Math.min(100,(quentes/Math.max(1,total))*100)+'%';
+document.getElementById('progressRetornos').style.width = Math.min(100,(retornos/Math.max(1,total))*100)+'%';
 }
 
 function updateAll(){ renderLeads(); updateDashboard(); }
 
 window.onload = async function(){
-  const logado = await tentarLoginAutomatico();
-  if(!logado){
-    const session = JSON.parse(localStorage.getItem('crm_session')||'null');
-    if(session){ currentUser = session; entrar(); }
-  }
+const logado = await tentarLoginAutomatico();
+if(!logado){
+const session = JSON.parse(localStorage.getItem('crm_session')||'null');
+if(session){ currentUser = session; entrar(); }
+}
 };
 
 document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('active');}));
