@@ -17,8 +17,6 @@ body{margin:0;font-family:'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;b
 button{font-family:inherit;cursor:pointer;}
 a{text-decoration:none;color:inherit;}
 input,select,textarea{font-family:inherit;}
-
-/* ===== LOGIN ===== */
 #loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#2f7d6b,#1f5347);}
 #loginScreen.hidden{display:none;}
 .login-box{background:#fff;border-radius:16px;padding:32px;max-width:380px;width:100%;box-shadow:0 10px 40px rgba(0,0,0,.2);}
@@ -41,8 +39,6 @@ input,select,textarea{font-family:inherit;}
 .cpf-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent-soft);color:var(--accent);font-size:12px;font-weight:600;padding:5px 10px;border-radius:20px;margin-bottom:14px;}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;margin-right:6px;}
 @keyframes spin{to{transform:rotate(360deg);}}
-
-/* ===== APP LAYOUT ===== */
 #app{display:none;min-height:100vh;}
 #app.visible{display:flex;}
 #sidebar{width:var(--sidebar-w);background:var(--card);border-right:1px solid var(--border);
@@ -215,7 +211,6 @@ body.is-admin .nav-item.admin-only{display:flex;}
 </head>
 <body>
 
-<!-- ===================== TELA DE LOGIN ===================== -->
 <div id="loginScreen">
   <div class="login-box">
     <h1>CRM Pocket</h1>
@@ -223,7 +218,6 @@ body.is-admin .nav-item.admin-only{display:flex;}
     <p class="welcome-text" id="loginWelcomeText">Organize relacionamentos e próximos cuidados com simplicidade.</p>
     <div class="login-msg" id="loginMsg"></div>
 
-    <!-- ETAPA 1: CPF -->
     <div id="etapaCpf">
       <div class="login-field">
         <label>CPF</label>
@@ -232,7 +226,6 @@ body.is-admin .nav-item.admin-only{display:flex;}
       <button class="login-btn" id="btnContinuarCpf" onclick="verificarCpfEtapa()">Continuar</button>
     </div>
 
-    <!-- ETAPA 2: LOGIN (já cadastrado) -->
     <div id="etapaLogin" style="display:none;">
       <div class="login-welcome">Olá, <strong id="nomeLoginTexto"></strong></div>
       <div class="login-field">
@@ -243,7 +236,6 @@ body.is-admin .nav-item.admin-only{display:flex;}
       <button class="login-back" onclick="voltarEtapaCpf()">Usar outro CPF</button>
     </div>
 
-    <!-- ETAPA 3: PRIMEIRO ACESSO -->
     <div id="etapaCadastro" style="display:none;">
       <div class="cpf-badge">✓ CPF reconhecido</div>
       <div class="login-welcome">Primeiro acesso — complete seu cadastro</div>
@@ -259,7 +251,6 @@ body.is-admin .nav-item.admin-only{display:flex;}
   </div>
 </div>
 
-<!-- ===================== APP PRINCIPAL ===================== -->
 <div id="app">
   <aside id="sidebar">
     <div class="logo">Gênesis Brasil<small>CRM Pocket</small></div>
@@ -305,7 +296,6 @@ body.is-admin .nav-item.admin-only{display:flex;}
 
 <nav id="bottomnav"><div class="nav-row" id="bottomNavList"></div></nav>
 
-<!-- MODAIS -->
 <div class="overlay" id="overlay-novoContato">
   <div class="modal">
     <button class="close-x" onclick="closeModal('novoContato')">✕</button>
@@ -398,9 +388,6 @@ body.is-admin .nav-item.admin-only{display:flex;}
 <div class="toast" id="toast"></div>
 
 <script>
-/* =========================================================
- * CONFIGURAÇÃO DA API
- * ========================================================= */
 const API_URL = "https://script.google.com/macros/s/AKfycbyVbYAzt8ch8EzSE0M6M3VbNy0QV3zArhzAXz5RX4aqPsERm4JaEmmOmrJOWPIbi9PYnw/exec";
 const SESSION_KEY = 'crm_token';
 const SESSION_USER_KEY = 'crm_usuario';
@@ -418,7 +405,6 @@ function limparSessao(){
   localStorage.removeItem(SESSION_USER_KEY);
 }
 
-/* Função central de comunicação com o backend */
 async function api(acao, dados){
   dados = dados || {};
   const payload = Object.assign({ acao: acao, token: obterToken() }, dados);
@@ -431,7 +417,6 @@ async function api(acao, dados){
     const json = await resposta.json();
     if(!json.sucesso){
       const msg = json.mensagem || 'Erro desconhecido.';
-      // Só desloga se o backend indicar explicitamente sessão expirada/token inválido
       if(/sess[aã]o expirada|token inv[aá]lido|n[ãa]o autenticado/i.test(msg)){
         limparSessao();
         mostrarLogin();
@@ -448,9 +433,6 @@ async function api(acao, dados){
   }
 }
 
-/* =========================================================
- * TOAST / MENSAGENS
- * ========================================================= */
 let toastTimer=null;
 function toast(msg, tipo){
   const t = document.getElementById('toast');
@@ -460,9 +442,6 @@ function toast(msg, tipo){
   toastTimer = setTimeout(()=>{ t.className='toast'; }, 3200);
 }
 
-/* =========================================================
- * MÁSCARA E VALIDAÇÃO DE CPF
- * ========================================================= */
 function mascaraCPF(input){
   let v = input.value.replace(/\D/g,'').slice(0,11);
   if(v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
@@ -477,15 +456,12 @@ function mascararCpfExibicao(cpf){
   return '***.***.***-' + cpf.slice(9);
 }
 
-/* =========================================================
- * ESTADO GLOBAL
- * ========================================================= */
 const ETAPAS = ["Primeiro contato","Escuta e entendimento","Construção de caminho","Acompanhamento","Decisão","Relacionamento contínuo"];
-let usuarioAtual = null; // {id, nome, perfil, cidade, telefone, email}
+let usuarioAtual = null;
 let currentPage = "visaoDoDia";
 let selectedCalDate = null;
 let searchTerm = "";
-let cacheConsultores = []; // usado no admin para exibir nome do responsável e filtro
+let cacheConsultores = [];
 
 const today = new Date(); today.setHours(0,0,0,0);
 const iso = d => Utilities_toISO(d);
@@ -493,9 +469,6 @@ function Utilities_toISO(d){ return d.toISOString().slice(0,10); }
 const addDays = (d,n) => { const x=new Date(d); x.setDate(x.getDate()+n); return x; };
 const fmtDate = (dstr) => { if(!dstr) return "—"; const d=new Date((dstr||'').slice(0,10)+"T00:00:00"); if(isNaN(d)) return "—"; return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}); };
 
-/* =========================================================
- * FLUXO DE LOGIN
- * ========================================================= */
 function mostrarMsgLogin(msg, tipo){
   const el = document.getElementById('loginMsg');
   el.textContent = msg;
@@ -622,9 +595,6 @@ async function fazerLogout(){
   mostrarLogin();
 }
 
-/* =========================================================
- * INICIALIZAÇÃO DO APP
- * ========================================================= */
 async function verificarSessaoExistente(){
   const token = obterToken();
   if(!token){ mostrarLogin(); return; }
@@ -632,25 +602,22 @@ async function verificarSessaoExistente(){
   try{
     await iniciarApp();
   }catch(erro){
-    // Só derruba a sessão se for erro real de autenticação
     if(/sess[aã]o expirada|token inv[aá]lido|n[ãa]o autenticado/i.test(erro.message)){
       limparSessao();
       mostrarLogin();
     } else {
-      // Erro de rede/backend — não desloga, só avisa
       toast('Erro ao conectar: ' + erro.message, 'erro');
-      mostrarLogin(); // opcional, mas sem limpar o token
+      mostrarLogin();
     }
   }
 }
 
 async function iniciarApp(){
-  usuarioAtual = await api('obter_usuario_atual'); // primeiro, garante sessão OK
+  usuarioAtual = await api('obter_usuario_atual');
   const resumo = await api('obter_resumo_do_dia');
   const agenda = await api('listar_agenda_do_dia');
   const notificacoes = await api('obter_notificacoes');
 
-  // ---- renderizar UI base ----
   document.getElementById('loginScreen').classList.add('hidden');
   document.getElementById('app').classList.add('visible');
   document.body.classList.toggle('is-admin', usuarioAtual.perfil === 'administrador');
@@ -660,7 +627,6 @@ async function iniciarApp(){
   document.getElementById('umNome').textContent = usuarioAtual.nome;
   document.getElementById('umPerfil').textContent = usuarioAtual.perfil === 'administrador' ? 'Administrador' : 'Consultor';
 
-  // ---- usar dados já carregados para evitar nova chamada dentro do render ----
   notifCache = notificacoes;
   atualizarNotifDot();
 
@@ -680,9 +646,6 @@ document.addEventListener('click', (e)=>{
   if(!e.target.closest('#userMenu') && !e.target.closest('#avatarBtn')) document.getElementById('userMenu').classList.remove('open');
 });
 
-/* =========================================================
- * NAVEGAÇÃO
- * ========================================================= */
 const NAV_ITEMS = [
   {id:"visaoDoDia", label:"Visão do dia", icon:"🏠"},
   {id:"pessoas", label:"Pessoas", icon:"👤"},
@@ -716,9 +679,6 @@ async function goTo(page){
 }
 function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
 
-/* =========================================================
- * BUSCA GLOBAL
- * ========================================================= */
 let searchDebounce = null;
 function onSearch(v){
   searchTerm = v.trim();
@@ -758,9 +718,6 @@ function renderSearchResults(resultados){
 }
 function closeSearchResults(){ document.getElementById('searchResults').classList.remove('open'); }
 
-/* =========================================================
- * NOTIFICAÇÕES
- * ========================================================= */
 let notifCache = null;
 
 async function carregarNotificacoes(){
@@ -827,15 +784,9 @@ function verAgendaCompleta(){
   goTo('visaoDoDia');
 }
 
-/* =========================================================
- * FAB
- * ========================================================= */
 function toggleFab(){ document.getElementById('fabMenu').classList.toggle('open'); }
 function closeFab(){ document.getElementById('fabMenu').classList.remove('open'); }
 
-/* =========================================================
- * ROTEADOR DE RENDER
- * ========================================================= */
 async function render(){
   renderNav();
   await carregarNotificacoes();
@@ -855,9 +806,6 @@ async function render(){
   }
 }
 
-/* =========================================================
- * VISÃO DO DIA
- * ========================================================= */
 async function renderVisaoDoDia(c){
   const resumo = await api('obter_resumo_do_dia');
 
@@ -970,9 +918,6 @@ async function confirmarConcluir(pessoaId, agendaId){
   }
 }
 
-/* =========================================================
- * PESSOAS
- * ========================================================= */
 let pessoasCache = [];
 let filtroPessoas = { etapa:'', atraso:false, responsavel:'' };
 
@@ -1079,9 +1024,6 @@ async function moverJornadaPrompt(id, etapaAtual){
   }
 }
 
-/* =========================================================
- * JORNADAS — KANBAN
- * ========================================================= */
 let dragPessoaId = null;
 let kanbanPessoas = [];
 
@@ -1199,9 +1141,6 @@ function attachTouchHandlers(){
   });
 }
 
-/* =========================================================
- * ACOMPANHAMENTOS
- * ========================================================= */
 async function renderAcompanhamentosPage(c){
   c = c || document.getElementById('content');
   const lista = await api('listar_acompanhamentos');
@@ -1222,9 +1161,6 @@ async function renderAcompanhamentosPage(c){
   `;
 }
 
-/* =========================================================
- * ORGANIZAÇÕES
- * ========================================================= */
 async function renderOrganizacoes(c){
   c = c || document.getElementById('content');
   const orgs = await api('listar_organizacoes');
@@ -1243,9 +1179,6 @@ async function renderOrganizacoes(c){
   `;
 }
 
-/* =========================================================
- * CONSULTORES (ADMIN)
- * ========================================================= */
 async function renderConsultores(c){
   c = c || document.getElementById('content');
   if(usuarioAtual.perfil !== 'administrador'){
@@ -1303,9 +1236,6 @@ async function submitNovoConsultor(ev){
   return false;
 }
 
-/* =========================================================
- * CONFIGURAÇÕES
- * ========================================================= */
 async function renderConfiguracoes(c){
   c = c || document.getElementById('content');
   c.innerHTML = `
@@ -1321,9 +1251,6 @@ async function renderConfiguracoes(c){
   `;
 }
 
-/* =========================================================
- * MODAIS — abertura, preenchimento e submissão
- * ========================================================= */
 async function fillSelects(){
   document.getElementById('nc-etapa').innerHTML = ETAPAS.map(e=>`<option>${e}</option>`).join('');
 
@@ -1351,10 +1278,11 @@ async function submitNovoContato(ev){
   btn.disabled = true; btn.textContent = 'Salvando...';
   try{
     const orgNome = document.getElementById('nc-org').value.trim();
+    let idOrganizacao = '';
     if(orgNome){
       const orgs = await api('listar_organizacoes');
       const existente = orgs.find(o=>o.nome.toLowerCase()===orgNome.toLowerCase());
-      var idOrganizacao = existente ? existente.id : (await api('criar_organizacao', { nome: orgNome })).id;
+      idOrganizacao = existente ? existente.id : (await api('criar_organizacao', { nome: orgNome })).id;
     }
     await api('criar_pessoa', {
       nome: document.getElementById('nc-nome').value,
@@ -1429,4 +1357,14 @@ async function submitAgendar(ev){
 }
 
 document.querySelectorAll('.overlay').forEach(ov=>{
-  ov.addEventListener('click',e=>{ if(e.target===
+  ov.addEventListener('click', e=>{
+    if(e.target === ov){
+      ov.classList.remove('open');
+    }
+  });
+});
+
+verificarSessaoExistente();
+</script>
+</body>
+</html>
