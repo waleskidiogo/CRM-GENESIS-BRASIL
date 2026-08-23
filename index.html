@@ -431,7 +431,8 @@ async function api(acao, dados){
     const json = await resposta.json();
     if(!json.sucesso){
       const msg = json.mensagem || 'Erro desconhecido.';
-      if(/sess[aã]o/i.test(msg) || /login/i.test(msg)){
+      // Só desloga se o backend indicar explicitamente sessão expirada/token inválido
+      if(/sess[aã]o expirada|token inv[aá]lido|n[ãa]o autenticado/i.test(msg)){
         limparSessao();
         mostrarLogin();
         mostrarMsgLogin(msg, 'info');
@@ -633,8 +634,15 @@ async function verificarSessaoExistente(){
     usuarioAtual = consultor;
     await iniciarApp();
   }catch(erro){
-    limparSessao();
-    mostrarLogin();
+    // Só derruba a sessão se for erro real de autenticação
+    if(/sess[aã]o expirada|token inv[aá]lido|n[ãa]o autenticado/i.test(erro.message)){
+      limparSessao();
+      mostrarLogin();
+    } else {
+      // Erro de rede/backend — não desloga, só avisa
+      toast('Erro ao conectar: ' + erro.message, 'erro');
+      mostrarLogin(); // opcional, mas sem limpar o token
+    }
   }
 }
 
