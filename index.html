@@ -1328,4 +1328,56 @@ async function submitNovoAcomp(ev){
       data: document.getElementById('na-data').value || iso(today),
       tipo_contato: document.getElementById('na-tipo').value,
       resumo: document.getElementById('na-resumo').value,
-      necessidade_percebida: document.getElementById('na-necessid
+           necessidade_percebida: document.getElementById('na-necessidade').value,
+      proximo_cuidado: document.getElementById('na-cuidado').value,
+      proxima_data: document.getElementById('na-cuidado-data').value
+    });
+    toast('Acompanhamento registrado.', 'sucesso');
+    document.getElementById('formNovoAcomp').reset();
+    closeModal('novoAcomp');
+    await render();
+  }catch(erro){
+    toast(erro.message, 'erro');
+  }finally{
+    btn.disabled = false; btn.textContent = 'Registrar';
+  }
+  return false;
+}
+
+async function submitAgendar(ev){
+  ev.preventDefault();
+  const btn = document.getElementById('btnAgendar');
+  btn.disabled = true; btn.textContent = 'Agendando...';
+  try{
+    await api('criar_retorno', {
+      id_pessoa: document.getElementById('ag-pessoa').value,
+      data: document.getElementById('ag-data').value,
+      hora: document.getElementById('ag-hora').value,
+      tipo: document.getElementById('ag-tipo').value,
+      resumo: document.getElementById('ag-cuidado').value
+    });
+    toast('Retorno agendado.', 'sucesso');
+    document.getElementById('formAgendar').reset();
+    closeModal('agendarRetorno');
+    await render();
+  }catch(erro){
+    toast(erro.message, 'erro');
+  }finally{
+    btn.disabled = false; btn.textContent = 'Agendar';
+  }
+  return false;
+}
+
+document.querySelectorAll('.overlay').forEach(ov=>{
+  ov.addEventListener('click', e=>{
+    if(e.target === ov){
+      ov.classList.remove('open');
+    }
+  });
+});
+
+verificarSessaoExistente();
+</script>
+</body>
+</html>
+
