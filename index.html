@@ -390,10 +390,8 @@ body.is-admin .nav-item.admin-only{display:flex;}
 const API_URL = "https://script.google.com/macros/s/AKfycbyVbYAzt8ch8EzSE0M6M3VbNy0QV3zArhzAXz5RX4aqPsERm4JaEmmOmrJOWPIbi9PYnw/exec";
 const SESSION_KEY = 'crm_token';
 
-// Flag global: true enquanto fazemos a checagem SILENCIOSA de sessão no carregamento
 let checagemSilenciosa = false;
 
-/* ================== SESSÃO (somente token no localStorage) ================== */
 function salvarToken(token){
   localStorage.setItem(SESSION_KEY, token);
 }
@@ -406,10 +404,8 @@ function ehErroDeSessao(msg){
   return /sess[aã]o expirada|sess[aã]o inv[aá]lida|token inv[aá]lido|n[ãa]o autenticado/i.test(msg || "");
 }
 
-/* ================== FUNÇÃO CENTRAL DE API ================== */
 async function api(acao, dados){
   dados = dados || {};
-  // Ações públicas não enviam token
   const acoesPublicas = ['verificar_cpf', 'login', 'concluir_primeiro_acesso'];
   const payload = acoesPublicas.includes(acao)
     ? Object.assign({ acao: acao }, dados)
@@ -476,7 +472,6 @@ let cacheConsultores = [];
 const today = new Date(); today.setHours(0,0,0,0);
 const iso = d => d.toISOString().slice(0,10);
 const addDays = (d,n) => { const x=new Date(d); x.setDate(x.getDate()+n); return x; };
-// Trata AAAA-MM-DD sempre como data LOCAL (evita "dia anterior")
 function parseLocalDate(dstr){
   if(!dstr) return null;
   const partes = (dstr||'').slice(0,10).split('-');
@@ -485,7 +480,6 @@ function parseLocalDate(dstr){
   return isNaN(d) ? null : d;
 }
 const fmtDate = (dstr) => { const d = parseLocalDate(dstr); if(!d) return "—"; return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}); };
-
 function mostrarMsgLogin(msg, tipo){
   const el = document.getElementById('loginMsg');
   el.textContent = msg;
@@ -611,7 +605,6 @@ async function fazerLogout(){
   mostrarLogin();
 }
 
-/* ===== CHECAGEM DE SESSÃO NO CARREGAMENTO (SILENCIOSA) ===== */
 async function verificarSessaoExistente(){
   const token = obterToken();
   if(!token){ mostrarLogin(); return; }
@@ -819,6 +812,8 @@ async function render(){
   }
 }
 
+/* ===== CORREÇÃO APLICADA: agora buscamos a agenda de cada dia visível
+   no calendário para exibir a bolinha (has-events) corretamente ===== */
 async function renderVisaoDoDia(c){
   const resumo = await api('obter_resumo_do_dia');
 
@@ -826,8 +821,19 @@ async function renderVisaoDoDia(c){
   for(let i=-3;i<=6;i++) days.push(iso(addDays(today,i)));
   const agendaDoDia = resumo.agenda_do_dia || [];
 
-  const calHtml = days.map(d=>{
-    const count = (d===iso(today)) ? agendaDoDia.length : 0;
+  // Busca em paralelo a quantidade de itens de agenda de cada dia da faixa
+  const contagens = await Promise.all(days.map(async (d)=>{
+    if(d === iso(today)) return agendaDoDia.length;
+    try{
+      const itens = await api('listar_agenda_do_dia', { data: d });
+      return itens.length;
+    }catch(e){
+      return 0;
+    }
+  }));
+
+  const calHtml = days.map((d,idx)=>{
+    const count = contagens[idx];
     const dt = parseLocalDate(d);
     const isToday = d===iso(today);
     const isSel = d===selectedCalDate;
@@ -1036,7 +1042,6 @@ async function moverJornadaPrompt(id, etapaAtual){
     }catch(erro){ toast(erro.message, 'erro'); }
   }
 }
-
 let dragPessoaId = null;
 let kanbanPessoas = [];
 
@@ -1328,7 +1333,7 @@ async function submitNovoAcomp(ev){
       data: document.getElementById('na-data').value || iso(today),
       tipo_contato: document.getElementById('na-tipo').value,
       resumo: document.getElementById('na-resumo').value,
-           necessidade_percebida: document.getElementById('na-necessidade').value,
+      necessidade_percebida: document.getElementById('na-necessidade').value,
       proximo_cuidado: document.getElementById('na-cuidado').value,
       proxima_data: document.getElementById('na-cuidado-data').value
     });
@@ -1380,4 +1385,3 @@ verificarSessaoExistente();
 </script>
 </body>
 </html>
-
